@@ -1,0 +1,36 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>测试 - 标签 - 知</title>
+        <link>https://negoces.github.io/tags/%E6%B5%8B%E8%AF%95/</link>
+        <description>测试 - 标签 - 知</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor>
+            <webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 03 Nov 2020 17:54:57 &#43;0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
+    <title>First_post</title>
+    <link>https://negoces.github.io/posts/6de19a38/</link>
+    <pubDate>Tue, 03 Nov 2020 17:54:57 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://negoces.github.io/posts/6de19a38/</guid>
+    <description><![CDATA[<h2 id="helloworld">HelloWorld</h2>
+<p>你好,这是一篇测试文章</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Hello World!&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><figure><a class="lightgallery" href="/posts/6de19a38/netdata.png" title="/posts/6de19a38/netdata.png" data-thumbnail="/posts/6de19a38/netdata.png" data-sub-html="<h2>netdate</h2>">
+        
+    </a><figcaption class="image-caption">netdate</figcaption>
+    </figure></p>]]></description>
+</item></channel>
+</rss>
