@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "style.min.css",
-	"sourceRoot": "/home/negoces/Code/hugo/blog",
+	"sourceRoot": "/home/runner/work/negoces.github.io/negoces.github.io",
 	"sources": [
 		"themes/loveit/assets/css/style.scss",
 		"themes/loveit/assets/css/_variables.scss",
