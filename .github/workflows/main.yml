@@ -18,11 +18,20 @@ jobs:
           hugo-version: '0.77.0'
           extended: true
 
-      - name: Build
+      - name: Build Web
         run: hugo -e production --minify
 
-      - name: Deploy
+      - name: Deploy To GH-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+
+      - name: Deploy To Firebase
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          expires: 30d
+          projectId: myblog-4f021
+          channelId: live
