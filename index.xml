@@ -1,5 +1,21 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>知</title><link>https://negoces.github.io/</link><description>这是我的全新 Hugo 网站</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 03 Nov 2020 17:54:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>First_post</title><link>https://negoces.github.io/posts/6de19a38/</link><pubDate>Tue, 03 Nov 2020 17:54:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/6de19a38/</guid><description><![CDATA[<h2 id="helloworld">HelloWorld</h2>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>知</title><link>https://negoces.github.io/</link><description>这是我的全新 Hugo 网站</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 03 Nov 2020 17:54:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>测试文章</title><link>https://negoces.github.io/posts/6de19a38/</link><pubDate>Tue, 03 Nov 2020 17:54:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/6de19a38/</guid><description><![CDATA[<h2 id="helloworld">HelloWorld</h2>
 <p>你好,这是一篇测试文章</p>
+<blockquote>
+<p>前言</p>
+</blockquote>
+<h4 id="文本测试">文本测试</h4>
+<p><em>斜体</em>、<strong>粗体</strong>、<em><strong>斜体+粗体</strong></em>、<del>删除线</del></p>
+<p><a href="" rel="">链接</a></p>
+<p>分割线:</p>
+<hr>
+<h3 id="图片测试">图片测试</h3>
+<p><figure><a class="lightgallery" href="/posts/6de19a38/netdata.png" title="/posts/6de19a38/netdata.png" data-thumbnail="/posts/6de19a38/netdata.png" data-sub-html="<h2>netdate</h2>">
+        
+    </a><figcaption class="image-caption">netdate</figcaption>
+    </figure></p>
+<h3 id="代码测试">代码测试</h3>
+<p>行内代码<code>code</code></p>
+<p>代码块:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -16,10 +32,30 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p><figure><a class="lightgallery" href="/posts/6de19a38/netdata.png" title="/posts/6de19a38/netdata.png" data-thumbnail="/posts/6de19a38/netdata.png" data-sub-html="<h2>netdate</h2>">
-        
-    </a><figcaption class="image-caption">netdate</figcaption>
-    </figure></p>
-<blockquote>
-<p>结束语</p>
-</blockquote>]]></description></item></channel></rss>
+</div><h3 id="表格">表格</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">一</th>
+<th style="text-align:center">二</th>
+<th style="text-align:right">三</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:right">6</td>
+</tr>
+<tr>
+<td style="text-align:left">7</td>
+<td style="text-align:center">8</td>
+<td style="text-align:right">9</td>
+</tr>
+</tbody>
+</table>]]></description></item></channel></rss>
