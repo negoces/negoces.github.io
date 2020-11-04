@@ -37,3 +37,12 @@ jobs:
           projectId: myblog-4f021
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
+      
+      - name: Deploy static to Tencent CloudBase
+        id: deployStatic
+        uses: TencentCloudBase/cloudbase-action@v1.1.1
+        with:
+          secretId: ${{ secrets.SECRET_ID }}
+          secretKey: ${{ secrets.SECRET_KEY }}
+          envId: ${{ secrets.ENV_ID }}
+          staticSrcPath: public
