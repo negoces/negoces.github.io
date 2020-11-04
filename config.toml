@@ -324,11 +324,11 @@ theme = "loveit"
       # Gitalk 评论系统设置
       [params.page.comment.gitalk]
         # 
-        enable = false
+        enable = true
         owner = "negoces"
-        repo = "talk"
-        clientId = "8360611e4ca17191984c"
-        clientSecret = "89f981cb126df0b646259fe123c2e0ef961dc317"
+        repo = "blog-talk"
+        clientId = "b27e7ef21fc1a033325a"
+        clientSecret = "ac19307d79a6fbe1931958899bb64c73b1f8f4ef"
       # Valine 评论系统设置
       [params.page.comment.valine]
         enable = false
