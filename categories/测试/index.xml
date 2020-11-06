@@ -1,4 +1,6 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>测试 - 分类 - 知</title><link>https://negoces.github.io/categories/%E6%B5%8B%E8%AF%95/</link><description>测试 - 分类 - 知</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 03 Nov 2020 17:54:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml"/><item><title>测试文章</title><link>https://negoces.github.io/posts/6de19a38/</link><pubDate>Tue, 03 Nov 2020 17:54:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/6de19a38/</guid><description><![CDATA[<h2 id="helloworld">HelloWorld</h2>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>测试 - 分类 - 知</title><link>https://negoces.github.io/categories/%E6%B5%8B%E8%AF%95/</link><description>测试 - 分类 - 知</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 03 Nov 2020 17:54:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml"/><item><title>测试文章</title><link>https://negoces.github.io/posts/6de19a38/</link><pubDate>Tue, 03 Nov 2020 17:54:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/6de19a38/</guid><description><![CDATA[<div class="featured-image">
+                <img src="/cover.png" referrerpolicy="no-referrer">
+            </div><h2 id="helloworld">HelloWorld</h2>
 <p>你好,这是一篇测试文章</p>
 <blockquote>
 <p>前言</p>
@@ -36,26 +38,31 @@
 <table>
 <thead>
 <tr>
-<th style="text-align:left">一</th>
+<th style="text-align:right">一</th>
 <th style="text-align:center">二</th>
-<th style="text-align:right">三</th>
+<th style="text-align:left">三</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">1</td>
+<td style="text-align:right">1</td>
 <td style="text-align:center">2</td>
-<td style="text-align:right">3</td>
+<td style="text-align:left">3</td>
 </tr>
 <tr>
-<td style="text-align:left">4</td>
+<td style="text-align:right">4</td>
 <td style="text-align:center">5</td>
-<td style="text-align:right">6</td>
+<td style="text-align:left">6</td>
 </tr>
 <tr>
-<td style="text-align:left">7</td>
+<td style="text-align:right">7</td>
 <td style="text-align:center">8</td>
-<td style="text-align:right">9</td>
+<td style="text-align:left">9</td>
 </tr>
 </tbody>
-</table>]]></description></item></channel></rss>
+</table>
+<h3 id="其他">其他</h3>
+<ul>
+<li><i class="far fa-square fa-fw"></i> todo1</li>
+<li><i class="far fa-check-square fa-fw"></i> todo2</li>
+</ul>]]></description></item></channel></rss>
