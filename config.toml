@@ -24,7 +24,7 @@ theme = "loveit"
   gitRepo = ""
   #  哪种哈希函数用来 SRI, 为空时表示不使用 SRI
   # ("sha256", "sha384", "sha512", "md5")
-  fingerprint = "md5"
+  fingerprint = "sha256"
   #  日期格式
   dateFormat = "2006-01-02"
   # 网站图片, 用于 Open Graph 和 Twitter Cards
@@ -578,3 +578,11 @@ theme = "loveit"
     url = "/about/"
     title = ""
     weight = 4
+  [[menu.main]]
+    identifier = "todo"
+    pre = ""
+    post = ""
+    name = "Todo"
+    url = "/todo/"
+    title = ""
+    weight = 5

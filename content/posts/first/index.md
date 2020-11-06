@@ -2,6 +2,7 @@
 title: "测试文章"
 subtitle: "Subtitle"
 date: 2020-11-03T17:54:57+08:00
+featuredImage: "cover.png"
 slug: 6de19a38
 categories: [测试]
 tags: [测试]
@@ -46,7 +47,12 @@ int main()
 ### 表格
 
 |一|二|三|
-|:-|:-:|-:|
+|-:|:-:|:-|
 |1|2|3|
 |4|5|6|
 |7|8|9|
+
+### 其他
+
++ [ ] todo1
++ [x] todo2
