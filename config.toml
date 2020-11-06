@@ -76,11 +76,11 @@ theme = "loveit"
     #  页面头部导航栏标题配置
     [params.header.title]
       # LOGO 的 URL
-      logo = ""
+      logo = "/logo.svg"
       # 标题名称
-      name = "知"
+      name = "NEGOCES's Blog"
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
-      pre = "👻"
+      pre = ""
       # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
       post = ""
       #  是否为标题显示打字机动画
@@ -217,7 +217,7 @@ theme = "loveit"
     Matrix = ""
     Bilibili = ""
     Email = "negoces@163.com"
-    RSS = true # 
+    RSS = true
 
   #  文章页面配置
   [params.page]
@@ -285,10 +285,10 @@ theme = "loveit"
     #  文章页面的分享信息设置
     [params.page.share]
       enable = false
-      Twitter = true
-      Facebook = true
+      Twitter = false
+      Facebook = false
       Linkedin = false
-      Whatsapp = true
+      Whatsapp = false
       Pinterest = false
       Tumblr = false
       HackerNews = false
@@ -296,7 +296,7 @@ theme = "loveit"
       VK = false
       Buffer = false
       Xing = false
-      Line = true
+      Line = false
       Instapaper = false
       Pocket = false
       Digg = false
@@ -304,11 +304,11 @@ theme = "loveit"
       Flipboard = false
       Weibo = true
       Renren = false
-      Myspace = true
-      Blogger = true
+      Myspace = false
+      Blogger = false
       Baidu = false
       Odnoklassniki = false
-      Evernote = true
+      Evernote = false
       Skype = false
       Trello = false
       Mix = false
