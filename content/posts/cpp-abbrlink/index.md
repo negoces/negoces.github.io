@@ -3,7 +3,7 @@ title: "C++实现生成abbrlink"
 date: 2020-11-05T01:37:57+08:00
 #featuredImage: "cover.png"
 slug: 16ea70f5
-categories: [学习日志]
+categories: [学习日记]
 tags: [C++]
 ---
 
