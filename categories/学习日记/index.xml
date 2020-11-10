@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>所有文章 - NEGOCES's Blog</title><link>https://negoces.github.io/posts/</link><description>所有文章 | NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 07 Nov 2020 12:33:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/posts/" rel="self" type="application/rss+xml"/><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>学习日记 - 分类 - NEGOCES's Blog</title><link>https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/</link><description>学习日记 - 分类 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 07 Nov 2020 12:33:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/" rel="self" type="application/rss+xml"/><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/cover.svg" referrerpolicy="no-referrer">
             </div><p>curl是从服务器传输数据或向服务器传输数据的工具，熟悉其用法后，完全可以取代 Postman 这一类的图形界面工具。</p>
 <h2 id="常规用法">常规用法</h2>
@@ -306,71 +306,4 @@ curl https://bob:12345@google.com/login
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>测试文章</title><link>https://negoces.github.io/posts/6de19a38/</link><pubDate>Tue, 03 Nov 2020 17:54:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/6de19a38/</guid><description><![CDATA[<div class="featured-image">
-                <img src="/cover.png" referrerpolicy="no-referrer">
-            </div><h2 id="helloworld">HelloWorld</h2>
-<p>你好,这是一篇测试文章</p>
-<blockquote>
-<p>前言</p>
-</blockquote>
-<h4 id="文本测试">文本测试</h4>
-<p><em>斜体</em>、<strong>粗体</strong>、<em><strong>斜体+粗体</strong></em>、<del>删除线</del></p>
-<p><a href="" rel="">链接</a></p>
-<p>分割线:</p>
-<hr>
-<h3 id="图片测试">图片测试</h3>
-<p><figure><a class="lightgallery" href="/posts/6de19a38/netdata.png" title="/posts/6de19a38/netdata.png" data-thumbnail="/posts/6de19a38/netdata.png" data-sub-html="<h2>netdate</h2>">
-        
-    </a><figcaption class="image-caption">netdate</figcaption>
-    </figure></p>
-<h3 id="代码测试">代码测试</h3>
-<p>行内代码<code>code</code></p>
-<p>代码块:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Hello World!&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="表格">表格</h3>
-<table>
-<thead>
-<tr>
-<th style="text-align:right">一</th>
-<th style="text-align:center">二</th>
-<th style="text-align:left">三</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right">1</td>
-<td style="text-align:center">2</td>
-<td style="text-align:left">3</td>
-</tr>
-<tr>
-<td style="text-align:right">4</td>
-<td style="text-align:center">5</td>
-<td style="text-align:left">6</td>
-</tr>
-<tr>
-<td style="text-align:right">7</td>
-<td style="text-align:center">8</td>
-<td style="text-align:left">9</td>
-</tr>
-</tbody>
-</table>
-<h3 id="其他">其他</h3>
-<ul>
-<li><i class="far fa-square fa-fw"></i> todo1</li>
-<li><i class="far fa-check-square fa-fw"></i> todo2</li>
-</ul>]]></description></item></channel></rss>
+</div>]]></description></item></channel></rss>

@@ -1,0 +1,199 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Linux - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/linux/</link><description>Linux - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 07 Nov 2020 12:33:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/linux/" rel="self" type="application/rss+xml"/><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
+                <img src="/cover.svg" referrerpolicy="no-referrer">
+            </div><p>curl是从服务器传输数据或向服务器传输数据的工具，熟悉其用法后，完全可以取代 Postman 这一类的图形界面工具。</p>
+<h2 id="常规用法">常规用法</h2>
+<p>模拟浏览器向网站发送请求<code>curl &lt;URL&gt;</code>,比如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl <span class="s2">&#34;https://www.bilibili.com&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="参数解释">参数解释</h2>
+<h3 id="-x-指定请求方法">-X 指定请求方法</h3>
+<p>指定 HTTP 请求的方法。RESTful API的四种方法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -X GET <span class="s2">&#34;https://example.com&#34;</span>
+curl -X POST <span class="s2">&#34;https://example.com&#34;</span>
+curl -X PUT <span class="s2">&#34;https://example.com&#34;</span>
+curl -X DELETE <span class="s2">&#34;https://example.com&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-a-指定ua">-A 指定UA</h3>
+<p>指定UA（<code>User-Agent</code>）。curl 的默认用户代理字符串是（<code>curl/[version]</code>）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -A <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36&#39;</span> https://google.com
+</code></pre></td></tr></table>
+</div>
+</div><p>也可以通过<code>-H</code>参数直接指定</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -H <span class="s1">&#39;User-Agent: php/1.0&#39;</span> https://google.com
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-b-发送cookies">-b 发送Cookies</h3>
+<p>向服务器发送 Cookies。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -b <span class="s1">&#39;foo1=bar;foo2=bar2&#39;</span> https://google.com
+</code></pre></td></tr></table>
+</div>
+</div><p>或者发送本地文件中的Cookies</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -b cookies.txt https://www.google.com
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-c-保存cookies">-c 保存Cookies</h3>
+<p>将服务器设置的 Cookies 写入一个文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -c cookies.txt https://www.google.com
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-d-发送post数据体">-d 发送POST数据体</h3>
+<p>用于发送 POST 请求的数据体。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -d<span class="s1">&#39;login=emma＆password=123&#39;</span> -X POST https://google.com/login
+<span class="c1">#或者使用本地文件</span>
+curl -d <span class="s1">&#39;@data.txt&#39;</span> https://google.com/login
+</code></pre></td></tr></table>
+</div>
+</div><p>使用<code>-d</code>参数以后，HTTP 请求会自动加上标头<code>Content-Type : application/x-www-form-urlencoded</code>。并且会自动将请求转为 POST 方法，因此可以省略<code>-X POST</code>。</p>
+<h3 id="-e-设置referer">-e 设置Referer</h3>
+<p>设置 HTTP 的标头<code>Referer</code>，表示请求的来源。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -e <span class="s1">&#39;https://google.com?q=example&#39;</span> https://www.example.com
+</code></pre></td></tr></table>
+</div>
+</div><p>可以通过<code>-H</code>参数直接添加标头<code>Referer</code>，达到同样效果。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -H <span class="s1">&#39;Referer: https://google.com?q=example&#39;</span> https://www.example.com
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-f-上传文件">-F 上传文件</h3>
+<p>向服务器上传二进制文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -F <span class="s1">&#39;file=@photo.png&#39;</span> https://google.com/profile
+</code></pre></td></tr></table>
+</div>
+</div><p>指定 MIME 类型。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -F <span class="s1">&#39;file=@photo.png;type=image/png&#39;</span> https://google.com/profile
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-h-指定http标头">-H 指定HTTP标头</h3>
+<p>添加 HTTP 请求的标头。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -H <span class="s1">&#39;Accept-Language: en-US&#39;</span> -H <span class="s1">&#39;Secret-Message: xyzzy&#39;</span> https://google.com
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-i-打印http标头">-i 打印HTTP标头</h3>
+<p>打印出服务器回应的 HTTP 标头。收到服务器回应后，先输出服务器回应的标头，然后空一行，再输出网页的源码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -i https://www.example.com
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-k-跳过ssl检测">-k 跳过SSL检测</h3>
+<p>跳过 SSL 检测。不会检查服务器的 SSL 证书是否正确。</p>
+<h3 id="-l-开启重定向">-L 开启重定向</h3>
+<p>让 HTTP 请求跟随服务器的重定向。curl 默认不跟随重定向。</p>
+<h3 id="-o-保存为文件">-o 保存为文件</h3>
+<p>将服务器的回应保存成文件，等同于<code>wget</code>命令。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -o example.html https://www.example.com
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-u-basic-auth认证">-u Basic Auth认证</h3>
+<p>用来设置服务器认证的用户名和密码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -u <span class="s1">&#39;bob:12345&#39;</span> https://google.com/login
+<span class="c1">#或</span>
+curl https://bob:12345@google.com/login
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="-x-设置代理">-x 设置代理</h3>
+<p>指定 HTTP 请求的代理。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -x socks5://user:passwd@proxy.com:8080 https://www.example.com
+</code></pre></td></tr></table>
+</div>
+</div><p>如果没有指定代理协议，默认为 HTTP。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -x user:passwd@proxy.com:8080 https://www.example.com
+</code></pre></td></tr></table>
+</div>
+</div>]]></description></item></channel></rss>
