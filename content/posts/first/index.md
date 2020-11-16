@@ -6,6 +6,7 @@ featuredImage: "cover.png"
 slug: 6de19a38
 categories: [测试]
 tags: [测试]
+draft: true
 ---
 
 ## HelloWorld

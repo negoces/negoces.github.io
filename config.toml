@@ -15,7 +15,7 @@ theme = "loveit"
   #  LoveIt 主题版本
   version = "0.2.X"
   # 网站描述
-  description = "这是我的全新 Hugo 网站"
+  description = ""
   # 网站关键词
   keywords = ["Theme", "Hugo"]
   # 网站默认主题样式 ("light", "dark", "auto")
@@ -142,7 +142,7 @@ theme = "loveit"
       # 是否显示社交账号
       social = true
       #  免责声明 (支持 HTML 格式)
-      disclaimer = ""
+      disclaimer = '旧博客：<a href="https://negoces.gitee.io/">negoces.gitee.io</a>'
     # 主页文章列表
     [params.home.posts]
       enable = true
