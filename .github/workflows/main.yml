@@ -15,7 +15,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: '0.77.0'
+          hugo-version: '0.79.0'
           extended: true
 
       - name: Build Web
@@ -26,12 +26,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-      
-      - name: Deploy static to Tencent CloudBase
-        id: deployStatic
-        uses: TencentCloudBase/cloudbase-action@v1.1.1
-        with:
-          secretId: ${{ secrets.SECRET_ID }}
-          secretKey: ${{ secrets.SECRET_KEY }}
-          envId: ${{ secrets.ENV_ID }}
-          staticSrcPath: public
