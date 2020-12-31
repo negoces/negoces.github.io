@@ -1,2 +1,2 @@
 #!/bin/bash
-hugo serve --disableFastRender -e production
+hugo serve --disableFastRender -e production -D
