@@ -7,7 +7,7 @@ categories: [学习日记]
 tags: [iptables, Linux]
 ---
 
-> iptables是运行在用户空间的应用软件，通过控制Linux内核netfilter模块，来管理网络数据包的处理和转发。在大部分Linux发行版中，可以通过手册页或`man iptables`获取用户手册。
+iptables是运行在用户空间的应用软件，通过控制Linux内核netfilter模块，来管理网络数据包的处理和转发。在大部分Linux发行版中，可以通过手册页或`man iptables`获取用户手册。
 
 <!--more-->
 
