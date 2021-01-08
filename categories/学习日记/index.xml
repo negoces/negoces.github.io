@@ -188,7 +188,7 @@
 </span><span class="cp"></span>
 <span class="k">typedef</span> <span class="k">struct</span> <span class="n">node</span>
 <span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">id</span><span class="p">;</span>   <span class="c1">//节点ID
+    <span class="kt">int</span> <span class="n">id</span><span class="p">;</span>   <span class="c1">//节点ID
 </span><span class="c1"></span>    <span class="k">struct</span> <span class="n">node</span> <span class="o">*</span><span class="n">prev</span><span class="p">;</span> <span class="c1">//上节点地址
 </span><span class="c1"></span>    <span class="k">struct</span> <span class="n">node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span> <span class="c1">//下节点地址
 </span><span class="c1"></span><span class="p">}</span> <span class="n">node</span><span class="p">;</span>

@@ -86,7 +86,7 @@ free(table)
 
 typedef struct node
 {
-    unsigned int id;   //节点ID
+    int id;   //节点ID
     struct node *prev; //上节点地址
     struct node *next; //下节点地址
 } node;
