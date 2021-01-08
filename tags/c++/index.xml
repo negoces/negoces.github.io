@@ -1,4 +1,304 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>C++ - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/c++/</link><description>C++ - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Thu, 05 Nov 2020 01:37:57 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/c++/" rel="self" type="application/rss+xml"/><item><title>C++实现生成abbrlink</title><link>https://negoces.github.io/posts/16ea70f5/</link><pubDate>Thu, 05 Nov 2020 01:37:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16ea70f5/</guid><description><![CDATA[<p>之前用过Hexo写过博客，用过一个插件叫hexo-abbrlink，可以生成文章唯一永久链接(8位16进制的字符串)，Hugo有个slug参数，可以用C++写个小程序生成一串字符并填入来模拟这个功能。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>C++ - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/c++/</link><description>C++ - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 09 Jan 2021 00:29:35 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/c++/" rel="self" type="application/rss+xml"/><item><title>C语言链表实现</title><link>https://negoces.github.io/posts/53e2617f/</link><pubDate>Sat, 09 Jan 2021 00:29:35 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/53e2617f/</guid><description><![CDATA[<h2 id="实现思路">实现思路</h2>
+<p>假设现在有个三节点的链表,每个节点具有两个指针:</p>
+<ul>
+<li>prev —— 上一节点地址</li>
+<li>next —— 下一节点地址</li>
+</ul>
+<div class="mermaid" id="id-1"></div>
+<h3 id="插入节点">插入节点</h3>
+<p>注:虚线表示删除,D为插入的节点</p>
+<div class="mermaid" id="id-2"></div>
+<p>按照这个图的操作应该是:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">C</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">D</span>
+<span class="n">D</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">C</span>
+<span class="n">D</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">B</span>
+<span class="n">B</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">D</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>假设此时的链表传入的table是B,插入的node为D,那么C语言代码为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">node</span>
+<span class="n">node</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span>
+<span class="n">node</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">table</span>
+<span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">node</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="删除节点">删除节点</h3>
+<p>注:虚线表示删除,B为要删除的节点</p>
+<div class="mermaid" id="id-3"></div>
+<p>按照这个图的操作应该是:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">A</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">C</span>
+<span class="n">C</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">A</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>假设此时的链表传入的table是B,那么C语言代码为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">table</span><span class="o">-&gt;</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">prev</span><span class="p">;</span>
+<span class="n">free</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="代码实现">代码实现</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">node</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">id</span><span class="p">;</span>   <span class="c1">//节点ID
+</span><span class="c1"></span>    <span class="k">struct</span> <span class="n">node</span> <span class="o">*</span><span class="n">prev</span><span class="p">;</span> <span class="c1">//上节点地址
+</span><span class="c1"></span>    <span class="k">struct</span> <span class="n">node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span> <span class="c1">//下节点地址
+</span><span class="c1"></span><span class="p">}</span> <span class="n">node</span><span class="p">;</span>
+
+<span class="n">node</span> <span class="o">*</span><span class="nf">createNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">uid</span><span class="p">);</span>                      <span class="c1">//创建(节点ID)
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">addNode</span><span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="n">table</span><span class="p">,</span> <span class="kt">int</span> <span class="n">uid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newUid</span><span class="p">);</span> <span class="c1">//增(链表,节点UID,新建节点UID)[在UID节点后插入]
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">delNode</span><span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="n">table</span><span class="p">,</span> <span class="kt">int</span> <span class="n">uid</span><span class="p">);</span>             <span class="c1">//删(链表,节点UID)
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">printTable</span><span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="n">table</span><span class="p">);</span>                   <span class="c1">//打印(链表)
+</span><span class="c1"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">node</span> <span class="o">*</span><span class="n">table</span> <span class="o">=</span> <span class="n">createNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">addNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">addNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="n">addNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="n">addNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">addNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="n">addNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>
+    <span class="n">delNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">delNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="n">delNode</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="n">printTable</span><span class="p">(</span><span class="n">table</span><span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">node</span> <span class="o">*</span><span class="nf">createNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">uid</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">node</span> <span class="o">*</span><span class="n">newTable</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">node</span><span class="p">));</span>
+    <span class="n">newTable</span><span class="o">-&gt;</span><span class="n">id</span> <span class="o">=</span> <span class="n">uid</span><span class="p">;</span>
+    <span class="n">newTable</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">newTable</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">newTable</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">addNode</span><span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="n">table</span><span class="p">,</span> <span class="kt">int</span> <span class="n">uid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newUid</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">table</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="p">{</span> <span class="c1">//未查找到相应节点
+</span><span class="c1"></span>            <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Node %d not find!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">uid</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">id</span> <span class="o">==</span> <span class="n">newUid</span><span class="p">)</span>
+        <span class="p">{</span> <span class="c1">//节点ID已存在
+</span><span class="c1"></span>            <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Node %d exist!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">newUid</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">id</span> <span class="o">==</span> <span class="n">uid</span><span class="p">)</span>
+        <span class="p">{</span> <span class="c1">//查找到相应节点
+</span><span class="c1"></span>            <span class="n">node</span> <span class="o">*</span><span class="n">newTable</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">node</span><span class="p">));</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="p">{</span> <span class="c1">//如果存在下一节点
+</span><span class="c1"></span>                <span class="c1">//建立当前与下一链表的联系
+</span><span class="c1"></span>                <span class="n">newTable</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+                <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">newTable</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="c1">//建立当前与上一链表的联系
+</span><span class="c1"></span>            <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">newTable</span><span class="p">;</span>
+            <span class="n">newTable</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">table</span><span class="p">;</span>
+            <span class="c1">//写入当前链表ID
+</span><span class="c1"></span>            <span class="n">newTable</span><span class="o">-&gt;</span><span class="n">id</span> <span class="o">=</span> <span class="n">newUid</span><span class="p">;</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">delNode</span><span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="n">table</span><span class="p">,</span> <span class="kt">int</span> <span class="n">uid</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">table</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="p">{</span> <span class="c1">//未查找到相应节点
+</span><span class="c1"></span>            <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Node %d not find!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">uid</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">id</span> <span class="o">==</span> <span class="n">uid</span><span class="p">)</span>
+        <span class="p">{</span> <span class="c1">//查找到相应节点
+</span><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="p">{</span> <span class="c1">//如果存在下一节点
+</span><span class="c1"></span>                <span class="c1">//建立上一节点与下一节点的连接
+</span><span class="c1"></span>                <span class="n">table</span><span class="o">-&gt;</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+                <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">prev</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span> <span class="c1">//如果不存在下一节点
+</span><span class="c1"></span>                <span class="c1">//设置上一节点的next为NULL
+</span><span class="c1"></span>                <span class="n">table</span><span class="o">-&gt;</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="c1">//释放当前节点
+</span><span class="c1"></span>            <span class="n">free</span><span class="p">(</span><span class="n">table</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">printTable</span><span class="p">(</span><span class="n">node</span> <span class="o">*</span><span class="n">table</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">table</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Node: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">id</span><span class="p">);</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>]]></description></item><item><title>C++实现生成abbrlink</title><link>https://negoces.github.io/posts/16ea70f5/</link><pubDate>Thu, 05 Nov 2020 01:37:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16ea70f5/</guid><description><![CDATA[<p>之前用过Hexo写过博客，用过一个插件叫hexo-abbrlink，可以生成文章唯一永久链接(8位16进制的字符串)，Hugo有个slug参数，可以用C++写个小程序生成一串字符并填入来模拟这个功能。</p>
 <blockquote>
 <p>这个实现方式只是通过生成8个0-15的随机数实现的，有概率会出现生成的字符重复的现象(只不过概率特别低)，不过其他方法我也不会啊，只能想到这种实现方式了(我太菜了)，就当作是练习C++的面向对象编程吧。</p>
 </blockquote>
