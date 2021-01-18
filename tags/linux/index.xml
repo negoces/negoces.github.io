@@ -32,7 +32,7 @@
 <li>PREROUTING</li>
 <li>OUTPUT</li>
 </ul>]]></description></item><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
-                <img src="/cover.svg" referrerpolicy="no-referrer">
+                <img src="/cover.png" referrerpolicy="no-referrer">
             </div><p>curl是从服务器传输数据或向服务器传输数据的工具，熟悉其用法后，完全可以取代 Postman 这一类的图形界面工具。</p>
 <h2 id="常规用法">常规用法</h2>
 <p>模拟浏览器向网站发送请求<code>curl &lt;URL&gt;</code>,比如</p>
