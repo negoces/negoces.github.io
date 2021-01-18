@@ -1,7 +1,7 @@
 ---
 title: "使用curl测试API"
 date: 2020-11-07T12:33:57+08:00
-featuredImage: "cover.svg"
+featuredImage: "cover.png"
 slug: 9058bdc8
 categories: [学习日记]
 tags: [curl, Linux]
