@@ -1,64 +1,87 @@
 ---
-title: "iptables详解"
-date: 2020-12-31T17:29:57+08:00
-#featuredImage: "cover.png"
+title: "iptables从入门到放弃"
+date: 2021-01-18T17:29:57+08:00
+featuredImage: "cover.png"
 slug: 16e870f5
 categories: [学习日记]
 tags: [iptables, Linux]
 ---
 
-iptables是运行在用户空间的应用软件，通过控制Linux内核netfilter模块，来管理网络数据包的处理和转发。在大部分Linux发行版中，可以通过手册页或`man iptables`获取用户手册。
+iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作
 
 <!--more-->
 
-iptables、ip6tables等都使用Xtables框架。存在“表（tables）”、“链（chain）”和“规则（rules）”三个层面。
+## iptables 是什么
 
-## 数据包走向
+iptables 是运行在用户空间的应用软件，通过控制 Linux 内核 netfilter 模块，来管理网络数据包的处理和转发。在大部分 Linux 发行版中，可以通过手册页或`man iptables`获取用户手册。
 
-{{< mermaid >}}
-graph LR;
-    输入 --> PREROUTING
-    PREROUTING --> B{本机?}
-    B -->|Y| INPUT
-    B -->|N| FORWARD
-    INPUT --> E[应用层]
-    E --> OUTPUT
-    FORWARD --> POSTROUTING
-    OUTPUT --> POSTROUTING
-    POSTROUTING --> 输出
-{{< /mermaid >}}
+{{< admonition info "netfilter是什么(摘自Wiki)" >}}
+Netfilter，在 Linux 内核中的一个软件框架，用于管理网络数据包。不仅具有网络地址转换（NAT）的功能，也具备数据包内容修改、以及数据包过滤等防火墙功能。利用运作于用户空间的应用软件，如 iptables、ebtables 和 arptables 等，来控制 Netfilter，系统管理者可以管理通过 Linux 操作系统的各种网络数据包。1990 年代，Netfilter 在 Linux 2.3.15 版时进入 Linux 内核，正式应用于 Linux 2.4 版。
+{{< /admonition >}}
 
-## 表
+简而言之就是 Netfilter 的上层程序，用户通过 iptables 指定规则，由 Netfilter 来执行，实现流量的拦截、转发等操作。
 
-### filter表
+## iptables 的链(chain)
 
-filter表是默认的表，如果不指明表则使用此表。其通常用于过滤数据包。其中的内建链包括：
+iptables 中有 5 个链，分别与 netfilter 中的 hook 对应
 
-+ INPUT，输入链。发往本机的数据包通过此链。
-+ OUTPUT，输出链。从本机发出的数据包通过此链。
-+ FORWARD，转发链。本机转发的数据包通过此链。
+- `PREROUTING` - 对应`NF_IP_PRE_ROUTING`,任何进入网络堆栈的流量都会触发此 hook。
+- `INPUT` - 对应`NF_IP_LOCAL_IN`，如果数据包发送到本地系统，则在路由传入数据包之后，将触发此 hook。
+- `FORWARD` - 对应`NF_IP_FORWARD`，如果该数据包转发到另一台主机，则在路由输入数据包之后将触发此 hook。
+- `OUTPUT` - 对应`NF_IP_LOCAL_OUT`，由本地的出栈流量触发。
+- `POSTROUTING` - 对应`NF_IP_POST_ROUTING`，任何传出的流量都将触发此 hook。
 
-### nat表
+数据包走向:
 
-nat表如其名，用于地址转换操作。其中的内建链包括：
+- 目的地址为本机的传入流量: -> `PREROUTING` -> `INPUT`
+- 目的地址为其他主机的传入流量: -> `PREROUTING` -> `FORWARD` -> `POSTROUTING` ->
+- 本机出站流量: `OUTPUT` -> `POSTROUTING` ->
 
-+ PREROUTING，路由前链，在处理路由规则前通过此链，通常用于目的地址转换（DNAT）。
-+ POSTROUTING，路由后链，完成路由规则后通过此链，通常用于源地址转换（SNAT）。
-+ OUTPUT，输出链，类似PREROUTING，但是处理本机发出的数据包。
+## iptables 的表(tables)
 
-### mangle表
+### filter 表
 
-mangle表用于处理数据包。其和nat表的主要区别在于，nat表侧重连接而mangle表侧重每一个数据包。[4]其中内建链列表如下。
+filter 表是默认的表，如果不指明表则使用此表。其通常用于过滤数据包。其中的内建链包括：
 
-+ PREROUTING
-+ OUTPUT
-+ FORWARD
-+ INPUT
-+ POSTROUTING
+- INPUT,OUTPUT,FORWARD
 
-### raw表
+### nat 表
 
-raw表用于处理异常，有如下两个内建链：
+nat 表如其名，用于地址转换操作。其中的内建链包括：
 
-+ PREROUTING
-+ OUTPUT
+- PREROUTING,POSTROUTING,OUTPUT
+
+### mangle 表
+
+mangle 表用于处理数据包。其和 nat 表的主要区别在于，nat 表侧重连接而 mangle 表侧重每一个数据包。其中内建链列表如下。
+
+- PREROUTING,OUTPUT,FORWARD,INPUT,POSTROUTING
+
+### raw 表
+
+raw 表用于处理异常，有如下两个内建链：
+
+- PREROUTING,OUTPUT
+
+{{< figure src="flow.webp" title="流量流向" >}}
+
+## iptables 的规则(rules)
+
+根据规则匹配条件来尝试匹配报文，一旦匹配成功，就由规则定义的处理动作做出处理。
+
+### 匹配条件
+
+基本匹配条件：源地址，目标地址，传输层协议  
+扩展匹配条件：由扩展模块定义
+
+### 处理动作
+
+基本处理动作：ACCEPT、DROP  
+扩展处理动作：REJECT、RETURN、LOG、REDIRECT
+
+### iptables的链：内置链和自定义链
+
+内置链：对应于hook functions  
+自定义链接：用于内置链的扩展和补充，可实现更灵活的规则管理机制；自定义链可以设置完之后，添加到内置链中，方便管理
+
+> 待续... (iptables的命令操作)
