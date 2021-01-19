@@ -1,0 +1,54 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>经验记录 - 分类 - NEGOCES's Blog</title><link>https://negoces.github.io/categories/%E7%BB%8F%E9%AA%8C%E8%AE%B0%E5%BD%95/</link><description>经验记录 - 分类 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 19 Jan 2021 20:55:39 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E7%BB%8F%E9%AA%8C%E8%AE%B0%E5%BD%95/" rel="self" type="application/rss+xml"/><item><title>树莓派+Clash实现透明代理</title><link>https://negoces.github.io/posts/d7266c81/</link><pubDate>Tue, 19 Jan 2021 20:55:39 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/d7266c81/</guid><description><![CDATA[<p>透明代理的透明即为用户不需要进行任何设置，察觉不到其存在。至于代理是什么，懂得都懂。</p>
+<h2 id="准备">准备</h2>
+<p>首先你得有个树莓派或者任意一个能装 Linux 系统并且能联网的设备(甚至可以是路由器，不过本文章不适用)，然后你得会配置Clash且有一定的Linux知识。</p>
+<p>本文以树莓派为例子</p>
+<p>清单:</p>
+<ul>
+<li>树莓派3B+(RaspberryOS(64位))</li>
+<li>Clash_linux_armv8可执行文件</li>
+</ul>
+<h2 id="解决53dns监听端口占用问题">解决53(DNS监听)端口占用问题</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#打开 /etc/systemd/resolved.conf 文件</span>
+sudo nano /etc/systemd/resolved.conf
+<span class="c1">#找到DNSStubListener 修改为 DNSStubListener=no</span>
+<span class="nv">DNSStubListener</span><span class="o">=</span>no
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>其他软件占用<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">若系统中安装有dnsencrypt或dnsmasq等软件，请卸载，此类软件也会占用53端口</div>
+        </div>
+    </div>
+<h2 id="开启linux内核转发">开启Linux内核转发</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#打开/etc/sysctl.conf文件</span>
+sudo nano /etc/sysctl.conf
+<span class="c1">#找到net.ipv4.ip_forward将值修改为1</span>
+net.ipv4.ip_forward <span class="o">=</span> <span class="m">1</span>
+<span class="c1">#立即生效</span>
+sudo sysctl -p
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>待续&hellip;</p>
+</blockquote>]]></description></item></channel></rss>

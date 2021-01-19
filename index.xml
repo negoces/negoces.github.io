@@ -1,4 +1,126 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 09 Jan 2021 00:29:35 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>C语言链表实现</title><link>https://negoces.github.io/posts/53e2617f/</link><pubDate>Sat, 09 Jan 2021 00:29:35 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/53e2617f/</guid><description><![CDATA[<h2 id="实现思路">实现思路</h2>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 19 Jan 2021 20:55:39 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>树莓派+Clash实现透明代理</title><link>https://negoces.github.io/posts/d7266c81/</link><pubDate>Tue, 19 Jan 2021 20:55:39 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/d7266c81/</guid><description><![CDATA[<p>透明代理的透明即为用户不需要进行任何设置，察觉不到其存在。至于代理是什么，懂得都懂。</p>
+<h2 id="准备">准备</h2>
+<p>首先你得有个树莓派或者任意一个能装 Linux 系统并且能联网的设备(甚至可以是路由器，不过本文章不适用)，然后你得会配置Clash且有一定的Linux知识。</p>
+<p>本文以树莓派为例子</p>
+<p>清单:</p>
+<ul>
+<li>树莓派3B+(RaspberryOS(64位))</li>
+<li>Clash_linux_armv8可执行文件</li>
+</ul>
+<h2 id="解决53dns监听端口占用问题">解决53(DNS监听)端口占用问题</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#打开 /etc/systemd/resolved.conf 文件</span>
+sudo nano /etc/systemd/resolved.conf
+<span class="c1">#找到DNSStubListener 修改为 DNSStubListener=no</span>
+<span class="nv">DNSStubListener</span><span class="o">=</span>no
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>其他软件占用<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">若系统中安装有dnsencrypt或dnsmasq等软件，请卸载，此类软件也会占用53端口</div>
+        </div>
+    </div>
+<h2 id="开启linux内核转发">开启Linux内核转发</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#打开/etc/sysctl.conf文件</span>
+sudo nano /etc/sysctl.conf
+<span class="c1">#找到net.ipv4.ip_forward将值修改为1</span>
+net.ipv4.ip_forward <span class="o">=</span> <span class="m">1</span>
+<span class="c1">#立即生效</span>
+sudo sysctl -p
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>待续&hellip;</p>
+</blockquote>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
+                <img src="/cover.png" referrerpolicy="no-referrer">
+            </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
+<h2 id="iptables-是什么">iptables 是什么</h2>
+<p>iptables 是运行在用户空间的应用软件，通过控制 Linux 内核 netfilter 模块，来管理网络数据包的处理和转发。在大部分 Linux 发行版中，可以通过手册页或<code>man iptables</code>获取用户手册。</p>
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw"></i>netfilter是什么(摘自Wiki)<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">Netfilter，在 Linux 内核中的一个软件框架，用于管理网络数据包。不仅具有网络地址转换（NAT）的功能，也具备数据包内容修改、以及数据包过滤等防火墙功能。利用运作于用户空间的应用软件，如 iptables、ebtables 和 arptables 等，来控制 Netfilter，系统管理者可以管理通过 Linux 操作系统的各种网络数据包。1990 年代，Netfilter 在 Linux 2.3.15 版时进入 Linux 内核，正式应用于 Linux 2.4 版。</div>
+        </div>
+    </div>
+<p>简而言之就是 Netfilter 的上层程序，用户通过 iptables 指定规则，由 Netfilter 来执行，实现流量的拦截、转发等操作。</p>
+<h2 id="iptables-的链chain">iptables 的链(chain)</h2>
+<p>iptables 中有 5 个链，分别与 netfilter 中的 hook 对应</p>
+<ul>
+<li><code>PREROUTING</code> - 对应<code>NF_IP_PRE_ROUTING</code>,任何进入网络堆栈的流量都会触发此 hook。</li>
+<li><code>INPUT</code> - 对应<code>NF_IP_LOCAL_IN</code>，如果数据包发送到本地系统，则在路由传入数据包之后，将触发此 hook。</li>
+<li><code>FORWARD</code> - 对应<code>NF_IP_FORWARD</code>，如果该数据包转发到另一台主机，则在路由输入数据包之后将触发此 hook。</li>
+<li><code>OUTPUT</code> - 对应<code>NF_IP_LOCAL_OUT</code>，由本地的出栈流量触发。</li>
+<li><code>POSTROUTING</code> - 对应<code>NF_IP_POST_ROUTING</code>，任何传出的流量都将触发此 hook。</li>
+</ul>
+<p>数据包走向:</p>
+<ul>
+<li>目的地址为本机的传入流量: -&gt; <code>PREROUTING</code> -&gt; <code>INPUT</code></li>
+<li>目的地址为其他主机的传入流量: -&gt; <code>PREROUTING</code> -&gt; <code>FORWARD</code> -&gt; <code>POSTROUTING</code> -&gt;</li>
+<li>本机出站流量: <code>OUTPUT</code> -&gt; <code>POSTROUTING</code> -&gt;</li>
+</ul>
+<h2 id="iptables-的表tables">iptables 的表(tables)</h2>
+<h3 id="filter-表">filter 表</h3>
+<p>filter 表是默认的表，如果不指明表则使用此表。其通常用于过滤数据包。其中的内建链包括：</p>
+<ul>
+<li>INPUT,OUTPUT,FORWARD</li>
+</ul>
+<h3 id="nat-表">nat 表</h3>
+<p>nat 表如其名，用于地址转换操作。其中的内建链包括：</p>
+<ul>
+<li>PREROUTING,POSTROUTING,OUTPUT</li>
+</ul>
+<h3 id="mangle-表">mangle 表</h3>
+<p>mangle 表用于处理数据包。其和 nat 表的主要区别在于，nat 表侧重连接而 mangle 表侧重每一个数据包。其中内建链列表如下。</p>
+<ul>
+<li>PREROUTING,OUTPUT,FORWARD,INPUT,POSTROUTING</li>
+</ul>
+<h3 id="raw-表">raw 表</h3>
+<p>raw 表用于处理异常，有如下两个内建链：</p>
+<ul>
+<li>PREROUTING,OUTPUT</li>
+</ul>
+<figure>
+     <figcaption>
+            <h4>流量流向</h4>
+        </figcaption>
+</figure>
+
+<h2 id="iptables-的规则rules">iptables 的规则(rules)</h2>
+<p>根据规则匹配条件来尝试匹配报文，一旦匹配成功，就由规则定义的处理动作做出处理。</p>
+<h3 id="匹配条件">匹配条件</h3>
+<p>基本匹配条件：源地址，目标地址，传输层协议<br>
+扩展匹配条件：由扩展模块定义</p>
+<h3 id="处理动作">处理动作</h3>
+<p>基本处理动作：ACCEPT、DROP<br>
+扩展处理动作：REJECT、RETURN、LOG、REDIRECT</p>
+<h3 id="iptables的链内置链和自定义链">iptables的链：内置链和自定义链</h3>
+<p>内置链：对应于hook functions<br>
+自定义链接：用于内置链的扩展和补充，可实现更灵活的规则管理机制；自定义链可以设置完之后，添加到内置链中，方便管理</p>
+<blockquote>
+<p>待续&hellip; (iptables的命令操作)</p>
+</blockquote>]]></description></item><item><title>C语言链表实现</title><link>https://negoces.github.io/posts/53e2617f/</link><pubDate>Sat, 09 Jan 2021 00:29:35 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/53e2617f/</guid><description><![CDATA[<h2 id="实现思路">实现思路</h2>
 <p>假设现在有个三节点的链表,每个节点具有两个指针:</p>
 <ul>
 <li>prev —— 上一节点地址</li>
@@ -298,40 +420,7 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>iptables详解</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Thu, 31 Dec 2020 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<p>iptables是运行在用户空间的应用软件，通过控制Linux内核netfilter模块，来管理网络数据包的处理和转发。在大部分Linux发行版中，可以通过手册页或<code>man iptables</code>获取用户手册。</p>
-<p>iptables、ip6tables等都使用Xtables框架。存在“表（tables）”、“链（chain）”和“规则（rules）”三个层面。</p>
-<h2 id="数据包走向">数据包走向</h2>
-<div class="mermaid" id="id-1"></div>
-<h2 id="表">表</h2>
-<h3 id="filter表">filter表</h3>
-<p>filter表是默认的表，如果不指明表则使用此表。其通常用于过滤数据包。其中的内建链包括：</p>
-<ul>
-<li>INPUT，输入链。发往本机的数据包通过此链。</li>
-<li>OUTPUT，输出链。从本机发出的数据包通过此链。</li>
-<li>FORWARD，转发链。本机转发的数据包通过此链。</li>
-</ul>
-<h3 id="nat表">nat表</h3>
-<p>nat表如其名，用于地址转换操作。其中的内建链包括：</p>
-<ul>
-<li>PREROUTING，路由前链，在处理路由规则前通过此链，通常用于目的地址转换（DNAT）。</li>
-<li>POSTROUTING，路由后链，完成路由规则后通过此链，通常用于源地址转换（SNAT）。</li>
-<li>OUTPUT，输出链，类似PREROUTING，但是处理本机发出的数据包。</li>
-</ul>
-<h3 id="mangle表">mangle表</h3>
-<p>mangle表用于处理数据包。其和nat表的主要区别在于，nat表侧重连接而mangle表侧重每一个数据包。[4]其中内建链列表如下。</p>
-<ul>
-<li>PREROUTING</li>
-<li>OUTPUT</li>
-<li>FORWARD</li>
-<li>INPUT</li>
-<li>POSTROUTING</li>
-</ul>
-<h3 id="raw表">raw表</h3>
-<p>raw表用于处理异常，有如下两个内建链：</p>
-<ul>
-<li>PREROUTING</li>
-<li>OUTPUT</li>
-</ul>]]></description></item><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
+</div>]]></description></item><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/cover.png" referrerpolicy="no-referrer">
             </div><p>curl是从服务器传输数据或向服务器传输数据的工具，熟悉其用法后，完全可以取代 Postman 这一类的图形界面工具。</p>
 <h2 id="常规用法">常规用法</h2>
