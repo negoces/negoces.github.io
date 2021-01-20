@@ -1,13 +1,42 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 19 Jan 2021 20:55:39 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>树莓派+Clash实现透明代理</title><link>https://negoces.github.io/posts/d7266c81/</link><pubDate>Tue, 19 Jan 2021 20:55:39 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/d7266c81/</guid><description><![CDATA[<p>透明代理的透明即为用户不需要进行任何设置，察觉不到其存在。至于代理是什么，懂得都懂。</p>
 <h2 id="准备">准备</h2>
-<p>首先你得有个树莓派或者任意一个能装 Linux 系统并且能联网的设备(甚至可以是路由器，不过本文章不适用)，然后你得会配置Clash且有一定的Linux知识。</p>
+<p>首先你得有个树莓派或者任意一个能装 Linux 系统并且能联网的设备(甚至可以是路由器，不过本文章不适用)，然后你得会配置 Clash 且有一定的 Linux 知识。</p>
 <p>本文以树莓派为例子</p>
 <p>清单:</p>
 <ul>
-<li>树莓派3B+(RaspberryOS(64位))</li>
-<li>Clash_linux_armv8可执行文件</li>
+<li>树莓派 3B+(RaspberryOS(64 位))</li>
+<li>Clash_linux_armv8 可执行文件</li>
 </ul>
-<h2 id="解决53dns监听端口占用问题">解决53(DNS监听)端口占用问题</h2>
+<h2 id="设置-ip-获取方式为静态">设置 IP 获取方式为静态</h2>
+<p>因为我是把树莓派作为旁路由，所以会将路由器的 DHCP 的网关设置为树莓派 IP，为了防止树莓派使用自己的 IP 地址作为网关，我们要为树莓派手动指定 IP 及网关。</p>
+<p>编辑网络配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo nano /etc/network/interfaces
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="na">auto eth0</span>
+<span class="na">iface eth0 inet static</span>
+    <span class="na">address 10.0.0.2    #IP地址</span>
+    <span class="na">netmask 255.255.0.0 #子掩码</span>
+    <span class="na">gateway 10.0.0.1    #网关</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="解决-53dns-监听端口占用问题">解决 53(DNS 监听)端口占用问题</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -27,10 +56,10 @@ sudo nano /etc/systemd/resolved.conf
             <i class="icon fas fa-pencil-alt fa-fw"></i>其他软件占用<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
-            <div class="admonition-content">若系统中安装有dnsencrypt或dnsmasq等软件，请卸载，此类软件也会占用53端口</div>
+            <div class="admonition-content">若系统中安装有 dnsencrypt 或 dnsmasq 等软件，请卸载，此类软件也会占用 53 端口</div>
         </div>
     </div>
-<h2 id="开启linux内核转发">开启Linux内核转发</h2>
+<h2 id="开启-linux-内核转发">开启 Linux 内核转发</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -49,9 +78,366 @@ net.ipv4.ip_forward <span class="o">=</span> <span class="m">1</span>
 sudo sysctl -p
 </code></pre></td></tr></table>
 </div>
-</div><blockquote>
-<p>待续&hellip;</p>
-</blockquote>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
+</div><h2 id="安装-clash">安装 clash</h2>
+<p>将 clash 命名为 clash 且赋予可执行权限，放入<code>/opt</code>目录</p>
+<p>编辑<code>/etc/systemd/system/clash.service</code>让 clash 开机自启动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">clash</span>
+<span class="na">Documentation</span><span class="o">=</span><span class="s">man:clash</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target network-online.target nss-lookup.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<span class="na">StandardError</span><span class="o">=</span><span class="s">journal</span>
+<span class="na">User</span><span class="o">=</span><span class="s">nobody</span>
+<span class="na">AmbientCapabilities</span><span class="o">=</span><span class="s">CAP_NET_BIND_SERVICE</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/opt/clash/clash -d /opt/clash</span>
+<span class="na">ExecReload</span><span class="o">=</span><span class="s">/bin/kill -HUP $MAINPID</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+<span class="na">RestartSec</span><span class="o">=</span><span class="s">1s</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#开机自启</span>
+sudo systemctl <span class="nb">enable</span> clash
+</code></pre></td></tr></table>
+</div>
+</div><p>安装完之后不急着启动，否则会因为没有配置文件而报错</p>
+<h2 id="配置-clash">配置 clash</h2>
+<p>编辑<code>/opt/clash/config.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">redir-port</span><span class="p">:</span><span class="w"> </span><span class="m">1811</span><span class="w">
+</span><span class="w"></span><span class="nt">tproxy-port</span><span class="p">:</span><span class="w"> </span><span class="m">1812</span><span class="w">
+</span><span class="w"></span><span class="nt">mixed-port</span><span class="p">:</span><span class="w"> </span><span class="m">1080</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">allow-lan</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w"></span><span class="nt">bind-address</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;*&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l">rule</span><span class="w">
+</span><span class="w"></span><span class="nt">log-level</span><span class="p">:</span><span class="w"> </span><span class="l">warning</span><span class="w">
+</span><span class="w"></span><span class="nt">ipv6</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w"></span><span class="nt">external-controller</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">9090</span><span class="w">
+</span><span class="w"></span><span class="c"># external-ui: folder</span><span class="w">
+</span><span class="w"></span><span class="c"># secret: &#34;&#34;</span><span class="w">
+</span><span class="w"></span><span class="c"># interface-name: en0</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">hosts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c"># &#39;*.clash.dev&#39;: 127.0.0.1</span><span class="w">
+</span><span class="w">  </span><span class="c"># &#39;.dev&#39;: 127.0.0.1</span><span class="w">
+</span><span class="w">  </span><span class="c"># &#39;alpha.clash.dev&#39;: &#39;::1&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">dns</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">  </span><span class="nt">listen</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0.0</span><span class="p">:</span><span class="m">53</span><span class="w">
+</span><span class="w">  </span><span class="nt">ipv6</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">  </span><span class="nt">default-nameserver</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="m">223.5.5.5</span><span class="w">
+</span><span class="w">    </span>- <span class="m">114.114.114.114</span><span class="w">
+</span><span class="w">    </span>- <span class="m">8.8.8.8</span><span class="w">
+</span><span class="w">  </span><span class="nt">enhanced-mode</span><span class="p">:</span><span class="w"> </span><span class="l">redir-host</span><span class="w">
+</span><span class="w">  </span><span class="nt">use-hosts</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="nt">nameserver</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="m">114.114.114.114</span><span class="w"> </span><span class="c"># default value</span><span class="w">
+</span><span class="w">    </span>- <span class="m">8.8.8.8</span><span class="w"> </span><span class="c"># default value</span><span class="w">
+</span><span class="w">    </span>- <span class="l">tls://dns.rubyfish.cn:853</span><span class="w"> </span><span class="c"># DNS over TLS</span><span class="w">
+</span><span class="w">    </span>- <span class="l">https://1.1.1.1/dns-query</span><span class="w"> </span><span class="c"># DNS over HTTPS</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="nt">fallback</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="l">tcp://1.1.1.1</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="nt">fallback-filter</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">geoip</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">    </span><span class="nt">ipcidr</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="c"># - 240.0.0.0/4</span><span class="w">
+</span><span class="w">    </span><span class="c"># domain:</span><span class="w">
+</span><span class="w">    </span><span class="c">#   - &#39;+.google.com&#39;</span><span class="w">
+</span><span class="w">    </span><span class="c">#   - &#39;+.facebook.com&#39;</span><span class="w">
+</span><span class="w">    </span><span class="c">#   - &#39;+.youtube.com&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">proxies</span><span class="p">:</span><span class="w">
+</span><span class="w"></span><span class="c">#这里写代理</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">proxy-groups</span><span class="p">:</span><span class="w">
+</span><span class="w"></span><span class="c">#这里写代理组</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">proxy-providers</span><span class="p">:</span><span class="w">
+</span><span class="w"></span><span class="c">#这里写订阅</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">#这里写规则</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c"># 保留地址 =========================================</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,10.0.0.0/8,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,127.0.0.0/8,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,169.254.0.0/16,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,172.16.0.0/12,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,192.168.0.0/16,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,0.0.0.0/8,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,224.0.0.0/4,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">IP-CIDR,240.0.0.0/4,DIRECT</span><span class="w">
+</span><span class="w">  </span><span class="c"># 最终匹配 =========================================</span><span class="w">
+</span><span class="w">  </span>- <span class="l">GEOIP,CN,DIRECT</span><span class="w">
+</span><span class="w">  </span>- <span class="l">MATCH,Proxy</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1">#重启clash</span>
+sudo systemctl restart clash.service
+<span class="c1">#查看clash状态</span>
+sudo systemctl status clash.service
+</code></pre></td></tr></table>
+</div>
+</div><p>如果 clash 并未启动(即为状态非<code>active(running)</code>)，则可能是配置文件问题</p>
+<h2 id="添加-iptables-规则">添加 iptables 规则</h2>
+<p>添加 iptables 规则，让进入树莓派的流量转发至 clash</p>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>如何避免BT流量被代理<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">若 BT 流量被转发至 clash 可能会导致下载速度变慢，流量不足等问题。下面利用了 BT 流量高端口的特性，仅转发了 1024 以下的端口的流量，若要代理全部流量请去除最后一行<code>--dport 0:1024</code>参数。</div>
+        </div>
+    </div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo iptables -t nat -N clash
+sudo iptables -t nat -A clash -d 0.0.0.0/8 -j RETURN
+sudo iptables -t nat -A clash -d 10.0.0.0/8 -j RETURN
+sudo iptables -t nat -A clash -d 127.0.0.0/8 -j RETURN
+sudo iptables -t nat -A clash -d 169.254.0.0/16 -j RETURN
+sudo iptables -t nat -A clash -d 172.16.0.0/12 -j RETURN
+sudo iptables -t nat -A clash -d 192.168.0.0/16 -j RETURN
+sudo iptables -t nat -A clash -d 224.0.0.0/4 -j RETURN
+sudo iptables -t nat -A clash -d 240.0.0.0/4 -j RETURN
+sudo iptables -t nat -A clash -p tcp -j REDIRECT --to-port <span class="m">1811</span>
+sudo iptables -t nat -A PREROUTING -p tcp --dport 0:1024 -j clash
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>使用TProxy端口<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>因为我的 tproxy 端口不知何种原因，并未被打开，所以上面采用的是 REDIRECT 转发，若要使用 Linux 的 tproxy 特性请参考下面的规则:<br>
+(可用<code>lsof -i:&lt;port&gt;</code>指令查看端口是否开放)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo ip rule add fwmark <span class="m">1</span> table <span class="m">100</span>
+sudo ip route add <span class="nb">local</span> default dev lo table <span class="m">100</span>
+sudo iptables -t mangle -N clash
+sudo iptables -t mangle -A clash -d 0.0.0.0/8 -j RETURN
+sudo iptables -t mangle -A clash -d 10.0.0.0/8 -j RETURN
+sudo iptables -t mangle -A clash -d 127.0.0.0/8 -j RETURN
+sudo iptables -t mangle -A clash -d 169.254.0.0/16 -j RETURN
+sudo iptables -t mangle -A clash -d 172.16.0.0/12 -j RETURN
+sudo iptables -t mangle -A clash -d 192.168.0.0/16 -j RETURN
+sudo iptables -t mangle -A clash -d 224.0.0.0/4 -j RETURN
+sudo iptables -t mangle -A clash -d 240.0.0.0/4 -j RETURN
+sudo iptables -t mangle -A clash -p tcp -j TPROXY --on-port <span class="m">1812</span> --tproxy-mark <span class="m">1</span>
+sudo iptables -t mangle -A PREROUTING -p tcp --dport 0:1024 -j clash
+</code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>代理UDP流量<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>以上规则仅代理了 TCP 流量，若要代理 UDP 流量请追加以下规则</p>
+<ul>
+<li>redir</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo iptables -t nat -A clash -p udp -j REDIRECT --to-port <span class="m">1811</span>
+sudo iptables -t nat -A PREROUTING -p udp -j clash
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>tproxy</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo iptables -t mangle -A clash -p udp -j TPROXY --on-port <span class="m">1812</span> --tproxy-mark <span class="m">1</span>
+sudo iptables -t mangle -A PREROUTING -p udp -j clash
+</code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>
+<h2 id="iptables-规则持久化">iptables 规则持久化</h2>
+<p>安装<code>iptables-persistent</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install iptables-persistent
+</code></pre></td></tr></table>
+</div>
+</div><p>对当前规则进行保存</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo netfilter-persistent save
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="设置路由器dhcp">设置路由器DHCP</h2>
+<p>进入路由器的DHCP设置页面，将网关与DNS服务器改为树莓派的IP地址，然后将手机电脑等设备重新连接路由器即可。</p>
+<p>Enjoy youslef!</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/cover.png" referrerpolicy="no-referrer">
             </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
 <h2 id="iptables-是什么">iptables 是什么</h2>
