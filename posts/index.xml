@@ -100,6 +100,7 @@ sudo sysctl -p
 </span><span class="lnt">15
 </span><span class="lnt">16
 </span><span class="lnt">17
+</span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[Unit]</span>
@@ -111,6 +112,7 @@ sudo sysctl -p
 <span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
 <span class="na">StandardError</span><span class="o">=</span><span class="s">journal</span>
 <span class="na">User</span><span class="o">=</span><span class="s">nobody</span>
+<span class="na">AmbientCapabilities</span><span class="o">=</span><span class="s">CAP_NET_RAW</span>
 <span class="na">AmbientCapabilities</span><span class="o">=</span><span class="s">CAP_NET_BIND_SERVICE</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/opt/clash/clash -d /opt/clash</span>
 <span class="na">ExecReload</span><span class="o">=</span><span class="s">/bin/kill -HUP $MAINPID</span>
@@ -344,8 +346,7 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 0:1024 -j clash
             <i class="icon fas fa-pencil-alt fa-fw"></i>使用TProxy端口<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
-            <div class="admonition-content"><p>因为我的 tproxy 端口不知何种原因，并未被打开，所以上面采用的是 REDIRECT 转发，若要使用 Linux 的 tproxy 特性请参考下面的规则:<br>
-(可用<code>lsof -i:&lt;port&gt;</code>指令查看端口是否开放)</p>
+            <div class="admonition-content"><p>若要使用 Linux 的 tproxy 特性请参考下面的规则:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1

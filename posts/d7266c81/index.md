@@ -75,6 +75,7 @@ After=network.target network-online.target nss-lookup.target
 Type=simple
 StandardError=journal
 User=nobody
+AmbientCapabilities=CAP_NET_RAW
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 ExecStart=/opt/clash/clash -d /opt/clash
 ExecReload=/bin/kill -HUP $MAINPID
@@ -204,8 +205,7 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 0:1024 -j clash
 ```
 
 {{< admonition note "使用TProxy端口" >}}
-因为我的 tproxy 端口不知何种原因，并未被打开，所以上面采用的是 REDIRECT 转发，若要使用 Linux 的 tproxy 特性请参考下面的规则:  
-(可用`lsof -i:<port>`指令查看端口是否开放)
+若要使用 Linux 的 tproxy 特性请参考下面的规则:  
 
 ```shell
 sudo ip rule add fwmark 1 table 100
