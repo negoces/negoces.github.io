@@ -5,7 +5,7 @@ date: 2021-01-19T20:55:39+08:00
 slug: d7266c81
 categories: [经验记录]
 tags: [Linux, Proxy]
-#draft: true
+draft: true
 ---
 
 透明代理的透明即为用户不需要进行任何设置，察觉不到其存在。至于代理是什么，懂得都懂。
