@@ -1,4 +1,105 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Mon, 25 Jan 2021 14:42:03 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 03 Mar 2021 20:54:16 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>树莓派4入门指南(无显示器)</title><link>https://negoces.github.io/posts/04c00a0d/</link><pubDate>Wed, 03 Mar 2021 20:54:16 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/04c00a0d/</guid><description><![CDATA[<h2 id="准备">准备</h2>
+<p>所需材料:</p>
+<ul>
+<li>树莓派*1</li>
+<li>SD卡*1</li>
+<li>树莓派系统镜像*1</li>
+<li>PC*1</li>
+<li>Etcher*1</li>
+<li>活人*1</li>
+</ul>
+<h2 id="制作带有系统的sd卡">制作带有系统的SD卡</h2>
+<p>打开Etcher，点击最左侧的<code>Flash from file</code>，选择你所下载的树莓派镜像，点击中间的<code>Select target</code>，勾选你的SD卡，点击<code>Select</code>，点击最右边的<code>Flash</code>等待烧录完即可。</p>
+<p>烧录完之后系统里面会多出一个命名为<code>boot</code>的分区，在此分区里面创建一个空白的名为<code>ssh</code>的文件以开启ssh远程访问。</p>
+<h2 id="装配你的树莓派">装配你的树莓派</h2>
+<p>插上SD卡，装上散热马甲(如果有的话)，插上网线，插上电源，静待开机</p>
+<h2 id="连接你的树莓派">连接你的树莓派</h2>
+<p>前往你的路由器查看你的树莓派IP，一般主机名就是<code>raspberrypi</code>，我的树莓派分配到的IP是<code>10.0.0.181</code>，用ssh连接(默认用户名:<code>pi</code>密码:<code>raspberry</code>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">ssh pi@10.0.0.181
+<span class="c1"># 进去之后改一下密码</span>
+passwd
+<span class="c1"># 第一个输入当前密码，第二个和第三个是新密码</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="设置镜像并更新">设置镜像并更新</h2>
+<blockquote>
+<p>我的配置用的是testing更新通道，软件比较新但也可能出现bug</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">$ sudo nano /etc/apt/sources.list
+<span class="c1"># 将文件修改如下</span>
+<span class="c1"># /etc/apt/sources.list</span>
+deb https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
+deb https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
+deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">$ sudo nano /etc/apt/sources.list.d/raspi.list
+<span class="c1"># 将文件修改如下</span>
+<span class="c1"># /etc/apt/sources.list.d/raspi.list</span>
+deb https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
+deb-src https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
+sudo apt full-upgrade
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="设置中文">设置中文</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">$ sudo nano /etc/environment
+<span class="c1"># 将文件修改如下</span>
+<span class="nv">LANG</span><span class="o">=</span>zh_CN.UTF-8
+<span class="nv">LANGUAGE</span><span class="o">=</span><span class="s2">&#34;zh_CN:zh:en_US:en&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后重启</p>
+<p>然后，Enjoy youdelf!</p>]]></description></item><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
 <h2 id="第一次接触-linux">第一次接触 Linux</h2>
 <p>我一个接触到的 Linux 叫<a href="https://www.slax.org/" target="_blank" rel="noopener noreffer">Slax</a>，我也不清楚它算不算一个发行版本，总之它是基于 Debian 的。</p>
 <p>当时我高一，上的是封闭式学校，不给带电子产品，一周下来唯一能接触电子产品的时候便是微机课。因为平时的高强度学习，微机课一般都被我们当作放松时间(虽然要过会考)，便想着通过机房的电脑玩些什么。然而学校的老师们早就想到了这一点，通过路由切断了网络，安装了极域电子教室对 USB 进行管控(虽然后期通过注册表找到了卸载密码)。我曾因为重装家里面电脑的系统在 U 盘写了个老毛桃 PE，于是在微机室的电脑上启动试了一下发现可以启动。但是 PE 在运行时将系统加载到内存上，安装的软件关机之后就没有了。于是我在万恶的百度(当时还不会上谷歌)上面搜索&quot;口袋系统&quot;，我便在搜索结果里面看到了 Slax。<br>
