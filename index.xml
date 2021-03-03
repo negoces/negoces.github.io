@@ -1,4 +1,123 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 03 Mar 2021 20:54:16 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>树莓派4入门指南(无显示器)</title><link>https://negoces.github.io/posts/04c00a0d/</link><pubDate>Wed, 03 Mar 2021 20:54:16 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/04c00a0d/</guid><description><![CDATA[<h2 id="准备">准备</h2>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 03 Mar 2021 21:55:47 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>树莓派4安装Docker</title><link>https://negoces.github.io/posts/%E6%A0%91%E8%8E%93%E6%B4%BE4%E5%AE%89%E8%A3%85docker/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/%E6%A0%91%E8%8E%93%E6%B4%BE4%E5%AE%89%E8%A3%85docker/</guid><description><![CDATA[<h2 id="安装必要工具">安装必要工具</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
+sudo apt install apt-transport-https ca-certificates curl gnupg -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装-docker">安装 Docker</h2>
+<p>下载安装 GPG 密钥</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl -fsSL https://mirror.sjtu.edu.cn/docker-ce/linux/debian/gpg <span class="p">|</span> sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+</code></pre></td></tr></table>
+</div>
+</div><p>添加镜像源</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
+</span><span class="se"></span><span class="s2">&#34;deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirror.sjtu.edu.cn/docker-ce/linux/debian buster stable&#34;</span> <span class="se">\
+</span><span class="se"></span><span class="p">|</span> sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><p>安装 Docker-ce</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="赋予账户可直接操作-docker-的权限">赋予账户可直接操作 Docker 的权限</h2>
+<p>将自己的账户添加到 docker 组</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo usermod -aG docker <span class="nv">$USER</span>
+newgrp docker
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="添加-docker-仓库加速">添加 Docker 仓库加速</h2>
+<p>编辑或新建<code>/etc/docker/daemon.json</code>文件，向其中添加<code>registry-mirrors</code>项，使最终配置类似：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">{</span>
+    <span class="s2">&#34;registry-mirrors&#34;</span>: <span class="o">[</span><span class="s2">&#34;https://docker.mirrors.sjtug.sjtu.edu.cn&#34;</span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="启动-docker-并设置自启">启动 Docker 并设置自启</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl start docker
+sudo systemctl <span class="nb">enable</span> docker
+sudo systemctl status docker
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装-portainer-面板">安装 Portainer 面板</h2>
+<p>为了防止待会部署面板时拉取过慢，我们提前拉取</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker pull portainer/portainer-ce
+</code></pre></td></tr></table>
+</div>
+</div><p>部署面板</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker volume create portainer_data
+docker run -d <span class="se">\
+</span><span class="se"></span>-p 8000:8000 <span class="se">\
+</span><span class="se"></span>-p 9000:9000 <span class="se">\
+</span><span class="se"></span>--name<span class="o">=</span>portainer <span class="se">\
+</span><span class="se"></span>--restart<span class="o">=</span>always <span class="se">\
+</span><span class="se"></span>-v /var/run/docker.sock:/var/run/docker.sock <span class="se">\
+</span><span class="se"></span>-v portainer_data:/data <span class="se">\
+</span><span class="se"></span>portainer/portainer-ce
+</code></pre></td></tr></table>
+</div>
+</div><p>到此为止，Docker 和 Portainer 面板均已部署完毕，可前往<code>&lt;ip&gt;：9000</code>访问面板</p>]]></description></item><item><title>树莓派4入门指南(无显示器)</title><link>https://negoces.github.io/posts/04c00a0d/</link><pubDate>Wed, 03 Mar 2021 20:54:16 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/04c00a0d/</guid><description><![CDATA[<h2 id="准备">准备</h2>
 <p>所需材料:</p>
 <ul>
 <li>树莓派*1</li>
