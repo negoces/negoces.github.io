@@ -1,7 +1,7 @@
 ---
 title: "树莓派4安装Docker"
 date: 2021-03-03T21:55:47+08:00
-slug:
+slug: c0b3720d
 categories: [学习日记]
 tags: [RaspberryPi, Docker]
 ---
