@@ -28,8 +28,8 @@ sudo apt install apt-transport-https ca-certificates curl gnupg -y
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
-</span><span class="se"></span><span class="s2">&#34;deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirror.sjtu.edu.cn/docker-ce/linux/debian buster stable&#34;</span> <span class="se">\
-</span><span class="se"></span><span class="p">|</span> sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+</span><span class="se"></span><span class="s2">&#34;deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirror.sjtu.edu.cn/docker-ce/linux/debian buster stable&#34;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
 </code></pre></td></tr></table>
 </div>
 </div><p>安装 Docker-ce</p>
@@ -39,8 +39,8 @@ sudo apt install apt-transport-https ca-certificates curl gnupg -y
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io -y
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="赋予账户可直接操作-docker-的权限">赋予账户可直接操作 Docker 的权限</h2>
@@ -56,17 +56,21 @@ newgrp docker
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="添加-docker-仓库加速">添加 Docker 仓库加速</h2>
-<p>编辑或新建<code>/etc/docker/daemon.json</code>文件，向其中添加<code>registry-mirrors</code>项，使最终配置类似：</p>
+<p>编辑或新建<code>/etc/docker/daemon.json</code>文件，向其中添加<code>registry-mirrors</code>项</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">{</span>
-    <span class="s2">&#34;registry-mirrors&#34;</span>: <span class="o">[</span><span class="s2">&#34;https://docker.mirrors.sjtug.sjtu.edu.cn&#34;</span><span class="o">]</span>
-<span class="o">}</span>
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
+</span><span class="se"></span><span class="s1">&#39;{
+</span><span class="s1">    &#34;registry-mirrors&#34;: [&#34;https://docker.mirrors.sjtug.sjtu.edu.cn&#34;]
+</span><span class="s1">}&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/docker/daemon.json &gt; /dev/null
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="启动-docker-并设置自启">启动 Docker 并设置自启</h2>
@@ -121,19 +125,39 @@ docker run -d <span class="se">\
 <p>所需材料:</p>
 <ul>
 <li>树莓派*1</li>
-<li>SD卡*1</li>
+<li>SD 卡*1</li>
 <li>树莓派系统镜像*1</li>
 <li>PC*1</li>
 <li>Etcher*1</li>
 <li>活人*1</li>
 </ul>
-<h2 id="制作带有系统的sd卡">制作带有系统的SD卡</h2>
-<p>打开Etcher，点击最左侧的<code>Flash from file</code>，选择你所下载的树莓派镜像，点击中间的<code>Select target</code>，勾选你的SD卡，点击<code>Select</code>，点击最右边的<code>Flash</code>等待烧录完即可。</p>
-<p>烧录完之后系统里面会多出一个命名为<code>boot</code>的分区，在此分区里面创建一个空白的名为<code>ssh</code>的文件以开启ssh远程访问。</p>
+<h2 id="制作带有系统的-sd-卡">制作带有系统的 SD 卡</h2>
+<p>打开 Etcher，点击最左侧的<code>Flash from file</code>，选择你所下载的树莓派镜像，点击中间的<code>Select target</code>，勾选你的 SD 卡，点击<code>Select</code>，点击最右边的<code>Flash</code>等待烧录完即可。</p>
+<p>烧录完之后系统里面会多出一个命名为<code>boot</code>的分区，在此分区里面创建一个空白的名为<code>ssh</code>的文件以开启 ssh 远程访问。</p>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>使用USB启动<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>一、更新<code>eeprom</code></p>
+<ol>
+<li>准备一张 SD 卡，格式化成 FAT32 格式</li>
+<li>前往<a href="https://github.com/raspberrypi/rpi-eeprom/releases/" target="_blank" rel="noopener noreffer">Github</a>下载<code>rpi-boot-eeprom-recovery-xxx.zip</code>(要求 vl805 以上的版本)</li>
+<li>将 zip 内的文件解压到 SD 卡内</li>
+<li>将 SD 卡插入树莓派，插电</li>
+<li>等待一段时间，当绿灯开始规律闪烁时则表示更新完毕</li>
+</ol>
+<p>二、制作 USB 启动镜像</p>
+<ul>
+<li>与制作 SD 卡镜像一样，把勾选 SD 卡改为勾选 USB 设备即可</li>
+</ul>
+</div>
+        </div>
+    </div>
 <h2 id="装配你的树莓派">装配你的树莓派</h2>
-<p>插上SD卡，装上散热马甲(如果有的话)，插上网线，插上电源，静待开机</p>
+<p>插上 SD 卡(U 盘)，装上散热马甲(如果有的话)，插上网线，插上电源，静待开机</p>
 <h2 id="连接你的树莓派">连接你的树莓派</h2>
-<p>前往你的路由器查看你的树莓派IP，一般主机名就是<code>raspberrypi</code>，我的树莓派分配到的IP是<code>10.0.0.181</code>，用ssh连接(默认用户名:<code>pi</code>密码:<code>raspberry</code>)</p>
+<p>前往你的路由器查看你的树莓派 IP，一般主机名就是<code>raspberrypi</code>，我的树莓派分配到的 IP 是<code>10.0.0.181</code>，用 ssh 连接(默认用户名:<code>pi</code>密码:<code>raspberry</code>)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -150,8 +174,9 @@ passwd
 </div>
 </div><h2 id="设置镜像并更新">设置镜像并更新</h2>
 <blockquote>
-<p>我的配置用的是testing更新通道，软件比较新但也可能出现bug</p>
+<p>我的配置用的是 testing 更新通道，软件比较新但也可能出现 bug</p>
 </blockquote>
+<p>设置 Debian 仓库镜像</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -165,18 +190,19 @@ passwd
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">$ sudo nano /etc/apt/sources.list
-<span class="c1"># 将文件修改如下</span>
-<span class="c1"># /etc/apt/sources.list</span>
-deb https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
-deb https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
-deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
+</span><span class="se"></span><span class="s2">&#34;# /etc/apt/sources.list
+</span><span class="s2">deb https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
+</span><span class="s2">deb https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
+</span><span class="s2">deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
+</span><span class="s2">deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
+</span><span class="s2">deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
+</span><span class="s2">deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free&#34;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/apt/sources.list &gt; /dev/null
 </code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div><p>设置 RaspberryPi 仓库镜像</p>
+<div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -185,21 +211,22 @@ deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main c
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">$ sudo nano /etc/apt/sources.list.d/raspi.list
-<span class="c1"># 将文件修改如下</span>
-<span class="c1"># /etc/apt/sources.list.d/raspi.list</span>
-deb https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
-deb-src https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
+</span><span class="se"></span><span class="s2">&#34;# /etc/apt/sources.list.d/raspi.list
+</span><span class="s2">deb https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
+</span><span class="s2">deb-src https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main&#34;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/apt/sources.list.d/raspi.list &gt; /dev/null
 </code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div class="chroma">
+</div><p>对系统镜像全量更新</p>
+<div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
-sudo apt full-upgrade
+sudo apt full-upgrade -y
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="设置中文">设置中文</h2>
@@ -211,14 +238,14 @@ sudo apt full-upgrade
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">$ sudo nano /etc/environment
-<span class="c1"># 将文件修改如下</span>
-<span class="nv">LANG</span><span class="o">=</span>zh_CN.UTF-8
-<span class="nv">LANGUAGE</span><span class="o">=</span><span class="s2">&#34;zh_CN:zh:en_US:en&#34;</span>
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
+</span><span class="se"></span><span class="s1">&#39;LANG=zh_CN.UTF-8
+</span><span class="s1">LANGUAGE=&#34;zh_CN:zh:en_US:en&#34;&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/environment &gt; /dev/null
 </code></pre></td></tr></table>
 </div>
 </div><p>然后重启</p>
-<p>然后，Enjoy youdelf!</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
+<p>然后，Enjoy youself!</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/cover.png" referrerpolicy="no-referrer">
             </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
 <h2 id="iptables-是什么">iptables 是什么</h2>
