@@ -103,3 +103,24 @@ sudo tee /etc/environment > /dev/null
 然后重启
 
 然后，Enjoy youself!
+
+{{< admonition note "小技巧" >}}
+
+#### 磁盘测速
+
+```shell
+dd if=/dev/zero of=./test.dbf bs=512k count=1024 conv=fdatasync
+```
+
+将会在当前目录写入一个 512MiB 的`test.dbf`文件来测试写入速度
+
+#### 查看温度
+
+```shell
+# 方法一：直接查看系统文件
+cat /sys/class/thermal/thermal_zone0/temp
+# 方法二：通过vcgencmd查看
+vcgencmd measure_temp
+```
+
+{{< /admonition >}}
