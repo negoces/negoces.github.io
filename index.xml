@@ -245,7 +245,40 @@ sudo apt full-upgrade -y
 </code></pre></td></tr></table>
 </div>
 </div><p>然后重启</p>
-<p>然后，Enjoy youself!</p>]]></description></item><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
+<p>然后，Enjoy youself!</p>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>小技巧<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><h4 id="磁盘测速">磁盘测速</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">dd <span class="k">if</span><span class="o">=</span>/dev/zero <span class="nv">of</span><span class="o">=</span>./test.dbf <span class="nv">bs</span><span class="o">=</span>512k <span class="nv">count</span><span class="o">=</span><span class="m">1024</span> <span class="nv">conv</span><span class="o">=</span>fdatasync
+</code></pre></td></tr></table>
+</div>
+</div><p>将会在当前目录写入一个 512MiB 的<code>test.dbf</code>文件来测试写入速度</p>
+<h4 id="查看温度">查看温度</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 方法一：直接查看系统文件</span>
+cat /sys/class/thermal/thermal_zone0/temp
+<span class="c1"># 方法二：通过vcgencmd查看</span>
+vcgencmd measure_temp
+</code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>]]></description></item><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
 <h2 id="第一次接触-linux">第一次接触 Linux</h2>
 <p>我一个接触到的 Linux 叫<a href="https://www.slax.org/" target="_blank" rel="noopener noreffer">Slax</a>，我也不清楚它算不算一个发行版本，总之它是基于 Debian 的。</p>
 <p>当时我高一，上的是封闭式学校，不给带电子产品，一周下来唯一能接触电子产品的时候便是微机课。因为平时的高强度学习，微机课一般都被我们当作放松时间(虽然要过会考)，便想着通过机房的电脑玩些什么。然而学校的老师们早就想到了这一点，通过路由切断了网络，安装了极域电子教室对 USB 进行管控(虽然后期通过注册表找到了卸载密码)。我曾因为重装家里面电脑的系统在 U 盘写了个老毛桃 PE，于是在微机室的电脑上启动试了一下发现可以启动。但是 PE 在运行时将系统加载到内存上，安装的软件关机之后就没有了。于是我在万恶的百度(当时还不会上谷歌)上面搜索&quot;口袋系统&quot;，我便在搜索结果里面看到了 Slax。<br>
