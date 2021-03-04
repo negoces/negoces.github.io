@@ -12,26 +12,42 @@ tags: [RaspberryPi]
 ## 准备
 
 所需材料:
-+ 树莓派*1
-+ SD卡*1
-+ 树莓派系统镜像*1
-+ PC*1
-+ Etcher*1
-+ 活人*1
 
-## 制作带有系统的SD卡
+- 树莓派\*1
+- SD 卡\*1
+- 树莓派系统镜像\*1
+- PC\*1
+- Etcher\*1
+- 活人\*1
 
-打开Etcher，点击最左侧的`Flash from file`，选择你所下载的树莓派镜像，点击中间的`Select target`，勾选你的SD卡，点击`Select`，点击最右边的`Flash`等待烧录完即可。
+## 制作带有系统的 SD 卡
 
-烧录完之后系统里面会多出一个命名为`boot`的分区，在此分区里面创建一个空白的名为`ssh`的文件以开启ssh远程访问。
+打开 Etcher，点击最左侧的`Flash from file`，选择你所下载的树莓派镜像，点击中间的`Select target`，勾选你的 SD 卡，点击`Select`，点击最右边的`Flash`等待烧录完即可。
+
+烧录完之后系统里面会多出一个命名为`boot`的分区，在此分区里面创建一个空白的名为`ssh`的文件以开启 ssh 远程访问。
+
+{{< admonition note "使用USB启动" >}}
+一、更新`eeprom`
+
+1. 准备一张 SD 卡，格式化成 FAT32 格式
+2. 前往[Github](https://github.com/raspberrypi/rpi-eeprom/releases/)下载`rpi-boot-eeprom-recovery-xxx.zip`(要求 vl805 以上的版本)
+3. 将 zip 内的文件解压到 SD 卡内
+4. 将 SD 卡插入树莓派，插电
+5. 等待一段时间，当绿灯开始规律闪烁时则表示更新完毕
+
+二、制作 USB 启动镜像
+
+- 与制作 SD 卡镜像一样，把勾选 SD 卡改为勾选 USB 设备即可
+
+{{< /admonition >}}
 
 ## 装配你的树莓派
 
-插上SD卡，装上散热马甲(如果有的话)，插上网线，插上电源，静待开机
+插上 SD 卡(U 盘)，装上散热马甲(如果有的话)，插上网线，插上电源，静待开机
 
 ## 连接你的树莓派
 
-前往你的路由器查看你的树莓派IP，一般主机名就是`raspberrypi`，我的树莓派分配到的IP是`10.0.0.181`，用ssh连接(默认用户名:`pi`密码:`raspberry`)
+前往你的路由器查看你的树莓派 IP，一般主机名就是`raspberrypi`，我的树莓派分配到的 IP 是`10.0.0.181`，用 ssh 连接(默认用户名:`pi`密码:`raspberry`)
 
 ```shell
 ssh pi@10.0.0.181
@@ -42,42 +58,48 @@ passwd
 
 ## 设置镜像并更新
 
-> 我的配置用的是testing更新通道，软件比较新但也可能出现bug
+> 我的配置用的是 testing 更新通道，软件比较新但也可能出现 bug
+
+设置 Debian 仓库镜像
 
 ```shell
-$ sudo nano /etc/apt/sources.list
-# 将文件修改如下
-# /etc/apt/sources.list
+echo \
+"# /etc/apt/sources.list
 deb https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
 deb https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
 deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
 deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
 deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free" | \
+sudo tee /etc/apt/sources.list > /dev/null
 ```
 
+设置 RaspberryPi 仓库镜像
+
 ```shell
-$ sudo nano /etc/apt/sources.list.d/raspi.list
-# 将文件修改如下
-# /etc/apt/sources.list.d/raspi.list
+echo \
+"# /etc/apt/sources.list.d/raspi.list
 deb https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
-deb-src https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
+deb-src https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main" | \
+sudo tee /etc/apt/sources.list.d/raspi.list > /dev/null
 ```
+
+对系统镜像全量更新
 
 ```shell
 sudo apt update
-sudo apt full-upgrade
+sudo apt full-upgrade -y
 ```
 
 ## 设置中文
 
 ```shell
-$ sudo nano /etc/environment
-# 将文件修改如下
-LANG=zh_CN.UTF-8
-LANGUAGE="zh_CN:zh:en_US:en"
+echo \
+'LANG=zh_CN.UTF-8
+LANGUAGE="zh_CN:zh:en_US:en"' | \
+sudo tee /etc/environment > /dev/null
 ```
 
 然后重启
 
-然后，Enjoy youdelf!
+然后，Enjoy youself!

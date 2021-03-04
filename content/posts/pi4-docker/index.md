@@ -27,15 +27,15 @@ curl -fsSL https://mirror.sjtu.edu.cn/docker-ce/linux/debian/gpg | sudo gpg --de
 
 ```shell
 echo \
-"deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirror.sjtu.edu.cn/docker-ce/linux/debian buster stable" \
-| sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+"deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirror.sjtu.edu.cn/docker-ce/linux/debian buster stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
 安装 Docker-ce
 
 ```shell
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io -y
 ```
 
 ## 赋予账户可直接操作 Docker 的权限
@@ -49,12 +49,14 @@ newgrp docker
 
 ## 添加 Docker 仓库加速
 
-编辑或新建`/etc/docker/daemon.json`文件，向其中添加`registry-mirrors`项，使最终配置类似：
+编辑或新建`/etc/docker/daemon.json`文件，向其中添加`registry-mirrors`项
 
 ```shell
-{
+echo \
+'{
     "registry-mirrors": ["https://docker.mirrors.sjtug.sjtu.edu.cn"]
-}
+}' | \
+sudo tee /etc/docker/daemon.json > /dev/null
 ```
 
 ## 启动 Docker 并设置自启
