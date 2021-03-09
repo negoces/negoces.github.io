@@ -142,7 +142,7 @@ theme = "loveit"
       # 是否显示社交账号
       social = true
       # 免责声明 (支持 HTML 格式)
-      disclaimer = '旧博客：<a href="https://negoces.gitee.io/">negoces.gitee.io</a>'
+      disclaimer = '现实中我们用真名说假话，网络中我们用假名说真话'
     # 主页文章列表
     [params.home.posts]
       enable = true
@@ -593,4 +593,12 @@ theme = "loveit"
     name = "凡人名言"
     url = "/quot/"
     title = "凡人名言"
+    weight = 6
+  [[menu.main]]
+    identifier = "note"
+    pre = "📋"
+    post = ""
+    name = "随手记"
+    url = "/note/"
+    title = "随手记"
     weight = 6
