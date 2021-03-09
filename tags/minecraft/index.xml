@@ -1,0 +1,203 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Minecraft - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/minecraft/</link><description>Minecraft - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 06 Jun 2020 20:41:33 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/minecraft/" rel="self" type="application/rss+xml"/><item><title>Minecraft 服务端种类</title><link>https://negoces.github.io/posts/d9828d29/</link><pubDate>Sat, 06 Jun 2020 20:41:33 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/d9828d29/</guid><description><![CDATA[<p>现在网络上的我的世界服务端有许多，那么他们都有些什么特点呢</p>
+<h2 id="快速入门">快速入门</h2>
+<p>底下那么一大坨认真看的人我觉得不多，直接列举吧</p>
+<ul>
+<li>插件服
+<ul>
+<li>Bukkit 插件服
+<ul>
+<li><a href="https://www.spigotmc.org/" target="_blank" rel="noopener noreffer">SpigotMC</a></li>
+<li><a href="https://papermc.io/" target="_blank" rel="noopener noreffer">PaperMC</a></li>
+</ul>
+</li>
+<li>Sponge 插件服
+<ul>
+<li><a href="https://www.spongepowered.org/" target="_blank" rel="noopener noreffer">SpongeVanilla</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Mod服
+<ul>
+<li>Forge Mod服
+<ul>
+<li>官方 + <a href="https://files.minecraftforge.net/" target="_blank" rel="noopener noreffer">Forge</a></li>
+</ul>
+</li>
+<li>Fabric Mod服
+<ul>
+<li>官方 + <a href="https://fabricmc.net/" target="_blank" rel="noopener noreffer">Fabric</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>混合型
+<ul>
+<li>Forge + Sponge (Mod+插件)
+<ul>
+<li><a href="https://www.spongepowered.org/" target="_blank" rel="noopener noreffer">SpongeForge</a>(本质是Mod，依赖Forge)</li>
+</ul>
+</li>
+<li>Forge + Bukkit (Mod+插件)
+<ul>
+<li><a href="http://catserver.moe/" target="_blank" rel="noopener noreffer">CatServer</a>(存在兼容性问题，仅支持1.12.2)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>注:无论是那种服务端，插件放在<code>plugins</code>文件夹，模组放在<code>mods</code>文件夹。上面说过SpongeForge本质是模组，所以SpongeForge.jar不能直接启动，而是放在<code>mods</code>文件夹，sponge插件放在<code>plugins</code>文件夹</p>
+<h2 id="知识普及">知识普及</h2>
+<h3 id="api是啥">API是啥</h3>
+<p>API（Application Programming Interface，应用程序接口）是一些预先定义的函数，或指软件系统不同组成部分衔接的约定。用来提供应用程序与开发人员基于某软件或硬件得以访问的一组例程，而又无需访问原码，或理解内部工作机制的细节。——摘自百度百科</p>
+<p>简单来说就是给模组、插件开发者留的一些功能实现接口。</p>
+<h2 id="minecraft现在有哪些api">Minecraft现在有哪些API</h2>
+<p>这些API不是官方提供的，而是修改官方的服务端实现的，下面列举一下</p>
+<h3 id="forge">Forge</h3>
+<p>玩mod的人都知道，<a href="https://files.minecraftforge.net/" target="_blank" rel="noopener noreffer">Forge</a>是一个模组(mod)API，可以让我的世界拥有更多的方块和玩法，典型的例子有<a href="https://www.industrial-craft.net/" target="_blank" rel="noopener noreffer">工业2</a>，当然也有一些辅助型的mod，比如<a href="https://journeymap.info/Home" target="_blank" rel="noopener noreffer">旅行地图</a></p>
+<h3 id="fabric">Fabric</h3>
+<p>与Forge类似，<a href="https://fabricmc.net/" target="_blank" rel="noopener noreffer">Fabric</a>也是个模组API,与Forge不同的是Fabric是模块化的，主要针对高版本的MC(1.14+)，对Bukkit，Optifine支持友好，加速火把和WorldEdit也都出现了Fabric版本的模组了</p>
+<h3 id="bukkit水桶">Bukkit(水桶)</h3>
+<p>Bukkit是一个服务器插件API，大部分插件都是基于这个API的，比如 基础插件(EssX) 登录插件(Authme) 等等，特点是客户端不需要安装，只要服务端安装就行了。典型代表是CraftBukkit，但是被Mojang咬了一口，现在已经Over了。但是不用担心，大部分API已经被Spigot继承了。</p>
+<h3 id="sponge海绵">Sponge(海绵)</h3>
+<p>这也是一个插件API，他可以建立在原版上，也可以建立在Forge的API之上，使mod和插件同时存在变为可能，也可以单独存在。</p>
+<h3 id="api总结">API总结</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">API名称</th>
+<th style="text-align:left">用途</th>
+<th style="text-align:left">要求</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Forge</td>
+<td style="text-align:left">模组</td>
+<td style="text-align:left">客户端和服务器均要安装</td>
+<td style="text-align:left">加载慢占内存,主流</td>
+</tr>
+<tr>
+<td style="text-align:left">Fabric</td>
+<td style="text-align:left">模组</td>
+<td style="text-align:left">客户端和服务器均要安装</td>
+<td style="text-align:left">新API，支持的模组没Forge多</td>
+</tr>
+<tr>
+<td style="text-align:left">Bukkit</td>
+<td style="text-align:left">插件</td>
+<td style="text-align:left">仅服务端需要安装</td>
+<td style="text-align:left">老牌API，插件多，主流</td>
+</tr>
+<tr>
+<td style="text-align:left">Sponge</td>
+<td style="text-align:left">插件</td>
+<td style="text-align:left">仅服务端需要安装</td>
+<td style="text-align:left">插件没Bukkit多</td>
+</tr>
+</tbody>
+</table>
+<h2 id="服务端介绍">服务端介绍</h2>
+<h3 id="官方服务端">官方服务端</h3>
+<p>官方提供的服务端，在正版启动器和官网能够下载到，不提供任何API，只提供原版的联机能力</p>
+<h3 id="spigotmc">SpigotMC</h3>
+<p>是CraftBukkit的改进版本，提供Bukkit API，作为插件服使用，对性能要求稍微低一点，当然插件多了也吃性能。前面也说了CraftBukkit被咬了一口，Spigot为了避免这种情况所以不提供直接下载，只提供<a href="https://hub.spigotmc.org/jenkins/job/BuildTools/" target="_blank" rel="noopener noreffer">Buildtool下载</a>，用户可以通过此工具自己编译服务端。下面给出一个示例代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">java -jar buildtool.jar --rev 1.15.2
+</code></pre></td></tr></table>
+</div>
+</div><p>注:需要代理</p>
+<h3 id="papermc">PaperMC</h3>
+<p>是SpigotMC的一个改进版本，也提供Bukkit API，插件服，对于性能要求稍高一些</p>
+<h3 id="spongevanilla">SpongeVanilla</h3>
+<p>在原版的基础上提供Sponge API，插件服</p>
+<h3 id="官方fmlforge-mod-loader">官方+FML(Forge Mod Loader)</h3>
+<p>在官方的基础上加上Forge API的支持，可以加mod</p>
+<h3 id="官方fabric">官方+Fabric</h3>
+<p>在官方的基础上加上Fabric API的支持，可以加mod</p>
+<h3 id="官方forgespongeforge">官方+Forge+SpongeForge</h3>
+<p>SpongeForge本质上可以算是一个Mod，在Forge API上面提供Spong API支持，同时支持模组和插件</p>
+<h3 id="catserver">CatServer</h3>
+<p>一个魔改版本，同时支持Forge API和Bukkit API，只支持1.12.2，存在兼容性问题，有时会导致Mod功能失效，例如AE2(应用能源)的空间塔</p>
+<h3 id="服务端总结">服务端总结</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">服务端名称</th>
+<th style="text-align:left">用途</th>
+<th style="text-align:left">要求</th>
+<th style="text-align:left">备注</th>
+<th style="text-align:left">支持版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">官方</td>
+<td style="text-align:left">原版联机</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">All</td>
+</tr>
+<tr>
+<td style="text-align:left">SpigotMC</td>
+<td style="text-align:left">插件服</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">1.8+</td>
+</tr>
+<tr>
+<td style="text-align:left">PaperMC</td>
+<td style="text-align:left">插件服</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">1.8+</td>
+</tr>
+<tr>
+<td style="text-align:left">SpongeVanilla</td>
+<td style="text-align:left">插件服</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">支持插件较少，没Bukkit全</td>
+<td style="text-align:left">1.8+</td>
+</tr>
+<tr>
+<td style="text-align:left">官方+FML</td>
+<td style="text-align:left">模组服</td>
+<td style="text-align:left">客户端需安装Forge及对应模组</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">ALL</td>
+</tr>
+<tr>
+<td style="text-align:left">官方+Fabric</td>
+<td style="text-align:left">模组服</td>
+<td style="text-align:left">客户端需安装Fabric及对应模组</td>
+<td style="text-align:left">支持模组较少</td>
+<td style="text-align:left">1.14+</td>
+</tr>
+<tr>
+<td style="text-align:left">CatServer</td>
+<td style="text-align:left">模组+插件服</td>
+<td style="text-align:left">客户端需安装Forge及对应模组</td>
+<td style="text-align:left">存在不兼容问题</td>
+<td style="text-align:left">1.12.2</td>
+</tr>
+<tr>
+<td style="text-align:left">另类:</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">SpongeForge</td>
+<td style="text-align:left">模组+插件服</td>
+<td style="text-align:left">客户端需安装Forge及对应模组</td>
+<td style="text-align:left">本质是一个模组，需基于Forge，支持插件较少</td>
+<td style="text-align:left">1.8+</td>
+</tr>
+</tbody>
+</table>]]></description></item></channel></rss>

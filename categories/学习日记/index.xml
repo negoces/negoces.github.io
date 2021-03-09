@@ -1,4 +1,548 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>学习日记 - 分类 - NEGOCES's Blog</title><link>https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/</link><description>学习日记 - 分类 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 03 Mar 2021 21:55:47 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/" rel="self" type="application/rss+xml"/><item><title>树莓派4安装Docker</title><link>https://negoces.github.io/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/c0b3720d/</guid><description><![CDATA[<h2 id="安装必要工具">安装必要工具</h2>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>学习日记 - 分类 - NEGOCES's Blog</title><link>https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/</link><description>学习日记 - 分类 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Thu, 04 Mar 2021 20:10:24 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/" rel="self" type="application/rss+xml"/><item><title>树莓派4安装Gitea</title><link>https://negoces.github.io/posts/a6cf258f/</link><pubDate>Thu, 04 Mar 2021 20:10:24 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/a6cf258f/</guid><description><![CDATA[<blockquote>
+<p>此文章依据怎么方便怎么来的准则，并未考虑稳定与性能，切勿用作生产环境！</p>
+</blockquote>
+<h2 id="安装-mariadb">安装 MariaDB</h2>
+<h3 id="拉取-mariadb-镜像">拉取 mariadb 镜像</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker pull mariadb
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="部署-mariadb">部署 mariadb</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker run -d <span class="se">\
+</span><span class="se"></span>--name mariadb <span class="se">\
+</span><span class="se"></span>-p 3306:3306 <span class="se">\
+</span><span class="se"></span>-e <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>&lt;password&gt; <span class="se">\
+</span><span class="se"></span>--restart<span class="o">=</span>always <span class="se">\
+</span><span class="se"></span>mariadb
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装-phpmyadmin">安装 phpMyAdmin</h2>
+<h3 id="拉取-phpmyadmin-镜像">拉取 phpmyadmin 镜像</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker pull phpmyadmin
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="部署-phpmyadmin">部署 phpmyadmin</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker run -d <span class="se">\
+</span><span class="se"></span>--name phpmyadmin <span class="se">\
+</span><span class="se"></span>-p 3380:80 <span class="se">\
+</span><span class="se"></span>-e <span class="nv">PMA_HOST</span><span class="o">=</span>&lt;树莓派IP&gt; <span class="se">\
+</span><span class="se"></span>--restart<span class="o">=</span>always <span class="se">\
+</span><span class="se"></span>phpmyadmin
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>注意：&lt;树莓派 IP&gt;不能填写 127.0.0.1，负责无法连接到数据库</p>
+</blockquote>
+<h2 id="安装-gitea">安装 Gitea</h2>
+<h3 id="创建-gitea-数据库">创建 Gitea 数据库</h3>
+<p>登录<code>&lt;树莓派IP&gt;:3380</code>创建 gitea 用户并创建同名数据库并赋予权限，注意把密码记着</p>
+<h3 id="获取-gitea">获取 Gitea</h3>
+<p>下载地址: <a href="https://dl.gitea.io/gitea/">https://dl.gitea.io/gitea/</a></p>
+<h3 id="安装-git">安装 git</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install git git-lfs -y
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="创建文件夹并复制文件">创建文件夹并复制文件</h3>
+<p>创建文件夹</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo mkdir /opt/gitea
+sudo mkdir /opt/gitea/etc
+sudo mkdir /opt/gitea/home
+sudo mkdir /opt/gitea/var
+sudo mkdir /opt/gitea/var/lib
+</code></pre></td></tr></table>
+</div>
+</div><p>复制文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo mv gitea /opt/gitea
+</code></pre></td></tr></table>
+</div>
+</div><p>设置权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo chown git:git -R /opt/gitea
+sudo chmod <span class="m">775</span> -R /opt/gitea
+</code></pre></td></tr></table>
+</div>
+</div><p>最终目录结构</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">/opt/gitea/
+├── etc
+├── gitea
+├── home
+└── var
+    └── lib
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="创建-git-用户">创建 git 用户</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo useradd -d /opt/gitea/home -s /bin/bash -U git
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="创建-service-文件">创建 service 文件</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
+</span><span class="se"></span><span class="s1">&#39;[Unit]
+</span><span class="s1">Description=Gitea (Git with a cup of tea)
+</span><span class="s1">After=syslog.target
+</span><span class="s1">After=network.target docker.service
+</span><span class="s1">Requires=docker.service
+</span><span class="s1">
+</span><span class="s1">[Service]
+</span><span class="s1">RestartSec=2s
+</span><span class="s1">Type=simple
+</span><span class="s1">User=git
+</span><span class="s1">Group=git
+</span><span class="s1">WorkingDirectory=/opt/gitea/var/lib
+</span><span class="s1">ExecStart=/opt/gitea/gitea web --config /opt/gitea/etc/app.ini
+</span><span class="s1">Restart=always
+</span><span class="s1">Environment=USER=git HOME=/opt/gitea/home GITEA_WORK_DIR=/opt/gitea/var/lib
+</span><span class="s1">CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+</span><span class="s1">AmbientCapabilities=CAP_NET_BIND_SERVICE
+</span><span class="s1">
+</span><span class="s1">[Install]
+</span><span class="s1">WantedBy=multi-user.target&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/systemd/system/gitea.service &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="启动-gitea-并设置自启">启动 gitea 并设置自启</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl start gitea
+sudo systemctl <span class="nb">enable</span> gitea
+sudo systemctl status gitea
+</code></pre></td></tr></table>
+</div>
+</div><p>访问<code>&lt;IP&gt;:3000</code>进行 Gitea 初始化设置</p>
+<h2 id="配置-gitea">配置 Gitea</h2>
+<p>编辑<code>/opt/gitea/etc/app.ini</code>，添加或修改以下内容以解除 release 发布限制</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[attachment]</span>
+<span class="na">ENABLE</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">PATH</span> <span class="o">=</span> <span class="s">/opt/gitea/home/attachments</span>
+<span class="na">ALLOWED_TYPES</span> <span class="o">=</span> <span class="s">&lt;文件格式&gt;</span>
+<span class="na">MAX_SIZE</span> <span class="o">=</span> <span class="s">&lt;文件最大大小,单位M,不需要加&gt;</span>
+<span class="na">MAX_FILES</span> <span class="o">=</span> <span class="s">&lt;文件最大数量&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>关于文件格式:</p>
+<p>查询网址:</p>
+<ul>
+<li><a href="https://filext.com/" target="_blank" rel="noopener noreffer">filext.com</a></li>
+<li><a href="https://tool.oschina.net/commons/" target="_blank" rel="noopener noreffer">OSChina</a></li>
+</ul>
+<p>比如要接受所有文件就填写</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="na">ALLOWED_TYPES</span> <span class="o">=</span> <span class="s">octet-stream</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-nginx-反向代理">配置 Nginx 反向代理</h2>
+<h3 id="安装-nginx">安装 Nginx</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
+sudo apt install nginx -y
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="修改配置">修改配置</h3>
+<p>编辑<code>/etc/nginx/sites-available/default</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name &lt;域名&gt;;
+
+    ssl_certificate &lt;证书路径&gt;;
+    ssl_certificate_key &lt;密钥路径&gt;;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:MozSSL:10m;
+    ssl_session_tickets off;
+
+    # curl https://ssl-config.mozilla.org/ffdhe2048.txt &gt; /path/to/dhparam
+    ssl_dhparam /path/to/dhparam;
+
+    # intermediate configuration
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+
+    # HSTS (ngx_http_headers_module is required) (63072000 seconds)
+    add_header Strict-Transport-Security &#34;max-age=63072000&#34; always;
+
+    client_max_body_size 4096M;
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+    }
+}
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="重启-nginx">重启 Nginx</h3>
+<p>检查配置并更新</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo nginx -t
+sudo systemctl restart nginx
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装-droneci">安装 DroneCI</h2>
+<h3 id="拉取镜像">拉取镜像</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker pull drone/drone:1
+docker pull drone/drone-runner-docker:1
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="生成-rpc-密钥">生成 RPC 密钥</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">openssl rand -hex <span class="m">16</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="部署-droneci">部署 DroneCI</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker run <span class="se">\
+</span><span class="se"></span>--volume<span class="o">=</span>/var/lib/drone:/data <span class="se">\
+</span><span class="se"></span>--env<span class="o">=</span><span class="nv">DRONE_GITEA_SERVER</span><span class="o">={{</span>DRONE_GITEA_SERVER<span class="o">}}</span> <span class="se">\
+</span><span class="se"></span>--env<span class="o">=</span><span class="nv">DRONE_GITEA_CLIENT_ID</span><span class="o">={{</span>DRONE_GITEA_CLIENT_ID<span class="o">}}</span> <span class="se">\
+</span><span class="se"></span>--env<span class="o">=</span><span class="nv">DRONE_GITEA_CLIENT_SECRET</span><span class="o">={{</span>DRONE_GITEA_CLIENT_SECRET<span class="o">}}</span> <span class="se">\
+</span><span class="se"></span>--env<span class="o">=</span><span class="nv">DRONE_RPC_SECRET</span><span class="o">={{</span>DRONE_RPC_SECRET<span class="o">}}</span> <span class="se">\
+</span><span class="se"></span>--env<span class="o">=</span><span class="nv">DRONE_SERVER_HOST</span><span class="o">={{</span>DRONE_SERVER_HOST<span class="o">}}</span> <span class="se">\
+</span><span class="se"></span>--env<span class="o">=</span><span class="nv">DRONE_SERVER_PROTO</span><span class="o">={{</span>DRONE_SERVER_PROTO<span class="o">}}</span> <span class="se">\
+</span><span class="se"></span>--env<span class="o">=</span><span class="nv">DRONE_USER_CREATE</span><span class="o">=</span>username:<span class="o">{{</span>ADMIN_USERNAME<span class="o">}}</span>,admin:true <span class="se">\
+</span><span class="se"></span>--publish<span class="o">=</span>80:80 <span class="se">\
+</span><span class="se"></span>--restart<span class="o">=</span>always <span class="se">\
+</span><span class="se"></span>--detach<span class="o">=</span><span class="nb">true</span> <span class="se">\
+</span><span class="se"></span>--name<span class="o">=</span>drone <span class="se">\
+</span><span class="se"></span>drone/drone:1
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker run -d <span class="se">\
+</span><span class="se"></span>-v /var/run/docker.sock:/var/run/docker.sock <span class="se">\
+</span><span class="se"></span>-e <span class="nv">DRONE_RPC_PROTO</span><span class="o">=</span>https <span class="se">\
+</span><span class="se"></span>-e <span class="nv">DRONE_RPC_HOST</span><span class="o">=</span>drone.company.com <span class="se">\
+</span><span class="se"></span>-e <span class="nv">DRONE_RPC_SECRET</span><span class="o">=</span>super-duper-secret <span class="se">\
+</span><span class="se"></span>-e <span class="nv">DRONE_RUNNER_CAPACITY</span><span class="o">=</span><span class="m">2</span> <span class="se">\
+</span><span class="se"></span>-e <span class="nv">DRONE_RUNNER_NAME</span><span class="o">=</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span> <span class="se">\
+</span><span class="se"></span>-e <span class="nv">DRONE_UI_USERNAME</span><span class="o">=</span>admin <span class="se">\
+</span><span class="se"></span>-e <span class="nv">DRONE_UI_PASSWORD</span><span class="o">=</span>admin <span class="se">\
+</span><span class="se"></span>-p 3200:3000 <span class="se">\
+</span><span class="se"></span>--restart always <span class="se">\
+</span><span class="se"></span>--name runner <span class="se">\
+</span><span class="se"></span>drone/drone-runner-docker:1
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker logs runner
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="配置-nginx-反代">配置 Nginx 反代</h3>
+<p>在<code>/etc/nginx/sites-available/default</code>后面追加</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">server <span class="o">{</span>
+    listen <span class="m">443</span> ssl http2<span class="p">;</span>
+    listen <span class="o">[</span>::<span class="o">]</span>:443 ssl http2<span class="p">;</span>
+
+    server_name &lt;域名&gt;<span class="p">;</span>
+
+    ssl_certificate &lt;证书路径&gt;<span class="p">;</span>
+    ssl_certificate_key &lt;密钥路径&gt;<span class="p">;</span>
+    ssl_session_timeout 1d<span class="p">;</span>
+    ssl_session_cache shared:MozSSL:10m<span class="p">;</span>
+    ssl_session_tickets off<span class="p">;</span>
+
+    <span class="c1"># curl https://ssl-config.mozilla.org/ffdhe2048.txt &gt; /path/to/dhparam</span>
+    ssl_dhparam /path/to/dhparam<span class="p">;</span>
+
+    <span class="c1"># intermediate configuration</span>
+    ssl_protocols TLSv1.2 TLSv1.3<span class="p">;</span>
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384<span class="p">;</span>
+    ssl_prefer_server_ciphers off<span class="p">;</span>
+
+    <span class="c1"># HSTS (ngx_http_headers_module is required) (63072000 seconds)</span>
+    add_header Strict-Transport-Security <span class="s2">&#34;max-age=63072000&#34;</span> always<span class="p">;</span>
+
+    client_max_body_size 4096M<span class="p">;</span>
+    location / <span class="o">{</span>
+        proxy_pass http://127.0.0.1:3100<span class="p">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>Drone 默认会选择 amd64 架构的 runner，但是我们的树莓派是 arm64 的，会导致构建一直处于<code>Pending</code>状态，所以项目的<code>.drone.yml</code>需要指定平台，比如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nn">---</span><span class="w">
+</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">pipeline</span><span class="w">
+</span><span class="w"></span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">docker</span><span class="w">
+</span><span class="w"></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span><span class="w"></span><span class="nt">platform</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">os</span><span class="p">:</span><span class="w"> </span><span class="l">linux</span><span class="w">
+</span><span class="w">  </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l">arm64</span><span class="w">
+</span><span class="w"></span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">build</span><span class="w">
+</span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">golang</span><span class="w">
+</span><span class="w">    </span><span class="nt">commands</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">go build</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>]]></description></item><item><title>树莓派4安装Docker</title><link>https://negoces.github.io/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/c0b3720d/</guid><description><![CDATA[<h2 id="安装必要工具">安装必要工具</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -955,4 +1499,642 @@ curl https://bob:12345@google.com/login
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div>]]></description></item></channel></rss>
+</div>]]></description></item><item><title>Windows 下 MinGW 的选择与安装</title><link>https://negoces.github.io/posts/f1d8b9f4/</link><pubDate>Fri, 12 Jun 2020 23:35:44 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/f1d8b9f4/</guid><description><![CDATA[<p>Windows下安装用于编译的MinGW</p>
+<p><code>注:</code> 经不起折腾的人还是老老实实用<a href="https://sourceforge.net/projects/orwelldevcpp/files/" target="_blank" rel="noopener noreffer">Dev-C++</a>吧，一键安装，现成的UI！</p>
+<h2 id="关于mingw">关于MinGW</h2>
+<h3 id="mingw是什么">MinGW是什么</h3>
+<p>MinGW（Minimalist GNU for Windows），又称mingw32，是将GCC编译器和GNU Binutils移植到Win32平台下的产物，包括一系列头文件（Win32API）、库和可执行文件。</p>
+<p>另有可用于产生32位及64位Windows可执行文件的MinGW-w64项目，是从原本MinGW产生的分支。如今已经独立发展。</p>
+<h3 id="mingw的作用">MinGW的作用</h3>
+<p>GCC支持的语言大多在MinGW也受支持，其中涵盖C、C++、Objective-C、Fortran及Ada。</p>
+<p>对于C语言之外的语言，MinGW使用标准的GNU运行库，如C++使用GNU libstdc++。</p>
+<p>但是MinGW使用Windows中的C运行库。因此用MinGW开发的程序不需要额外的第三方DLL支持就可以直接在Windows下运行，而且也不一定必须遵从GPL许可证。这同时造成了MinGW开发的程序只能使用Win32API和跨平台的第三方库，而缺少POSIX支持，大多数GNU软件无法在不修改源代码的情况下用MinGW编译。</p>
+<h2 id="安装mingw">安装MinGW</h2>
+<p>如果你已经阅读完上面的内容，并且已经准备好安装MinGW了，那就请阅读下面的内容吧！</p>
+<p>我们先不急着下载，我们先搞懂几个概念，当然，你想边看边下载也可以，<a href="https://sourceforge.net/projects/mingw-w64/files/mingw-w64/" target="_blank" rel="noopener noreffer">下载链接</a></p>
+<h3 id="系统架构的选择">系统架构的选择</h3>
+<p>这取决于你的电脑，Windows7用户请打开<code>系统属性</code>，Windows10在<code>设置</code>-&gt;<code>系统</code>-&gt;<code>关于</code>-&gt;<code>系统信息</code>，请看到<code>系统类型</code>这一行，这里会告诉你你的系统是<code>64位</code>还是<code>32位</code>，如果是64位请选择<code>x86_64</code>，32位请选择<code>i686</code></p>
+<h3 id="系统接口协议的选择">系统接口协议的选择</h3>
+<blockquote>
+<p>这里我查了好久，垃圾百度上面的东西太杂乱了，根本看不出什么名堂出来，最终还是去查Wiki了，链接：<a href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%A7%BB%E6%A4%8D%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3" target="_blank" rel="noopener noreffer">POSIX</a> <a href="https://zh.wikipedia.org/wiki/Windows_API" target="_blank" rel="noopener noreffer">Win32</a> (可能需要代理)</p>
+</blockquote>
+<p>共有两种选择，<code>posix</code>和<code>win32</code>。</p>
+<p>POSIX(可移植操作系统接口,Portable Operating System Interface)是IEEE为要在各种UNIX操作系统(Linux、MacOS)上运行软件，而定义API的一系列互相关联的标准的总称。微软的Windows NT声称部分实现了POSIX标准。</p>
+<p>Windows操作系统应用程序接口（Windows API），有非正式的简称法为WinAPI，是微软对于Windows操作系统中可用的核心应用程序编程接口的称法。它被设计为各种语言的程序调用，也是应用软件与Windows系统最直接的交互方式。大多数驱动程序需要对Windows系统更底层次访问接口，由所用版本的Windows的Native API来提供接口。</p>
+<p>总的来说就是，Win32是Windows原生API，POSIX是UNIX的API，Windows仅部分支持，但是好像最大的区别在于线程上面，posix支持C11的多线程功能，支持<code>std::thread</code>，而win32不支持，调用的是Windows的API，这影响你以后写代码时多线程的实现方法，这个你自己选择吧，你偏向于原生的C标准就选<code>posix</code>，面向Windows编程就选<code>win32</code>，如果你还是选择困难的话，毕竟我们最常用的还是Windows，选win32也没什么问题</p>
+<h3 id="异常处理模型的选择">异常处理模型的选择</h3>
+<p>异常处理模型共三种，<code>seh</code>、<code>dwarf</code>和<code>sjlj</code>，我列一个表你自己选吧.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">64位</th>
+<th style="text-align:center">32位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">性能</td>
+<td style="text-align:center">seh</td>
+<td style="text-align:center">dwarf</td>
+</tr>
+<tr>
+<td style="text-align:center">稳定</td>
+<td style="text-align:center">sjlj</td>
+<td style="text-align:center">sjlj</td>
+</tr>
+</tbody>
+</table>
+<p>如果你想深入了解，下面是引自Wiki的话</p>
+<p>MinGW编译器在实现异常机制时，有三种可选方式：</p>
+<ul>
+<li>SJLJ (setjmp/longjmp)：可用于32/64位，但不是零代价的：即使不抛出异常，仍会有一定的性能损失（在最差情形下~15%）。</li>
+<li>DWARF (DW2, dwarf-2)：只能用于32位，没有永久的运行时开销，需要调用栈是dwarf-enabled，这意味着异常对于Windows system DLLs或Visual Studio编译的DLLs的异常不能被抛出。</li>
+<li>SEH：零花销。</li>
+</ul>
+<h3 id="下载mingw">下载MinGW</h3>
+<p><a href="https://sourceforge.net/projects/mingw-w64/files/mingw-w64/" target="_blank" rel="noopener noreffer">下载链接</a></p>
+<p>至于版本，选最新的吧，支持的标准也新一点</p>
+<p>下载的时候不要看见大大的绿色按钮就点，往下面翻一下，你会看到这个链接</p>
+<ul>
+<li>MinGW-W64-install.exe</li>
+</ul>
+<p>但是，不要点他，这是在线安装程序，安装时下载的速度能让你绝望，继续往下翻，看到这些链接，在这里面选</p>
+<ul>
+<li>x86_64-posix-sjlj</li>
+<li>x86_64-posix-seh</li>
+<li>x86_64-win32-sjlj</li>
+<li>x86_64-win32-seh</li>
+<li>i686-posix-sjlj</li>
+<li>i686-posix-dwarf</li>
+<li>i686-win32-sjlj</li>
+<li>i686-win32-dwarf</li>
+</ul>
+<p>下载可能会有点慢，那就试试其他下载工具，某雷，或者其他多线程下载器。</p>
+<h3 id="解压mingw">解压MinGW</h3>
+<p>下载完之后你会得到一个7z压缩包，下面的软件都可以解压，自己选一个吧(我也不知道哪个好用，我用的是7-zip)</p>
+<ul>
+<li>7-Zip和p7zip</li>
+<li>IZArc</li>
+<li>PowerArchiver</li>
+<li>QuickZip</li>
+<li>Squeez</li>
+<li>TUGZip</li>
+<li>WinRAR</li>
+<li>ZipGenius</li>
+<li>EZ 7z</li>
+<li>Bandizip</li>
+</ul>
+<p>解压过后得到一个文件夹，重命名一下，为<code>mingw-w64</code>，然后确保这个目录下面有<code>bin</code>文件夹，然后将<code>mingw-w64</code>移动到你想要存放的位置，比如我就放在了D盘，路径为<code>D:\buildtool\mingw-w64</code></p>
+<h3 id="设置环境变量">设置环境变量</h3>
+<p>解压过后是不能直接用的，我们要把他添加到环境变量里面去，打开<code>设置</code>-&gt;<code>系统</code>-&gt;<code>关于</code>-&gt;<code>系统信息</code>-&gt;<code>高级系统设置</code>-&gt;<code>环境变量</code>，你会注意到有上下两个框。上面的是用户变量，只在自己的用户内有效，更改之后注销重新登录就能生效。下面的是系统变量，全局有效，更改之后需要重启才能生效，当然也有其他方法能让他立即生效。方法是，在改完之后保存，然后打开一个命令行窗口，输入<code>set Path=C:</code>，像更新什么变量就把Path换成那个变量名，然后关闭命令行窗口即可。</p>
+<p>然后我们添加mingw-w64到系统变量</p>
+<p>建议按照下面这张表添加变量(多个值之间用<code>;</code>分隔)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">变量名</th>
+<th style="text-align:left">变量值</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">MINGW_HOME</td>
+<td style="text-align:left">D:\buildtool\mingw-w64\</td>
+<td style="text-align:left">根据自己的存放位置填写</td>
+</tr>
+<tr>
+<td style="text-align:left">Path</td>
+<td style="text-align:left">%MINGW_HOME%\bin\</td>
+<td style="text-align:left">追加，而不是覆盖，注意<code>;</code>分隔</td>
+</tr>
+<tr>
+<td style="text-align:left">C_INCLUDE_PATH</td>
+<td style="text-align:left">%MINGW_HOME%\include\;%MINGW_HOME%\lib\gcc\x86_64-w64-mingw32\8.1.0\include\</td>
+<td style="text-align:left">第二个值gcc后面的版本号需自己更改一下</td>
+</tr>
+<tr>
+<td style="text-align:left">CPLUS_INCLUDE_PATH</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">C++的Include目录</td>
+</tr>
+<tr>
+<td style="text-align:left">LIBRARY_PATH</td>
+<td style="text-align:left">%MINGW_HOME%\lib\</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="验证安装是否成功">验证安装是否成功</h3>
+<p>改完变量之后最好重启一下</p>
+<p>打开命令行，输入<code>gcc -v</code>如果最后一行显示下列字符则表示安装成功，版本可能不一样。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">gcc version 8.1.0 <span class="o">(</span>x86_64-win32-seh-rev0, Built by MinGW-W64 project<span class="o">)</span>
+</code></pre></td></tr></table>
+</div>
+</div>]]></description></item><item><title>添加Windows右键菜单选项</title><link>https://negoces.github.io/posts/b7b8efff/</link><pubDate>Fri, 05 Jun 2020 23:50:32 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/b7b8efff/</guid><description><![CDATA[<p>在右键菜单里面添加你想要的内容，让你的操作更加流畅方便，也可以删除一些失效的快捷方式</p>
+<h2 id="直接将选项添加至右键菜单">直接将选项添加至右键菜单</h2>
+<p>先打开注册表编辑器(<code>win</code>+<code>R</code>键，输入<code>regedit</code>，确定)</p>
+<p>定位到下表里面的位置</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\*\shell\</code></td>
+<td style="text-align:left">任意文件上的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\</code></td>
+<td style="text-align:left">文件夹空白处的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\shell\</code></td>
+<td style="text-align:left">文件夹上的右键菜单</td>
+</tr>
+</tbody>
+</table>
+<p>创建一个<code>项</code>，名称随意，尽量为英文且自己能看懂，修改该项的默认值，<code>默认值即为显示名称</code>,如需图标则创建字串符值<code>Icon</code>，值为图标的绝对路径，然后在刚刚创建的项里面再创建一个<code>项</code>名称一定为<code>command</code>，该项的默认值即为指令。</p>
+<p>上面的一段话可能有点绕，下面来个例子(创建<code>在此处打开CMD</code>)：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCMD\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">在此处打开CMD</td>
+<td style="text-align:left">显示名称</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCMD\Icon</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">显示图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCMD\command\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">操作&amp;指令</td>
+</tr>
+</tbody>
+</table>
+<h2 id="创建二级菜单">创建二级菜单</h2>
+<h3 id="将指令注册进系统">将指令注册进系统</h3>
+<p>将注册表定位到<code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\</code>，在里面创建<code>项</code>例子如下(例子:在此处打开CMD)(表中路径有省略)：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left"><code>空</code></td>
+<td style="text-align:left">无作用</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\icon</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">显示图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\MUIVerb</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">在此处打开CMD</td>
+<td style="text-align:left">显示名称</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\command\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">操作&amp;指令</td>
+</tr>
+</tbody>
+</table>
+<h3 id="在想要的地方创建菜单项">在想要的地方创建菜单项</h3>
+<p>定位到下表位置(对，就是第一节的那张表)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\*\shell\</code></td>
+<td style="text-align:left">任意文件上的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\</code></td>
+<td style="text-align:left">文件夹空白处的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\shell\</code></td>
+<td style="text-align:left">文件夹上的右键菜单</td>
+</tr>
+</tbody>
+</table>
+<p>然后直接上表吧，更直观一点</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left"><code>空</code></td>
+<td style="text-align:left">无作用</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\Icon</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">显示图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\MUIVerb</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">快捷操作</td>
+<td style="text-align:left">显示名称</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\subcommands</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">opencmd;</td>
+<td style="text-align:left">菜单项目</td>
+</tr>
+</tbody>
+</table>
+<p><code>注</code>:<code>subcommands</code>里面可以添加多项，用<code>;</code>分隔，比如：<code>command1;command2</code>,如果想对项目进行分隔分类可以使用<code>|</code>,比如<code>command1;|;command2;command3</code></p>]]></description></item><item><title>从零开始搭建Hexo博客</title><link>https://negoces.github.io/posts/4b1b8c9f/</link><pubDate>Thu, 16 Apr 2020 22:13:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4b1b8c9f/</guid><description><![CDATA[<p>教你从零开始搭建自己的Hexo博客</p>
+<h2 id="简介">简介</h2>
+<h3 id="什么是hexo">什么是Hexo</h3>
+<blockquote>
+<p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
+</blockquote>
+<h3 id="安装前提">安装前提</h3>
+<p>安装 Hexo 相当简单，只需要先安装下列应用程序即可：</p>
+<ul>
+<li>Node.js (Node.js 版本需不低于 8.10，建议使用 Node.js 10.0 及以上版本)</li>
+<li>Git
+如果您的电脑中已经安装上述必备程序，那么恭喜您！你可以直接前往 安装 Hexo 步骤。</li>
+</ul>
+<h2 id="安装">安装</h2>
+<h3 id="安装git">安装git</h3>
+<blockquote>
+<p>Git 是一个开源的分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目。</p>
+</blockquote>
+<p><a href="https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%AE%89%E8%A3%85-Git" target="_blank" rel="noopener noreffer">Git官方安装指南</a></p>
+<p>安装完成后可以打开<code>cmd</code>(命令提示符)或<code>PowerShell</code>执行下面的指令检查<code>git</code>是否安装成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">git version
+</code></pre></td></tr></table>
+</div>
+</div><p>如果返回</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">git version xxx.xxx
+</code></pre></td></tr></table>
+</div>
+</div><p>则表示<code>git</code>安装成功</p>
+<h3 id="安装nodejs">安装Node.JS</h3>
+<blockquote>
+<p>Node.js® 是一个基于 Chrome V8 引擎 的 JavaScript 运行时。</p>
+</blockquote>
+<p>Node.js 为大多数平台提供了官方的安装程序。对于中国大陆地区用户，可以前往淘宝 Node.js 镜像下载。</p>
+<ul>
+<li><a href="https://nodejs.org/zh-cn/" target="_blank" rel="noopener noreffer">官方链接</a></li>
+<li><a href="https://npm.taobao.org/mirrors/node" target="_blank" rel="noopener noreffer">淘宝镜像</a></li>
+</ul>
+<blockquote>
+<p>致Windows用户：<br>
+使用Nodejs官方安装程序时，请确保勾选<code>Add to PATH</code>选项（默认已勾选）。</p>
+</blockquote>
+<p>安装完成后可以打开<code>cmd</code>(命令提示符)或<code>PowerShell</code>执行下面的指令检查<code>Node.JS</code>是否安装成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">node -v
+</code></pre></td></tr></table>
+</div>
+</div><p>如果返回</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">vXX.XX.X
+<span class="c1"># 例如</span>
+v12.16.2
+</code></pre></td></tr></table>
+</div>
+</div><p>则表示<code>Node.JS</code>安装成功</p>
+<h3 id="配置nodejs镜像源非中国大陆用户请跳过">配置Node.JS镜像源(非中国大陆用户请跳过)</h3>
+<p>打开<code>cmd</code>(命令提示符)或<code>PowerShell</code>执行下面的指令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">npm config <span class="nb">set</span> registry https://registry.npm.taobao.org/
+</code></pre></td></tr></table>
+</div>
+</div><p>再执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">npm get registry
+</code></pre></td></tr></table>
+</div>
+</div><p>返回以下内容则表示修改成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">https://registry.npm.taobao.org/
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="进入正题安装hexo">进入正题，安装<code>Hexo</code></h3>
+<p>打开<code>cmd</code>(命令提示符)或<code>PowerShell</code>执行下面的指令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">npm install -g hexo-cli
+</code></pre></td></tr></table>
+</div>
+</div><p>安装完成后可以输入以下指令查看<code>Hexo</code>是否安装成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">hexo -v
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="使用hexo建立属于自己的blog">使用<code>Hexo</code>建立属于自己的blog</h2>
+<h3 id="初始化一个blog">初始化一个blog</h3>
+<p>我们要找一个方便找到的地方来存放我们的Hexo博客，因为只有这样我们才能更方便的编辑，但是我不建议直接放在桌面上，因为对我来说，我不喜欢桌面有太多东西，而且还有可能把它们误删掉</p>
+<p>这里我把它放在<code>D:</code>盘来做演示</p>
+<p>打开<code>cmd</code>(命令提示符)或<code>PowerShell</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="nb">cd</span> D:
+hexo init myblog <span class="c1"># 这里的myblog是存放博客文件夹名字，你也可以换成你喜欢的名字</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>因为途中会克隆Github仓库中的某些文件，所以过程会有些漫长，多等一会就好了</p>
+<p>如果你看到了绿色的 <span style="background: #0C0; color: #EEE; padding: 0 8px;">INFO</span> 和以下信息，说明Hexo初始化成功了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">INFO  Start blogging with Hexo!
+</code></pre></td></tr></table>
+</div>
+</div><p>如果你看到了红色的 <span style="background: #C00; color: #EEE;  padding: 0 8px;">FATAL</span> 和以下信息，则表示myblog文件夹不是空的，请删除后再重试，或重新找一个文件夹</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">FATAL D:<span class="se">\m</span>yblog not empty, please run <span class="sb">`</span>hexo init<span class="sb">`</span> on an empty folder and <span class="k">then</span> copy your files into it
+FATAL Something<span class="err">&#39;</span>s wrong. Maybe you can find the solution here: http://hexo.io/docs/troubleshooting.html
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="进入博客文件夹测试">进入博客文件夹测试</h3>
+<p>打开<code>D:\myblog</code>可以看到以下目录结构</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">node_modules            <span class="c1"># 你博客的插件目录</span>
+scaffolds               <span class="c1"># 中文翻译脚手架，是存放生成新页面的模板文件的地方</span>
+<span class="nb">source</span>                  <span class="c1"># 你写文章的地方，所有文章和图片、文件都应该存放在这里</span>
+themes                  <span class="c1"># 主题文件夹，用于存放自定义主题</span>
+.gitignore              <span class="c1"># git生成的文件，不用管</span>
+_config.yml             <span class="c1"># 你的Hexo博客配置</span>
+package.json            <span class="c1"># 你的Hexo的插件列表</span>
+package-lock.json       <span class="c1"># 在`npm install`后生成的，用来记录实际安装的插件版本</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们在<code>myblog</code>文件夹里面打开<code>cmd</code>(命令提示符)或<code>PowerShell</code>，执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">hexo g
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>如何在某个文件夹里面打开命令行？<br>
+按住<code>Shitf</code>键，在文件夹的空白处右击，选择<code>在此处打开命令提示符</code>或者<code>在此处打开PowerShell</code>即可</p>
+</blockquote>
+<p>经过下面一番输出后，文件夹里面应该多出来了一个<code>public</code>文件夹</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">INFO  Start processing
+INFO  Files loaded in <span class="m">120</span> ms
+<span class="c1"># ···</span>
+<span class="c1"># 此处省略不知道多少字</span>
+<span class="c1"># ···</span>
+INFO  <span class="m">28</span> files generated in <span class="m">400</span> ms
+</code></pre></td></tr></table>
+</div>
+</div><p><code>public</code>文件夹是用来存放静态网页的，和他的名字一样，里面的网页是用来发布的，我们输入以下指令，即可预览我们的博客长什么样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">hexo s
+<span class="c1"># 执行这段代码后我们可以用浏览器打开</span>
+<span class="c1"># 127.0.0.1:4000 或 localhost:4000 来预览</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果要关闭预览，我们关闭浏览器，然后在刚刚执行<code>hexo s</code>的那个窗口里面按下<code>Ctrl</code>+<code>C</code>即可终止</p>
+<h3 id="对博客的标题和信息进行自定义">对博客的标题和信息进行自定义</h3>
+<blockquote>
+<p>在阅读本节之前，建议学习<code>YAML</code>语法 <a href="https://www.runoob.com/w3cnote/yaml-intro.html" target="_blank" rel="noopener noreffer">传送门</a></p>
+</blockquote>
+<p>预览过后我们发现，这个博客的标题叫做<code>Hexo</code>，根本不能彰显我们的个性，所以我们要对配置进行更改让他显示我们想要的标题和其他信息</p>
+<p>打开<code>_config.yml</code>文件，找到这几行，并做更改</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l">Hexo            </span><span class="w"> </span><span class="c"># 博客标题</span><span class="w">
+</span><span class="w"></span><span class="nt">subtitle</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w">            </span><span class="c"># 博客副标题</span><span class="w">
+</span><span class="w"></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w">         </span><span class="c"># 博客描述</span><span class="w">
+</span><span class="w"></span><span class="nt">keywords</span><span class="p">:</span><span class="w">               </span><span class="c"># 关键词(用于搜索引擎优化的(SEO)可以不用填)</span><span class="w">
+</span><span class="w"></span><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l">John Doe       </span><span class="w"> </span><span class="c"># 作者</span><span class="w">
+</span><span class="w"></span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l">en           </span><span class="w"> </span><span class="c"># 语言,要改成中文的话就把这里的 en 改成 zh-CH</span><span class="w">
+</span><span class="w"></span><span class="nt">timezone</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w">            </span><span class="c"># 时区可以不改</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>改完之后保存，执行以下指令然后打开<code>localhost:4000</code>来预览</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">hexo clean              <span class="c1"># 清理旧的静态文件</span>
+hexo g                  <span class="c1"># 生成新的静态文件</span>
+hexo s                  <span class="c1"># 启动本地服务器进行预览</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>预览之后，我们就发现，标题已经变成我们想要的样子了</p>
+<h3 id="创建新的文章">创建新的文章</h3>
+<p>我们在<code>myblog</code>文件夹里面打开<code>cmd</code>(命令提示符)或<code>PowerShell</code>，执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">hexo new <span class="s2">&#34;我的第一篇文章&#34;</span>       <span class="c1"># 这里的&#34;我的第一篇文章&#34;可以写你自己的标题</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后我们打开<code>\source\_posts\我的第一篇文章.md</code>文件，进行编辑，编辑完成后保存，执行以下代码就可以了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">hexo clean              <span class="c1"># 清理旧的静态文件</span>
+hexo g                  <span class="c1"># 生成新的静态文件</span>
+hexo s                  <span class="c1"># 启动本地服务器进行预览</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="对博客进行发布">对博客进行发布</h2>
+<p>使用<code>hexo s</code>预览的页面仅仅只有我们自己能看到，如果想让别人看到的话我们要进行发布，发布Hexo博客有两种方式</p>
+<ul>
+<li>使用云主机或网站服务器发布</li>
+<li>借助各大源码平台的pages服务发布</li>
+</ul>
+<h3 id="使用云主机或网站服务器发布">使用云主机或网站服务器发布</h3>
+<p>将<code>public</code>文件夹下的所有文件上传至服务器的网站根目录即可</p>
+<p>具体操作请自行百度或者联系你的服务器提供者</p>
+<h3 id="借助各大源码平台的pages服务发布">借助各大源码平台的pages服务发布</h3>
+<p>这里列出几个代码托管平台</p>
+<ul>
+<li><a href="https://github.com" target="_blank" rel="noopener noreffer">Github</a></li>
+<li><a href="https://gitee.com" target="_blank" rel="noopener noreffer">Gitee码云</a></li>
+<li><a href="https://coding.net" target="_blank" rel="noopener noreffer">Coding</a></li>
+</ul>
+<p>怎么注册和怎么使用我就不说了，自行研究和百度，这里只讲Hexo的操作方法</p>
+<p>首先我们得先安装一个插件<code>hexo-deployer-git</code>，通过以下指令安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">npm install hexo-deployer-git --save
+</code></pre></td></tr></table>
+</div>
+</div><p>之后我们在<code>_config.yml</code>里面找到并修改以下内容(没有的话就自行复制进去)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">deploy</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">git                                </span><span class="w"> </span><span class="c"># 仓库类型(svn或git)</span><span class="w">
+</span><span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l">git@xxx.com:xxx/xxx.git      </span><span class="w"> </span><span class="c"># 仓库地址(推荐使用SSH方式，SSH涉及的公钥创建及配置问题自行百度)</span><span class="w">
+</span><span class="w">  </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l">master                           </span><span class="w"> </span><span class="c"># 上传的分支</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>配置好之后保存，然后执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">hexo d
+</code></pre></td></tr></table>
+</div>
+</div><p>第一次连接会让你确认签名，输入<code>yes</code>之后回车就行了</p>
+<p>进入你的代码平台的仓库页面，打开pages服务，输入他提供的网址即可访问</p>
+<p>恭喜你!创建了一个属于自己的博客!</p>]]></description></item></channel></rss>

@@ -1,0 +1,159 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Windows - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/windows/</link><description>Windows - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Fri, 05 Jun 2020 23:50:32 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/windows/" rel="self" type="application/rss+xml"/><item><title>添加Windows右键菜单选项</title><link>https://negoces.github.io/posts/b7b8efff/</link><pubDate>Fri, 05 Jun 2020 23:50:32 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/b7b8efff/</guid><description><![CDATA[<p>在右键菜单里面添加你想要的内容，让你的操作更加流畅方便，也可以删除一些失效的快捷方式</p>
+<h2 id="直接将选项添加至右键菜单">直接将选项添加至右键菜单</h2>
+<p>先打开注册表编辑器(<code>win</code>+<code>R</code>键，输入<code>regedit</code>，确定)</p>
+<p>定位到下表里面的位置</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\*\shell\</code></td>
+<td style="text-align:left">任意文件上的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\</code></td>
+<td style="text-align:left">文件夹空白处的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\shell\</code></td>
+<td style="text-align:left">文件夹上的右键菜单</td>
+</tr>
+</tbody>
+</table>
+<p>创建一个<code>项</code>，名称随意，尽量为英文且自己能看懂，修改该项的默认值，<code>默认值即为显示名称</code>,如需图标则创建字串符值<code>Icon</code>，值为图标的绝对路径，然后在刚刚创建的项里面再创建一个<code>项</code>名称一定为<code>command</code>，该项的默认值即为指令。</p>
+<p>上面的一段话可能有点绕，下面来个例子(创建<code>在此处打开CMD</code>)：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCMD\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">在此处打开CMD</td>
+<td style="text-align:left">显示名称</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCMD\Icon</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">显示图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCMD\command\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">操作&amp;指令</td>
+</tr>
+</tbody>
+</table>
+<h2 id="创建二级菜单">创建二级菜单</h2>
+<h3 id="将指令注册进系统">将指令注册进系统</h3>
+<p>将注册表定位到<code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\</code>，在里面创建<code>项</code>例子如下(例子:在此处打开CMD)(表中路径有省略)：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left"><code>空</code></td>
+<td style="text-align:left">无作用</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\icon</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">显示图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\MUIVerb</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">在此处打开CMD</td>
+<td style="text-align:left">显示名称</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_LOCAL_MACHINE\...\CommandStore\shell\opencmd\command\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">cmd.exe</td>
+<td style="text-align:left">操作&amp;指令</td>
+</tr>
+</tbody>
+</table>
+<h3 id="在想要的地方创建菜单项">在想要的地方创建菜单项</h3>
+<p>定位到下表位置(对，就是第一节的那张表)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\*\shell\</code></td>
+<td style="text-align:left">任意文件上的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\</code></td>
+<td style="text-align:left">文件夹空白处的右键菜单</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\shell\</code></td>
+<td style="text-align:left">文件夹上的右键菜单</td>
+</tr>
+</tbody>
+</table>
+<p>然后直接上表吧，更直观一点</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">值</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\(默认)</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left"><code>空</code></td>
+<td style="text-align:left">无作用</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\Icon</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">显示图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\MUIVerb</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">快捷操作</td>
+<td style="text-align:left">显示名称</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HKEY_CLASSES_ROOT\Directory\Background\shell\menu1\subcommands</code></td>
+<td style="text-align:left">REG_SZ</td>
+<td style="text-align:left">opencmd;</td>
+<td style="text-align:left">菜单项目</td>
+</tr>
+</tbody>
+</table>
+<p><code>注</code>:<code>subcommands</code>里面可以添加多项，用<code>;</code>分隔，比如：<code>command1;command2</code>,如果想对项目进行分隔分类可以使用<code>|</code>,比如<code>command1;|;command2;command3</code></p>]]></description></item></channel></rss>
