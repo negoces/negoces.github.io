@@ -542,7 +542,9 @@ docker pull drone/drone-runner-docker:1
 </div>
 </div></div>
         </div>
-    </div>]]></description></item><item><title>树莓派4安装Docker</title><link>https://negoces.github.io/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/c0b3720d/</guid><description><![CDATA[<h2 id="安装必要工具">安装必要工具</h2>
+    </div>]]></description></item><item><title>树莓派4安装Docker</title><link>https://negoces.github.io/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/c0b3720d/</guid><description><![CDATA[<div class="featured-image">
+                <img src="/posts/c0b3720d/cover.png" referrerpolicy="no-referrer">
+            </div><h2 id="安装必要工具">安装必要工具</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -823,7 +825,7 @@ vcgencmd measure_temp
 </div></div>
         </div>
     </div>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
-                <img src="/cover.png" referrerpolicy="no-referrer">
+                <img src="/posts/16e870f5/cover.png" referrerpolicy="no-referrer">
             </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
 <h2 id="iptables-是什么">iptables 是什么</h2>
 <p>iptables 是运行在用户空间的应用软件，通过控制 Linux 内核 netfilter 模块，来管理网络数据包的处理和转发。在大部分 Linux 发行版中，可以通过手册页或<code>man iptables</code>获取用户手册。</p>
@@ -1795,7 +1797,9 @@ curl https://bob:12345@google.com/login
 </tr>
 </tbody>
 </table>
-<p><code>注</code>:<code>subcommands</code>里面可以添加多项，用<code>;</code>分隔，比如：<code>command1;command2</code>,如果想对项目进行分隔分类可以使用<code>|</code>,比如<code>command1;|;command2;command3</code></p>]]></description></item><item><title>从零开始搭建Hexo博客</title><link>https://negoces.github.io/posts/4b1b8c9f/</link><pubDate>Thu, 16 Apr 2020 22:13:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4b1b8c9f/</guid><description><![CDATA[<p>教你从零开始搭建自己的Hexo博客</p>
+<p><code>注</code>:<code>subcommands</code>里面可以添加多项，用<code>;</code>分隔，比如：<code>command1;command2</code>,如果想对项目进行分隔分类可以使用<code>|</code>,比如<code>command1;|;command2;command3</code></p>]]></description></item><item><title>从零开始搭建Hexo博客</title><link>https://negoces.github.io/posts/4b1b8c9f/</link><pubDate>Thu, 16 Apr 2020 22:13:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4b1b8c9f/</guid><description><![CDATA[<div class="featured-image">
+                <img src="/posts/4b1b8c9f/cover.png" referrerpolicy="no-referrer">
+            </div><p>教你从零开始搭建自己的Hexo博客</p>
 <h2 id="简介">简介</h2>
 <h3 id="什么是hexo">什么是Hexo</h3>
 <blockquote>

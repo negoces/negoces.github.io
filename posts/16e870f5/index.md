@@ -57,7 +57,7 @@ raw 表用于处理异常，有如下两个内建链：
 
 - PREROUTING,OUTPUT
 
-{{< figure src="flow.webp" title="流量流向" >}}
+{{< figure src="/posts/16e870f5/flow.webp" title="流量流向" >}}
 
 ## iptables 的规则(rules)
 
