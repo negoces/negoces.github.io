@@ -1,7 +1,7 @@
 ---
 title: "从零开始搭建Hexo博客"
 date: 2020-04-16T22:13:22+08:00
-#featuredImage: "cover.png"
+featuredImage: "/posts/4b1b8c9f/cover.png"
 slug: 4b1b8c9f
 categories: [学习日记]
 tags: [Hexo, Blog]

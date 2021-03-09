@@ -1,7 +1,7 @@
 ---
 title: "iptables从入门到放弃"
 date: 2021-01-18T17:29:57+08:00
-featuredImage: "cover.png"
+featuredImage: "/posts/16e870f5/cover.png"
 slug: 16e870f5
 categories: [学习日记]
 tags: [iptables, Linux]
@@ -63,7 +63,7 @@ raw 表用于处理异常，有如下两个内建链：
 
 - PREROUTING,OUTPUT
 
-{{< figure src="flow.webp" title="流量流向" >}}
+{{< figure src="/posts/16e870f5/flow.webp" title="流量流向" >}}
 
 ## iptables 的规则(rules)
 
