@@ -1,0 +1,226 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>从零开始搭建一个我的世界服务器 - NEGOCES's Blog</title><meta name=Description content><meta property="og:title" content="从零开始搭建一个我的世界服务器"><meta property="og:description" content="相信有不少人玩 Minecraft 的时候都想与自己的小伙伴一起玩耍，如过你们恰好在同一局域网，那么可以通过游戏内的对局域网开放与小伙伴联机，但是房主必须一直在线，而且非局域网内的小伙伴也无法一起玩耍。"><meta property="og:type" content="article"><meta property="og:url" content="https://negoces.github.io/posts/079848ab/"><meta property="og:image" content="https://negoces.github.io/posts/079848ab/cover.png"><meta property="article:published_time" content="2021-03-10T17:13:41+08:00"><meta property="article:modified_time" content="2021-03-10T17:13:41+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://negoces.github.io/posts/079848ab/cover.png"><meta name=twitter:title content="从零开始搭建一个我的世界服务器"><meta name=twitter:description content="相信有不少人玩 Minecraft 的时候都想与自己的小伙伴一起玩耍，如过你们恰好在同一局域网，那么可以通过游戏内的对局域网开放与小伙伴联机，但是房主必须一直在线，而且非局域网内的小伙伴也无法一起玩耍。"><meta name=application-name content="NEGOCES's Blog"><meta name=apple-mobile-web-app-title content="NEGOCES's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://negoces.github.io/posts/079848ab/><link rel=prev href=https://negoces.github.io/posts/a6cf258f/><link rel=stylesheet href=/lib/normalize/normalize.min.055364f5be272caa092b0e6654c165828707f8ab971e2656383a6d6392bc345e.css integrity="sha256-BVNk9b4nLKoJKw5mVMFlgocH+KuXHiZWODptY5K8NF4="><link rel=stylesheet href=/css/style.min.1e2694bed152fa2922dbe909a441838ed693d88b1330f97485bfa8ed78da42df.css integrity="sha256-HiaUvtFS+iki2+kJpEGDjtaT2IsTMPl0hb+o7XjaQt8="><link rel=stylesheet href=/lib/fontawesome-free/all.min.876d023d9d10c97941b80c3b03e2a5b94631ff7a4af9cee5604a6a2d39718d84.css integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ="><link rel=stylesheet href=/lib/animate/animate.min.3c770e90f98eb21b0c042fafb49755af93306fbaf42e449524f94fae9fc83295.css integrity="sha256-PHcOkPmOshsMBC+vtJdVr5Mwb7r0LkSVJPlPrp/IMpU="><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"从零开始搭建一个我的世界服务器","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/negoces.github.io\/posts\/079848ab\/"},"genre":"posts","keywords":"Minecraft, Server","wordcount":3260,"url":"https:\/\/negoces.github.io\/posts\/079848ab\/","datePublished":"2021-03-10T17:13:41+08:00","dateModified":"2021-03-10T17:13:41+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"NEGOCES"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':('auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark'))&&document.body.setAttribute('theme','dark');</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="NEGOCES's Blog"><img class="lazyload logo" src=/svg/loading.min.svg data-src=/logo.svg data-srcset="/logo.svg, /logo.svg 1.5x, /logo.svg 2x" data-sizes=auto alt=/logo.svg title=/logo.svg>NEGOCES's Blog</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/about/>关于 </a><a class=menu-item href=/todo/>Todo </a><a class=menu-item href=/quot/ title=凡人名言>凡人名言 </a><a class=menu-item href=/note/ title=随手记>📋 随手记 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="NEGOCES's Blog"><img class="lazyload logo" src=/svg/loading.min.svg data-src=/logo.svg data-srcset="/logo.svg, /logo.svg 1.5x, /logo.svg 2x" data-sizes=auto alt=/logo.svg title=/logo.svg>NEGOCES's Blog</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/>文章</a><a class=menu-item href=/tags/>标签</a><a class=menu-item href=/categories/>分类</a><a class=menu-item href=/about/>关于</a><a class=menu-item href=/todo/>Todo</a><a class=menu-item href=/quot/ title=凡人名言>凡人名言</a><a class=menu-item href=/note/ title=随手记>📋随手记</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">从零开始搭建一个我的世界服务器</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>NEGOCES</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/game/><i class="far fa-folder fa-fw"></i>Game</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-03-10>2021-03-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3260 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/079848ab/cover.png data-srcset="/posts/079848ab/cover.png, /posts/079848ab/cover.png 1.5x, /posts/079848ab/cover.png 2x" data-sizes=auto alt=/posts/079848ab/cover.png title=/posts/079848ab/cover.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#基础知识>基础知识</a><ul><li><a href=#java>Java</a></li><li><a href=#ip-地址和端口>IP 地址和端口</a></li></ul></li><li><a href=#准备工作>准备工作</a><ul><li><a href=#查看-java-是否安装>查看 Java 是否安装</a></li><li><a href=#下载一个服务端>下载一个服务端</a></li></ul></li><li><a href=#启动并配置>启动并配置</a></li></ul></nav></div></div><div class=content id=content><p>相信有不少人玩 Minecraft 的时候都想与自己的小伙伴一起玩耍，如过你们恰好在同一局域网，那么可以通过游戏内的<code>对局域网开放</code>与小伙伴联机，但是房主必须一直在线，而且非局域网内的小伙伴也无法一起玩耍。</p><blockquote><p>本文章只介绍了如何搭建一个 Minecraft 服务器，并不能直接让非局域网的用户连接，如果你恰好有公网 IP 只需要在路由器里面做个小小的设置(<code>端口映射</code>、<code>端口转发</code>或者叫<code>虚拟服务器</code>)就可以访问了，如果你没有公网 IP 你可以百度<code>内网穿透</code>寻找解决方案</p></blockquote><h2 id=基础知识>基础知识</h2><h3 id=java>Java</h3><p>Minecraft 玩家应该都知道这是什么东西，这里也不做过多的解释，想要了解的可以自己去百度、Google 或者<a href=https://zh.wikipedia.org/wiki/Java target=_blank rel="noopener noreffer">Wiki</a>。</p><p>我们搭建服务需要一个 Java 运行环境即 JRE(Java Runtime Environment)，不过我建议使用 Server JRE 或者 JDK 以便使用更多的启动参数，比如<code>-server</code>。</p><h3 id=ip-地址和端口>IP 地址和端口</h3><ul><li><p>IP 地址(IP Address)：这是一个网络上的概念，在网络上我们的手机、电脑相当于一个个建筑，网络则是一条条道路，IP 地址则是你的的门牌号，通过 IP 地址可以找到你的手机、电脑在什么地方，从而与你建立连接，发送数据。</p></li><li><p>端口(Port)：前面说 IP 地址是你的门牌号，那么端口指的就是你家的哪个门，前门、后门或者窗户？与哪个端口连接就相当于从哪个入口进去。Java 版 Minecraft 服务器默认监听(listen)端口: 25565</p></li></ul><h2 id=准备工作>准备工作</h2><h3 id=查看-java-是否安装>查看 Java 是否安装</h3><p>使用<code>java -version</code>指令查看 Java 是否已经正确安装，如果输出类似以下内容则表示 Java 已正确安装</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>java version <span class=s2>&#34;1.8.0_281&#34;</span>
+Java<span class=o>(</span>TM<span class=o>)</span> SE Runtime Environment <span class=o>(</span>build 1.8.0_281-b09<span class=o>)</span>
+Java HotSpot<span class=o>(</span>TM<span class=o>)</span> 64-Bit Server VM <span class=o>(</span>build 25.281-b09, mixed mode<span class=o>)</span>
+</code></pre></td></tr></table></div></div><p>若报错则表示你的 Java 未正确安装</p><div class="details admonition note open"><div class="details-summary admonition-title"><i class="icon fas fa-pencil-alt fa-fw"></i>关于 Server JRE<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content>Server JRE 不需要安装(也可以手动安装)，不需要上述操作，在启动服务器时将<code>java</code>指令换成 Server JRE 内 java 二进制文件的<code>绝对路径</code>(如<code>/opt/serverjre/jre/bin/java</code>或<code>D:\ServerJRE\jre\bin\java.exe</code>)即可。</div></div></div><h3 id=下载一个服务端>下载一个服务端</h3><p>下载一个服务端 Jar 文件，官方、spigot、paper 都行，这里用官方 1.16.5 作为演示，下面是下载地址:</p><ul><li><a href=https://download.mcbbs.net/v1/objects/1b557e7b033b583cd9f66746b7a9ab1ec1673ced/server.jar>https://download.mcbbs.net/v1/objects/1b557e7b033b583cd9f66746b7a9ab1ec1673ced/server.jar</a></li></ul><p>创建一个文件夹，名字任意，这里以<code>mcs-1.16.5</code>为例，位置为<code>~/RAMDisk/mcs-1.16.5</code>，将下载的<code>server.jar</code>丢进这个文件夹。</p><h2 id=启动并配置>启动并配置</h2><p><strong>在我们创建的文件夹内打开终端(命令行)</strong>，使用以下指令启动服务端</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell><span class=c1># -Xms2G 是最小分配内存，这里设置的是2GB，理论上越大启动越快</span>
+<span class=c1># -Xmx4G 是最大分配内存，这里设置的是4GB，理论上不大于物理内存的80%</span>
+java -Xms2G -Xmx4G -jar server.jar nogui
+</code></pre></td></tr></table></div></div><p>你会发现他输出三行文字就退出了</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell><span class=o>[</span>20:01:55<span class=o>]</span> <span class=o>[</span>main/ERROR<span class=o>]</span>: Failed to load properties from file: server.properties
+<span class=o>[</span>20:01:55<span class=o>]</span> <span class=o>[</span>main/WARN<span class=o>]</span>: Failed to load eula.txt
+<span class=o>[</span>20:01:55<span class=o>]</span> <span class=o>[</span>main/INFO<span class=o>]</span>: You need to agree to the EULA in order to run the server. Go to eula.txt <span class=k>for</span> more info.
+</code></pre></td></tr></table></div></div><p>从字面也能看出我们没有同意用户协议，将文件夹下<code>eula.txt</code>文件里面的<code>eula=false</code>改成<code>eula=true</code>即可。同时，我们发现它还在文件夹里面创建了一个叫<code>server.properties</code>的配置文件，我们就现在对其进行修改。</p><p>点击下面的<code>> Code</code>以展开配置文件</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ini data-lang=ini><span class=c1>#Minecraft server properties</span>
+<span class=c1>#Wed Mar 10 20:01:55 CST 2021</span>
+
+<span class=c1># 出生点保护范围，非op玩家在出生点这个距离的范围内无法建造与破坏</span>
+<span class=na>spawn-protection</span><span class=o>=</span><span class=s>16</span>
+<span class=c1># 设置每个tick花费的最大毫秒数。超过该毫秒数时，服务器看门狗将停止服务器程序并附带上信息：服务器的一个tick花费了60.00秒（最长也应该只有0.05秒）；判定服务器已崩溃，它将被强制关闭。遇到这种情况的时候，它会调用 System.exit(1)。</span>
+<span class=na>max-tick-time</span><span class=o>=</span><span class=s>60000</span>
+<span class=c1># GameSpy4协议的服务器监听端口。用于获取服务器信息。</span>
+<span class=na>query.port</span><span class=o>=</span><span class=s>25565</span>
+<span class=c1># 用于自定义世界的生成，参见 https://minecraft-zh.gamepedia.com/%E8%87%AA%E5%AE%9A%E4%B9%89</span>
+<span class=na>generator-settings</span><span class=o>=</span>
+<span class=c1># 启用后区块文件以同步模式写入。</span>
+<span class=na>sync-chunk-writes</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 是否强制游戏模式</span>
+<span class=na>force-gamemode</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 是否允许进入下界</span>
+<span class=na>allow-nether</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 在服务器上强制执行白名单</span>
+<span class=na>enforce-whitelist</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 游戏模式(高版本不接受数字参数) survival|creative|adventure|spectator</span>
+<span class=na>gamemode</span><span class=o>=</span><span class=s>survival</span>
+<span class=c1># 向所有在线OP发送所执行命令的输出。</span>
+<span class=na>broadcast-console-to-ops</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># GameSpy4协议的服务器监听开关。用于获取服务器信息。</span>
+<span class=na>enable-query</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 如果不为0，服务器将在玩家的空闲时间达到设置的时间（单位为分钟）时将玩家踢出服务器</span>
+<span class=na>player-idle-timeout</span><span class=o>=</span><span class=s>0</span>
+<span class=na>text-filtering-config</span><span class=o>=</span>
+<span class=c1># 游戏难度(高版本不接受数字参数) peaceful|easy|normal|hard</span>
+<span class=na>difficulty</span><span class=o>=</span><span class=s>easy</span>
+<span class=c1># 向所有在线OP发送通过RCON执行的命令的输出。</span>
+<span class=na>broadcast-rcon-to-ops</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 决定攻击型生物（怪物）是否可以生成。</span>
+<span class=na>spawn-monsters</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># OP的权限等级</span>
+<span class=na>op-permission-level</span><span class=o>=</span><span class=s>4</span>
+<span class=c1># pvp开关</span>
+<span class=na>pvp</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 此选项控制实体需要距离玩家有多近才会将数据包发送给客户端。更高的数值意味着实体可以在更远的地方就被渲染，同时也可能提高增加延迟的几率。(单位:% 范围:10-1000)</span>
+<span class=na>entity-broadcast-range-percentage</span><span class=o>=</span><span class=s>100</span>
+<span class=c1># 是否允许服务端定期发送统计数据到http://snoop.minecraft.net。</span>
+<span class=na>snooper-enabled</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 决定生成的地图的类型。 FLAT|LEGACY|DEFAULT</span>
+<span class=na>level-type</span><span class=o>=</span><span class=s>default</span>
+<span class=c1># 使服务器在服务器列表中看起来是“在线”的。</span>
+<span class=na>enable-status</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 如果设为 true，服务器难度的设置会被忽略并且设为 hard（困难），玩家在死后会自动切换至旁观模式。</span>
+<span class=na>hardcore</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 是否启用命令方块。</span>
+<span class=na>enable-command-block</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 默认会允许n-1字节的数据包正常发送, 如果数据包为n字节或更大时会进行压缩。-1：完全禁用数据包压缩 0：压缩全部数据包</span>
+<span class=na>network-compression-threshold</span><span class=o>=</span><span class=s>256</span>
+<span class=c1># 设置服务器同时能容纳的最大玩家数量。</span>
+<span class=na>max-players</span><span class=o>=</span><span class=s>20</span>
+<span class=c1># 世界最大半径值</span>
+<span class=na>max-world-size</span><span class=o>=</span><span class=s>29999984</span>
+<span class=c1># 资源包的SHA-1值，必须为小写十六进制，建议填写它。这还没有用于验证资源包的完整性，但是它提高了资源包缓存的有效性和可靠性。</span>
+<span class=na>resource-pack-sha1</span><span class=o>=</span>
+<span class=c1># 设定函数的默认权限等级。</span>
+<span class=na>function-permission-level</span><span class=o>=</span><span class=s>2</span>
+<span class=c1># rcon远程控制端口</span>
+<span class=na>rcon.port</span><span class=o>=</span><span class=s>25575</span>
+<span class=c1># 服务器（监听的）端口号。</span>
+<span class=na>server-port</span><span class=o>=</span><span class=s>25565</span>
+<span class=c1># 将服务器与一个特定IP绑定。强烈建议留空该属性值！</span>
+<span class=na>server-ip</span><span class=o>=</span>
+<span class=c1># 决定是否生成村民。</span>
+<span class=na>spawn-npcs</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 允许玩家在安装添加飞行功能的mod前提下在生存模式下飞行。</span>
+<span class=na>allow-flight</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 世界名称及其文件夹名（你可以把你已生成的世界存档复制过来，然后让这个值与那个文件夹的名字保持一致，服务器就可以载入该存档。）</span>
+<span class=na>level-name</span><span class=o>=</span><span class=s>world</span>
+<span class=c1># 最大视距(单位：区块)，客户端大于此数值也不会显示更远的区块</span>
+<span class=na>view-distance</span><span class=o>=</span><span class=s>10</span>
+<span class=c1># 可选选项，可输入指向一个资源包的URI。玩家可选择是否使用该资源包。注意若该值含&#34;:&#34;和&#34;=&#34;字符，需要在其前加上反斜线(\)</span>
+<span class=na>resource-pack</span><span class=o>=</span>
+<span class=c1># 决定动物是否可以生成。</span>
+<span class=na>spawn-animals</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 启用服务器的白名单。</span>
+<span class=na>white-list</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 设置RCON远程访问的密码</span>
+<span class=na>rcon.password</span><span class=o>=</span>
+<span class=c1># 定义是否能生成结构（例如村庄）</span>
+<span class=na>generate-structures</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 是否让服务器对比Minecraft账户数据库验证登录信息。(俗称：正版验证)</span>
+<span class=na>online-mode</span><span class=o>=</span><span class=s>true</span>
+<span class=c1># 玩家在游戏中能够建造的最大高度。</span>
+<span class=na>max-build-height</span><span class=o>=</span><span class=s>256</span>
+<span class=c1># 为世界定义一个种子。</span>
+<span class=na>level-seed</span><span class=o>=</span>
+<span class=c1># 如果服务器发送的ISP/AS和Mojang的验证服务器的不一样，玩家将会被踢出。(即：不允许使用VPN或代理)</span>
+<span class=na>prevent-proxy-connections</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 是否使用针对Linux平台的数据包收发优化。此选项仅会在Linux平台上生成。</span>
+<span class=na>use-native-transport</span><span class=o>=</span><span class=s>true</span>
+<span class=na>enable-jmx-monitoring</span><span class=o>=</span><span class=s>false</span>
+<span class=c1># 玩家客户端的多人游戏服务器列表中显示的服务器信息，显示于名称下方。中文需要用unicode，超过59个字符可能会返回“通讯错误”</span>
+<span class=na>motd</span><span class=o>=</span><span class=s>A Minecraft Server</span>
+<span class=c1># 设置玩家被踢出服务器前，可以发送的数据包数量。设置为0表示关闭此功能。</span>
+<span class=na>rate-limit</span><span class=o>=</span><span class=s>0</span>
+<span class=c1># rcon远程控制开关</span>
+<span class=na>enable-rcon</span><span class=o>=</span><span class=s>false</span>
+</code></pre></td></tr></table></div></div><p>然后保存，<strong>记得保存！！！</strong></p><p>再次使用上面的指令启动，出现<code>Done (16.409s)! For help, type "help"</code>字样表示启动成功。此时便可以进入服务器了。在终端输入<code>stop</code>后回车可关闭服务器。</p><div class="details admonition note open"><div class="details-summary admonition-title"><i class="icon fas fa-pencil-alt fa-fw"></i>关于模组和插件<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content><ul><li>forge 服务端的启动文件不是<code>server.jar</code>，而是<code>forge-x.xx.x.jar</code>，需要将<code>-jar server.jar</code>改成<code>-jar forge-x.xx.x.jar</code>，否则服务器不会加载模组。(注：这里的 xx 只是版本代称，请以实际版本填写。)</li><li>模组一般放在<code>mods</code>文件夹内。只有放入指定文件夹才能被服务器加载。<code>(只有 forge 或 fabric 服务器才能加载模组)</code></li><li>插件一般放在<code>plugins</code>文件夹内。只有放入指定文件夹才能被服务器加载。<code>(只有 spigot、paper 等基于 bukkit 或 sponge 服务器才能使用插件)</code></li></ul></div></div></div><div class="details admonition note open"><div class="details-summary admonition-title"><i class="icon fas fa-pencil-alt fa-fw"></i>关于 server-ip=<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content><p>此参数为服务端监听地址，绑定的是具有此 IP 的网卡<br>假定我有两张网卡，名称和 IP 分别为:</p><ul><li>eth0: 192.168.0.101</li><li>eth1: 192.168.1.101</li></ul><p>如果我设置 server-ip=192.168.1.101 那么服务端只会接受来自 eth1 网卡的连接，来自 eth0 的连接会被丢弃。</p><p>如果我设置 server-ip=127.0.0.1 那么服务端只会接受本地回环(loopback)的连接，即只有本机才能进入游戏，就算是来自局域网的连接也无法进入</p><p>设置 server-ip=0.0.0.0 或着留空则会监听所有网卡，会接受来自所有网卡的连接，<strong>故强烈建议此参数留空！</strong></p></div></div></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2021-03-10</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/minecraft/>Minecraft</a>,&nbsp;<a href=/tags/server/>Server</a></section><section><span><a href=javascript:void(0); onclick=window.history.back();>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/a6cf258f/ class=prev rel=prev title=树莓派4安装Gitea><i class="fas fa-angle-left fa-fw"></i>树莓派4安装Gitea</a></div></div><div id=comments><div id=gitalk class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://github.com/gitalk/gitalk></a>Gitalk</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.79.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>NEGOCES</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/gitalk/gitalk.min.f43b616e7aefc9891aaaa546d41562aff9da8cd5ca2a15ed796df560a4846fe4.css integrity="sha256-9DthbnrvyYkaqqVG1BVir/najNXKKhXteW31YKSEb+Q="><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.814eba54011def7fdeead06ae5cf964a245c347d0f4972e71cc3de1482b1b473.css integrity="sha256-gU66VAEd73/e6tBq5c+WSiRcNH0PSXLnHMPeFIKxtHM="><link rel=stylesheet href=/lib/katex/katex.min.4710034e669c7ff17f823f9ba12cf8a36582d65b007f79cbc4a3c11d7db2e4ca.css integrity="sha256-RxADTmacf/F/gj+boSz4o2WC1lsAf3nLxKPBHX2y5Mo="><link rel=stylesheet href=/lib/katex/copy-tex.min.bf9ff4137fec38f6255419e142d0883c9c52090885d746f80eee12b273d9b3e0.css integrity="sha256-v5/0E3/sOPYlVBnhQtCIPJxSCQiF10b4Du4SsnPZs+A="><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.cd0d0b6e50ff01ff2f3a9a70d7cfb66a7c6cb9acf7a566325568be6d3bd31fc4.css integrity="sha256-zQ0LblD/Af8vOppw18+2anxsuaz3pWYyVWi+bTvTH8Q="><script type=text/javascript src=/lib/gitalk/gitalk.min.0a873c7ad4c8e3eaf8357ef0c7f0fdc821654e86e646b54999a55810dd6657a0.js integrity="sha256-Coc8etTI4+r4NX7wx/D9yCFlTobmRrVJmaVYEN1mV6A="></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.bcff85fb5e00d68802850b393ac7792c997f722f536f38e26638c46dca8e5eb6.js integrity="sha256-vP+F+14A1ogChQs5Osd5LJl/ci9TbzjiZjjEbcqOXrY="></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.615590a2ca2b667afa7c02ef396f5500b62e22795ddbb46448f90494605d09a5.js integrity="sha256-YVWQosorZnr6fALvOW9VALYuInld27RkSPkElGBdCaU="></script><script type=text/javascript src=/lib/lunr/lunr.min.df84a2d58ea594c04a3371b48d020b55ea10284c2ec636e4e331965d7313e29b.js integrity="sha256-34Si1Y6llMBKM3G0jQILVeoQKEwuxjbk4zGWXXMT4ps="></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.136b99bd32b0c00924d0a5f80a946f737c958dc96ed527db1d959c3d229bc4b5.js integrity="sha256-E2uZvTKwwAkk0KX4CpRvc3yVjclu1SfbHZWcPSKbxLU="></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.099afa711c93c5f68c18abf5485def06649089efe383835258d0384d53dd1449.js integrity="sha256-CZr6cRyTxfaMGKv1SF3vBmSQie/jg4NSWNA4TVPdFEk="></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js integrity="sha256-+2SfyuYhd9/mPmcIHdzrgwtc4fBaQYTpu7fYesS49OU="></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.0ef47b3aa47d71accebfc4c7029c37f43d35f3ef43cda0e706c7adb8851f9554.js integrity="sha256-DvR7OqR9cazOv8THApw39D018+9DzaDnBsetuIUflVQ="></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.87bd0bf4ede9af1be2287acf1f0ac8777dc76a49209d44620752811c3c993897.js integrity="sha256-h70L9O3prxviKHrPHwrId33HakkgnURiB1KBHDyZOJc="></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.5993efde07d6b1a88dd5d5ff00cf5c0178d1d8c7f682eae59546a8e144aac57e.js integrity="sha256-WZPv3gfWsaiN1dX/AM9cAXjR2Mf2gurllUao4USqxX4="></script><script type=text/javascript src=/lib/clipboard/clipboard.min.8a7739925f4c03586479852df840b7061948832a7fda30c8c812d2ea4dd4c4f2.js integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI="></script><script type=text/javascript src=/lib/katex/katex.min.17f5dd6b9f123dd7140abfb18521b3f4c036cd004f6f40121182a8865f140877.js integrity="sha256-F/Xda58SPdcUCr+xhSGz9MA2zQBPb0ASEYKohl8UCHc="></script><script type=text/javascript src=/lib/katex/auto-render.min.f74776a677f0d2be0af0264058f928e2ba455d0b19bc985304660d922a43a6b2.js integrity="sha256-90d2pnfw0r4K8CZAWPko4rpFXQsZvJhTBGYNkipDprI="></script><script type=text/javascript src=/lib/katex/copy-tex.min.2ab2237329021bc443986c8327f6e61357fb68a54e5d233d224023718c02207d.js integrity="sha256-KrIjcykCG8RDmGyDJ/bmE1f7aKVOXSM9IkAjcYwCIH0="></script><script type=text/javascript src=/lib/katex/mhchem.min.5cea356d6025c5a2f18c454c83ec5674dbb04fab1cd1d75569e77788c6b6f888.js integrity="sha256-XOo1bWAlxaLxjEVMg+xWdNuwT6sc0ddVaed3iMa2+Ig="></script><script type=text/javascript src=/lib/cookieconsent/cookieconsent.min.e55842a856a6d829feca3c3ad736c136b6c7549e9247274f78aa296259e06e24.js integrity="sha256-5VhCqFam2Cn+yjw61zbBNrbHVJ6SRydPeKopYlngbiQ="></script><script type=text/javascript>window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"gitalk":{"admin":["negoces"],"clientID":"b27e7ef21fc1a033325a","clientSecret":"ac19307d79a6fbe1931958899bb64c73b1f8f4ef","id":"2021-03-10T17:13:41+08:00","owner":"negoces","repo":"blog-talk","title":"从零开始搭建一个我的世界服务器"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightGallery":{"actualSize":false,"exThumbImage":"data-thumbnail","hideBarsDelay":2000,"selector":".lightgallery","speed":400,"thumbContHeight":80,"thumbWidth":80,"thumbnail":true},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type=text/javascript src=/js/theme.min.f51938f3065a40ee841bcb558e4330e31fd26c0ea55343fff8770b88b0319a3c.js integrity="sha256-9Rk48wZaQO6EG8tVjkMw4x/SbA6lU0P/+HcLiLAxmjw="></script></body></html>
