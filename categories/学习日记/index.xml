@@ -684,6 +684,37 @@ docker run -d <span class="se">\
 <p>烧录完之后系统里面会多出一个命名为<code>boot</code>的分区，在此分区里面创建一个空白的名为<code>ssh</code>的文件以开启 ssh 远程访问。</p>
 <div class="details admonition note open">
         <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>连接到WiFi网络<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>在<code>boot</code>分区创建<code>wpa_supplicant.conf</code>并编辑</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nv">ctrl_interface</span><span class="o">=</span><span class="nv">DIR</span><span class="o">=</span>/var/run/wpa_supplicant <span class="nv">GROUP</span><span class="o">=</span>netdev
+<span class="nv">update_config</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">country</span><span class="o">=</span>&lt;填写ISO 3166-1国家码&gt;<span class="o">(</span>建议使用<span class="sb">`</span>US<span class="sb">`</span>,<span class="sb">`</span>CN<span class="sb">`</span>可能会导致连接不上WiFi<span class="o">)</span>
+
+<span class="nv">network</span><span class="o">={</span>
+ <span class="nv">ssid</span><span class="o">=</span><span class="s2">&#34;&lt;无线名称&gt;&#34;</span>
+ <span class="nv">psk</span><span class="o">=</span><span class="s2">&#34;&lt;无线密码&gt;&#34;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
             <i class="icon fas fa-pencil-alt fa-fw"></i>使用USB启动<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">

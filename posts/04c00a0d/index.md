@@ -20,6 +20,22 @@
 
 烧录完之后系统里面会多出一个命名为`boot`的分区，在此分区里面创建一个空白的名为`ssh`的文件以开启 ssh 远程访问。
 
+{{< admonition note "连接到WiFi网络" >}}
+在`boot`分区创建`wpa_supplicant.conf`并编辑
+
+```shell
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=<填写ISO 3166-1国家码>(建议使用`US`,`CN`可能会导致连接不上WiFi)
+
+network={
+ ssid="<无线名称>"
+ psk="<无线密码>"
+}
+```
+
+{{< /admonition >}}
+
 {{< admonition note "使用USB启动" >}}
 一、更新`eeprom`
 
