@@ -1,0 +1,215 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>SMB - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/smb/</link><description>SMB - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 17 Mar 2021 19:14:22 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/smb/" rel="self" type="application/rss+xml"/><item><title>在Linux上安装cifsd启用SMB共享</title><link>https://negoces.github.io/posts/4ab61985/</link><pubDate>Wed, 17 Mar 2021 19:14:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4ab61985/</guid><description><![CDATA[<p>用树莓派做了一个网络存储，想挂载到系统上，便想到了 SMB 协议，之前用过 Samba 但是性能实属不行，恰巧在 Github 上看到了 cifsd 这个项目，并且支持 RDMA 所以在树莓派上面安装试试，结果发现效果还不错，速度蛮快的。</p>
+<h2 id="安装必要的依赖">安装必要的依赖</h2>
+<p>Github 上只有源码，没有现成的二进制文件，软件仓库里面也没有，所以必须自己编译(其实并不意外，这个程序是作为内核模块运行的，所以才有如此之高的性能)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
+sudo apt install linux-headers gcc make git autoconf <span class="se">\
+</span><span class="se"></span>libtool pkg-config libnl-3-dev libnl-genl-3-dev libglib2.0-dev -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="编译安装-cifsd">编译安装 cifsd</h2>
+<p>克隆并进入目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">cd</span> ~
+git clone https://github.com.cnpmjs.org/cifsd-team/cifsd.git
+<span class="nb">cd</span> cifsd
+</code></pre></td></tr></table>
+</div>
+</div><p>编译并安装，如果出现问题。。。我相信你百度能力一直可以。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">make                <span class="c1"># 编译</span>
+sudo make install   <span class="c1"># 安装</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="编译安装-ksmbd-tools">编译安装 ksmbd-tools</h2>
+<p>克隆并进入目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">cd</span> ~
+git clone https://github.com.cnpmjs.org/cifsd-team/cifsd-tools.git
+<span class="nb">cd</span> ksmbd-tools
+</code></pre></td></tr></table>
+</div>
+</div><p>编译并安装，如果出现问题。。。我相信你百度能力一直可以。(悄悄告诉你，其实这一步最容易出错)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">./autogen.sh
+./configure
+make
+sudo make install
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="加载模块并设置开机自动加载">加载模块并设置开机自动加载</h2>
+<p>加载模块，并编辑<code>/etc/modules-load.d/ksmbd.conf</code>文件以设置开机自动加载。。。算了，怕你不会，直接运行下面的指令吧</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo modprobe ksmbd
+<span class="nb">echo</span> <span class="s1">&#39;ksmbd&#39;</span> <span class="p">|</span> sudo tee /etc/modules-load.d/ksmbd.conf &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><p>用<code>lsmod | grep ksmbd</code>查看模块是否被加载</p>
+<h2 id="创建并编辑配置">创建并编辑配置</h2>
+<p>先创建配置文件夹</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo mkdir /etc/ksmbd/
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="创建用户">创建用户</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># $USER 换成你想用的用户名</span>
+sudo ksmbd.adduser -a <span class="nv">$USER</span>
+<span class="c1"># 输密码，回车，再输一遍，回车</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="创建共享">创建共享</h3>
+<p>参考<a href="https://github.com/cifsd-team/ksmbd-tools/blob/master/Documentation/configuration.txt" target="_blank" rel="noopener noreffer">文档(Github)</a>对<code>/etc/ksmbd/smb.conf</code>进行配置，下面是一键生成示例配置的指令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s1">&#39;[global]
+</span><span class="s1">tcp port = 445
+</span><span class="s1">
+</span><span class="s1">[share]
+</span><span class="s1">comment = Share
+</span><span class="s1">path = /home/share
+</span><span class="s1">read only = no
+</span><span class="s1">browseable = yes
+</span><span class="s1">writeable = yes&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/ksmbd/smb.conf &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>经测试<code>tcp port = 445</code>这一行必须存在且需在<code>[global]</code>键下面，否则服务将无法在网络上监听。</p>
+</blockquote>
+<h2 id="启动测试">启动测试</h2>
+<p>使用下面的指令启动服务，并用其他设备连接测试(别和我说你不会连接 SMB)，如果测试成功就可以停止服务进行下一步了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 启动</span>
+sudo ksmbd.mountd
+<span class="c1"># 停止</span>
+sudo ksmbd.control -s
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="创建-sevice-文件实现开机自启">创建 sevice 文件实现开机自启</h2>
+<h3 id="创建-sevice-文件">创建 sevice 文件</h3>
+<p>创建<code>/etc/systemd/system/cifsd.service</code>文件，以下是一键指令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s1">&#39;[Unit]
+</span><span class="s1">Description=CIFSD
+</span><span class="s1">After=network.target network-online.target nss-lookup.target
+</span><span class="s1">
+</span><span class="s1">[Service]
+</span><span class="s1">Type=oneshot
+</span><span class="s1">StandardError=journal
+</span><span class="s1">User=root
+</span><span class="s1">Group=root
+</span><span class="s1">ExecStart=/usr/local/sbin/ksmbd.mountd
+</span><span class="s1">ExecStop=/usr/local/sbin/ksmbd.control -s
+</span><span class="s1">RemainAfterExit=true
+</span><span class="s1">Restart=on-failure
+</span><span class="s1">RestartSec=1s
+</span><span class="s1">
+</span><span class="s1">[Install]
+</span><span class="s1">WantedBy=multi-user.target&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/systemd/system/cifsd.service &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="设置开机自启">设置开机自启</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl daemon-reload
+sudo systemctl <span class="nb">enable</span> --now cifsd   <span class="c1"># 设置自启并立即启动</span>
+sudo systemctl status cifsd         <span class="c1"># 查看当前进程状态</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>大功告成，可以存你喜欢的小姐姐了<br>
+因为 <code>cifsd</code> 支持 <code>RDMA</code> 可以不经过 CPU 直接传输数据，所以理论上是可以跑满网络带宽的<br>
+至于你的带宽有多少你可以使用 <code>iperf3</code> 进行测试</p>
+</blockquote>]]></description></item></channel></rss>
