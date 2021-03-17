@@ -78,3 +78,27 @@ __GLX_VENDOR_LIBRARY_NAME=nvidia
 ```
 
 {{< /admonition >}}
+
+{{< admonition note "Debian删除或添加系统架构" false >}}
+
+- 查看现有架构
+
+```shell
+sudo dpkg --print-architecture
+```
+
+- 添加架构
+
+```shell
+sudo dpkg --add-architecture $ARCH
+```
+
+- 删除架构
+
+```shell
+sudo dpkg --remove-architecture $ARCH
+```
+
+> 其中 `$ARCH` 填写架构名，如：i386、amd64、arm64
+
+{{< /admonition >}}
