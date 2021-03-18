@@ -236,7 +236,7 @@ theme = "loveit"
     #  是否使用 fontawesome 扩展语法
     fontawesome = true
     # 是否在文章页面显示原始 Markdown 文档链接
-    linkToMarkdown = false
+    linkToMarkdown = true
     #  是否在 RSS 中显示全文内容
     rssFullText = true
     #  目录配置
@@ -284,9 +284,9 @@ theme = "loveit"
       fullscreen = true
     #  文章页面的分享信息设置
     [params.page.share]
-      enable = false
-      Twitter = false
-      Facebook = false
+      enable = true
+      Twitter = true
+      Facebook = true
       Linkedin = false
       Whatsapp = false
       Pinterest = false
@@ -324,16 +324,16 @@ theme = "loveit"
       # Gitalk 评论系统设置
       [params.page.comment.gitalk]
         # 
-        enable = true
-        owner = "negoces"
-        repo = "blog-talk"
-        clientId = "b27e7ef21fc1a033325a"
-        clientSecret = "ac19307d79a6fbe1931958899bb64c73b1f8f4ef"
+        enable = false
+        owner = ""
+        repo = ""
+        clientId = ""
+        clientSecret = ""
       # Valine 评论系统设置
       [params.page.comment.valine]
-        enable = false
-        appId = ""
-        appKey = ""
+        enable = true
+        appId = "3uWiEVeC9rHNohoAhIJ9ayXQ-gzGzoHsz"
+        appKey = "PU7NnLWWCuSlEdOlOLlRIGOj"
         placeholder = ""
         avatar = "mp"
         meta= ""
