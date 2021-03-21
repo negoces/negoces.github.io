@@ -125,3 +125,50 @@ theiaide/theia-cpp:latest
 ```
 
 {{< /admonition >}}
+
+{{< admonition tip "配置一个自认为高效的终端" false >}}
+
+安装以下软件
+
+- zsh
+- zsh-autosuggestions
+- zsh-syntax-highlighting
+- [starship](https://starship.rs/zh-CN/)
+
+编辑`~/.zshrc`
+
+```shell
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+
+alias grep="grep --color=auto"
+alias ls="ls --color -lh"
+eval "$(starship init zsh)"
+```
+
+编辑`~/.config/starship.toml`
+
+```shell
+[character]
+success_symbol = "[➜](bold green) "
+error_symbol = "[➜](bold red) "
+
+[hostname]
+ssh_only = false
+format =  "[@$hostname](bold red) "
+trim_at = ".companyname.com"
+disabled = false
+
+[username]
+style_user = "green bold"
+style_root = "red bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+```
+
+{{< /admonition >}}
