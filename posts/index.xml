@@ -1,4 +1,427 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>所有文章 - NEGOCES's Blog</title><link>https://negoces.github.io/posts/</link><description>所有文章 | NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 17 Mar 2021 19:14:22 +0800</lastBuildDate><atom:link href="https://negoces.github.io/posts/" rel="self" type="application/rss+xml"/><item><title>在Linux上安装cifsd启用SMB共享</title><link>https://negoces.github.io/posts/4ab61985/</link><pubDate>Wed, 17 Mar 2021 19:14:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4ab61985/</guid><description><![CDATA[<p>用树莓派做了一个网络存储，想挂载到系统上，便想到了 SMB 协议，之前用过 Samba 但是性能实属不行，恰巧在 Github 上看到了 cifsd 这个项目，并且支持 RDMA 所以在树莓派上面安装试试，结果发现效果还不错，速度蛮快的。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>所有文章 - NEGOCES's Blog</title><link>https://negoces.github.io/posts/</link><description>所有文章 | NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 20 Mar 2021 22:59:49 +0800</lastBuildDate><atom:link href="https://negoces.github.io/posts/" rel="self" type="application/rss+xml"/><item><title>Kubernetes 学习日记</title><link>https://negoces.github.io/posts/baaa9162/</link><pubDate>Sat, 20 Mar 2021 22:59:49 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/baaa9162/</guid><description><![CDATA[<p>Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。</p>
+<div class="details admonition danger open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">当前处于草稿状态，且目前仅到安装 kubeadm 可以，创建集群暂未测试</div>
+        </div>
+    </div>
+<div class="details admonition note">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>文章更新时间轴<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ul>
+<li>2021/03/20 文章创建</li>
+</ul>
+</div>
+        </div>
+    </div>
+<h2 id="引言">引言</h2>
+<p>随着微服务、分布式的流行，容器化也逐渐流行起来，Kubernetes 也逐渐成为了一项技能，我便在课余时间抽时间来学习了一下。</p>
+<p>Kubernetes 是一个容器编排工具，学习它肯定需要一个集群，但毕竟是学习，肯定没那么的资源来使用，我便使用虚拟机模拟了一个集群来进行学习。</p>
+<h2 id="用虚拟机创建集群">用虚拟机创建集群</h2>
+<p>考虑到 Kubernetes 的系统要求，我打算用 Fedora Server 作为虚拟机的系统，至于虚拟软件则因人而异了，有的人喜欢用 VM，我使用的是 KVM。</p>
+<div class="details admonition tip">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw"></i>Kubernetes 支持的系统<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ul>
+<li>Ubuntu 16.04+</li>
+<li>Debian 9+</li>
+<li>CentOS 7+</li>
+<li>Red Hat Enterprise Linux (RHEL) 7+</li>
+<li>Fedora 25+</li>
+<li>HypriotOS v1.0.1+</li>
+<li>Flatcar Container Linux （使用 2512.3.0 版本测试通过）</li>
+</ul>
+</div>
+        </div>
+    </div>
+<ol>
+<li>前往 <a href="https://mirrors.aliyun.com/fedora/releases/33/Server/x86_64/iso/" target="_blank" rel="noopener noreffer">Aliyun</a> 下载<code>Fedora-*.iso</code>文件。</li>
+<li>下载完毕后创建虚拟机，因为 k8s 的要求我们分配的虚拟机至少需要 <code>2 核 和 2G RAM</code>。</li>
+<li>启动虚拟机，根据提示安装。</li>
+<li>安装完毕后使用<code>reboot</code>重启，此时<code>iso</code>文件已经可以移除了。</li>
+</ol>
+<p>使用以上步骤创建至少两个虚拟机。</p>
+<h2 id="安装-kubeadm-及其他组件">安装 kubeadm 及其他组件</h2>
+<h3 id="每个节点上-mac-地址和-product_uuid-的唯一性">每个节点上 MAC 地址和 product_uuid 的唯一性</h3>
+<p>Kubernetes 使用这些值来唯一确定集群中的节点。 如果这些值在每个节点上不唯一，可能会导致安装失败。</p>
+<ul>
+<li>你可以使用命令 <code>ip link</code> 或 <code>ifconfig -a</code> 来获取网络接口的 MAC 地址</li>
+<li>可以使用 <code>sudo cat /sys/class/dmi/id/product_uuid</code> 命令对 product_uuid 校验</li>
+</ul>
+<h3 id="允许-iptables-检查桥接流量">允许 iptables 检查桥接流量</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo modprobe br_netfilter
+cat <span class="s">&lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf
+</span><span class="s">br_netfilter
+</span><span class="s">EOF</span>
+
+cat <span class="s">&lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
+</span><span class="s">net.bridge.bridge-nf-call-ip6tables = 1
+</span><span class="s">net.bridge.bridge-nf-call-iptables = 1
+</span><span class="s">EOF</span>
+sudo sysctl --system
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>放行端口<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>如果你用的是云服务器请确保以下端口已被放行</p>
+<ul>
+<li>控制平面节点: <code>6443</code>,<code>2379-2380</code>,<code>10250</code>,<code>10251</code>,<code>10252</code></li>
+<li>工作节点: <code>10250</code>,<code>30000-32767</code></li>
+</ul>
+<p>端口的具体作用请查阅<a href="https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports" target="_blank" rel="noopener noreffer">官网</a></p>
+</div>
+        </div>
+    </div>
+<h3 id="设置系统镜像">设置系统镜像</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo rm -f /etc/yum.repos.d/*
+
+<span class="nb">echo</span> <span class="s1">&#39;[fedora]
+</span><span class="s1">name=Fedora $releasever - $basearch
+</span><span class="s1">failovermethod=priority
+</span><span class="s1">baseurl=https://mirrors.aliyun.com/fedora/releases/$releasever/Everything/$basearch/os/
+</span><span class="s1">metadata_expire=28d
+</span><span class="s1">gpgcheck=1
+</span><span class="s1">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+</span><span class="s1">skip_if_unavailable=False&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/yum.repos.d/fedora.repo &gt; /dev/null
+
+<span class="nb">echo</span> <span class="s1">&#39;[updates]
+</span><span class="s1">name=Fedora $releasever - $basearch - Updates
+</span><span class="s1">failovermethod=priority
+</span><span class="s1">baseurl=https://mirrors.aliyun.com/fedora/updates/$releasever/Everything/$basearch/
+</span><span class="s1">enabled=1
+</span><span class="s1">gpgcheck=1
+</span><span class="s1">metadata_expire=6h
+</span><span class="s1">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+</span><span class="s1">skip_if_unavailable=False&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/yum.repos.d/fedora-updates.repo &gt; /dev/null
+
+<span class="nb">echo</span> <span class="s1">&#39;[fedora-modular]
+</span><span class="s1">name=Fedora Modular $releasever - $basearch
+</span><span class="s1">failovermethod=priority
+</span><span class="s1">baseurl=https://mirrors.aliyun.com/fedora/releases/$releasever/Modular/$basearch/os/
+</span><span class="s1">enabled=1
+</span><span class="s1">metadata_expire=7d
+</span><span class="s1">gpgcheck=1
+</span><span class="s1">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+</span><span class="s1">skip_if_unavailable=False&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/yum.repos.d/fedora-modular.repo &gt; /dev/null
+
+<span class="nb">echo</span> <span class="s1">&#39;[updates-modular]
+</span><span class="s1">name=Fedora Modular $releasever - $basearch - Updates
+</span><span class="s1">failovermethod=priority
+</span><span class="s1">baseurl=https://mirrors.aliyun.com/fedora/updates/$releasever/Modular/$basearch/
+</span><span class="s1">enabled=1
+</span><span class="s1">gpgcheck=1
+</span><span class="s1">metadata_expire=6h
+</span><span class="s1">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+</span><span class="s1">skip_if_unavailable=False&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/yum.repos.d/fedora-updates-modular.repo &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><p>系统更新: <code>sudo dnf update</code></p>
+<h3 id="安装-docker">安装 Docker</h3>
+<p>添加 mirrors</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo <span class="se">\
+</span><span class="se"></span>https://mirrors.aliyun.com/docker-ce/linux/fedora/docker-ce.repo
+</code></pre></td></tr></table>
+</div>
+</div><p>安装 Docker</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo dnf install docker-ce docker-ce-cli containerd.io
+</code></pre></td></tr></table>
+</div>
+</div><p>赋予账户可直接操作 Docker 的权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo usermod -aG docker <span class="nv">$USER</span>
+newgrp docker
+</code></pre></td></tr></table>
+</div>
+</div><p>添加 Docker 仓库加速</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="se">\
+</span><span class="se"></span><span class="s1">&#39;{
+</span><span class="s1">    &#34;exec-opts&#34;: [
+</span><span class="s1">        &#34;native.cgroupdriver=systemd&#34;
+</span><span class="s1">    ],
+</span><span class="s1">    &#34;log-driver&#34;: &#34;json-file&#34;,
+</span><span class="s1">    &#34;log-opts&#34;: {
+</span><span class="s1">        &#34;max-size&#34;: &#34;100m&#34;
+</span><span class="s1">    },
+</span><span class="s1">    &#34;storage-driver&#34;: &#34;overlay2&#34;,
+</span><span class="s1">    &#34;registry-mirrors&#34;: [
+</span><span class="s1">        &#34;https://docker.mirrors.sjtug.sjtu.edu.cn&#34;
+</span><span class="s1">    ]
+</span><span class="s1">}&#39;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/docker/daemon.json &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><p>启动 Docker 并设置自启</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl start docker
+sudo systemctl <span class="nb">enable</span> docker
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="安装-kubeadm">安装 kubeadm</h3>
+<p>添加 mirror</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">cat <span class="s">&lt;&lt;EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+</span><span class="s">[kubernetes]
+</span><span class="s">name=kubernetes
+</span><span class="s">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+</span><span class="s">enabled=1
+</span><span class="s">gpgcheck=1
+</span><span class="s">repo_gpgcheck=1
+</span><span class="s">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+</span><span class="s">exclude=kubelet kubeadm kubectl
+</span><span class="s">EOF</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>禁用 SELinux</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">setenforce <span class="m">0</span>
+sed -i <span class="s1">&#39;s/^SELINUX=enforcing$/SELINUX=permissive/&#39;</span> /etc/selinux/config
+</code></pre></td></tr></table>
+</div>
+</div><p>安装并启动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo dnf install -y kubelet kubeadm kubectl --disableexcludes<span class="o">=</span>kubernetes
+
+systemctl <span class="nb">enable</span> --now kubelet
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="使用-kubeadm-创建集群">使用 kubeadm 创建集群</h2>
+<p>关闭防火墙</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">systemctl stop firewalld
+systemctl disable firewalld
+</code></pre></td></tr></table>
+</div>
+</div><p>关闭 swap</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">swapoff -a
+sed -ri <span class="s1">&#39;s/.*swap.*/#&amp;/&#39;</span> /etc/fstab
+</code></pre></td></tr></table>
+</div>
+</div><p>提前拉取所需镜像(因版本而异)，可用<code>kubeadm config images list</code>查看</p>
+<blockquote>
+<p>将<code>k8s.gcr.io</code>换成<code>registry.aliyuncs.com/google_containers/</code></p>
+</blockquote>
+<blockquote>
+<p>也可修改配置实现加速<br>
+<code>kubeadm config print-defaults --api-objects ClusterConfiguration &gt; kubeadm.conf</code>生成配置<br>
+修改<code>kubernetesVersion:</code>为当前版本<br>
+修改<code>imageRepository:</code>为<code>registry.aliyuncs.com/google_containers</code></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">docker pull registry.aliyuncs.com/google_containers/kube-apiserver:v1.20.5
+docker pull registry.aliyuncs.com/google_containers/kube-controller-manager:v1.20.5
+docker pull registry.aliyuncs.com/google_containers/kube-scheduler:v1.20.5
+docker pull registry.aliyuncs.com/google_containers/kube-proxy:v1.20.5
+docker pull registry.aliyuncs.com/google_containers/pause:3.2
+docker pull registry.aliyuncs.com/google_containers/etcd:3.4.13-0
+docker pull registry.aliyuncs.com/google_containers/coredns:1.7.0
+
+docker tag registry.aliyuncs.com/google_containers/kube-apiserver:v1.20.5 <span class="se">\
+</span><span class="se"></span>k8s.gcr.io/kube-apiserver:v1.20.5
+docker tag registry.aliyuncs.com/google_containers/kube-controller-manager:v1.20.5 <span class="se">\
+</span><span class="se"></span>k8s.gcr.io/kube-controller-manager:v1.20.5
+docker tag registry.aliyuncs.com/google_containers/kube-scheduler:v1.20.5 <span class="se">\
+</span><span class="se"></span>k8s.gcr.io/kube-scheduler:v1.20.5
+docker tag registry.aliyuncs.com/google_containers/kube-proxy:v1.20.5 <span class="se">\
+</span><span class="se"></span>k8s.gcr.io/kube-proxy:v1.20.5
+docker tag registry.aliyuncs.com/google_containers/pause:3.2 <span class="se">\
+</span><span class="se"></span>k8s.gcr.io/pause:3.2
+docker tag registry.aliyuncs.com/google_containers/etcd:3.4.13-0 <span class="se">\
+</span><span class="se"></span>k8s.gcr.io/etcd:3.4.13-0
+docker tag registry.aliyuncs.com/google_containers/coredns:1.7.0 <span class="se">\
+</span><span class="se"></span>k8s.gcr.io/coredns:1.7.0
+</code></pre></td></tr></table>
+</div>
+</div><p>初始化</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">kubeadm init
+<span class="c1"># 或</span>
+kubeadm init --ignore-preflight-errors<span class="o">=</span>Swap
+</code></pre></td></tr></table>
+</div>
+</div>]]></description></item><item><title>在Linux上安装cifsd启用SMB共享</title><link>https://negoces.github.io/posts/4ab61985/</link><pubDate>Wed, 17 Mar 2021 19:14:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4ab61985/</guid><description><![CDATA[<p>用树莓派做了一个网络存储，想挂载到系统上，便想到了 SMB 协议，之前用过 Samba 但是性能实属不行，恰巧在 Github 上看到了 cifsd 这个项目，并且支持 RDMA 所以在树莓派上面安装试试，结果发现效果还不错，速度蛮快的。</p>
 <h2 id="安装必要的依赖">安装必要的依赖</h2>
 <p>Github 上只有源码，没有现成的二进制文件，软件仓库里面也没有，所以必须自己编译(其实并不意外，这个程序是作为内核模块运行的，所以才有如此之高的性能)。</p>
 <div class="highlight"><div class="chroma">
@@ -1985,116 +2408,6 @@ curl https://bob:12345@google.com/login
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-shell" data-lang="shell">curl -x user:passwd@proxy.com:8080 https://www.example.com
-</code></pre></td></tr></table>
-</div>
-</div>]]></description></item><item><title>C++实现生成abbrlink</title><link>https://negoces.github.io/posts/16ea70f5/</link><pubDate>Thu, 05 Nov 2020 01:37:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16ea70f5/</guid><description><![CDATA[<p>之前用过Hexo写过博客，用过一个插件叫hexo-abbrlink，可以生成文章唯一永久链接(8位16进制的字符串)，Hugo有个slug参数，可以用C++写个小程序生成一串字符并填入来模拟这个功能。</p>
-<blockquote>
-<p>这个实现方式只是通过生成8个0-15的随机数实现的，有概率会出现生成的字符重复的现象(只不过概率特别低)，不过其他方法我也不会啊，只能想到这种实现方式了(我太菜了)，就当作是练习C++的面向对象编程吧。</p>
-</blockquote>
-<h2 id="源代码">源代码</h2>
-<p>引入头文件</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;cstdlib&gt;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;ctime&gt;</span><span class="cp">
-</span><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>声明对象</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Abbrlink</span>
-<span class="p">{</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="kt">int</span> <span class="n">abbr</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-
-<span class="k">public</span><span class="o">:</span>
-    <span class="kt">void</span> <span class="n">New</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">seed</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="kt">int</span> <span class="n">bytes</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-            <span class="k">while</span> <span class="p">((</span><span class="n">bytes</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">bytes</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">))</span>
-            <span class="p">{</span>
-                <span class="n">seed</span><span class="o">--</span><span class="p">;</span>
-                <span class="n">srand</span><span class="p">(</span><span class="n">seed</span><span class="p">);</span>
-                <span class="n">bytes</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="mi">16</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="n">abbr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bytes</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="kt">void</span> <span class="nf">Print</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">abbr</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="p">}</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>主函数</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="n">Abbrlink</span> <span class="n">abbr</span><span class="p">;</span>
-    <span class="n">abbr</span><span class="p">.</span><span class="n">New</span><span class="p">();</span>
-    <span class="n">abbr</span><span class="p">.</span><span class="n">Print</span><span class="p">();</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div>]]></description></item></channel></rss>
