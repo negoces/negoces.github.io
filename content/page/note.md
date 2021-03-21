@@ -64,6 +64,12 @@ git config --global core.editor vim
 git config --global merge.tool vimdiff
 ```
 
+包含子模块 clone
+
+```shell
+git clone --recursive $REPO_URL
+```
+
 {{< /admonition >}}
 
 {{< admonition note "Linux 下使用环境变量使用NVIDIA显卡启动软件" false >}}
@@ -100,5 +106,22 @@ sudo dpkg --remove-architecture $ARCH
 ```
 
 > 其中 `$ARCH` 填写架构名，如：i386、amd64、arm64
+
+{{< /admonition >}}
+
+{{< admonition note "搭建Theia" false >}}
+
+```shell
+docker run \
+-d \
+--security-opt \
+seccomp=unconfined \
+--init -it \
+-p 2900:3000 \
+--restart=always \
+--name=theia \
+-v "/home/theia:/home/project:cached" \
+theiaide/theia-cpp:latest
+```
 
 {{< /admonition >}}
