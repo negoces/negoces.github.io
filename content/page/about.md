@@ -3,7 +3,8 @@ title: "关于"
 slug: about
 ---
 
-{{< music netease song 22736708 >}}
+<!-- {{< music netease song 22736708 >}} -->
+{{< music netease song 1452463974 >}}
 
 ## 关于网站
 
