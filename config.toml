@@ -382,7 +382,7 @@ theme = "loveit"
     #  第三方库配置
     [params.page.library]
       [params.page.library.css]
-        # someCSS = "some.css"
+        Hiden = "/css/hiden.css"
         # 位于 "assets/"
         # 或者
       [params.page.library.js]
