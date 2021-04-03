@@ -5,6 +5,41 @@ comment:
   enable: false
 ---
 
+<style>
+body span.hiden {
+  color: #0000;
+  background-color: #161209;
+}
+
+body span.hiden:hover {
+  animation: hidengc 0.3s forwards;
+}
+
+body[theme="dark"] span.hiden {
+  color: #0000;
+  background-color: #a9a9b3;
+}
+
+body[theme="dark"] span.hiden:hover {
+  animation: hidengcdark 0.3s forwards;
+}
+
+@keyframes hidengc {
+  to {
+    color: #161209;
+    background-color: #0000;
+  }
+}
+
+@keyframes hidengcdark {
+  to {
+    color: #a9a9b3;
+    background-color: #0000;
+  }
+}
+
+</style>
+
 ## 不用怀疑！这就是个记事本！
 
 {{< admonition note "Android SDK Platform Tools 下载地址" false >}}
@@ -182,5 +217,12 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\18D1D00D01
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\18D1D00D0100" /v "SkipContainerIdQuery" /t REG_BINARY /d "01000000" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\18D1D00D0100" /v "SkipBOSDescriptorQuery" /t REG_BINARY /d "01000000" /f
 ```
+
+{{< /admonition >}}
+
+{{< admonition note "电信光猫超级密码" true >}}
+
+帐号: telecomadmin  
+密码: <span class="hiden">nE7jA%5m</span>
 
 {{< /admonition >}}
