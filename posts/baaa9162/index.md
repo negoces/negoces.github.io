@@ -1,4 +1,4 @@
-# Kubernetes 学习日记
+# Kubernetes 学习日记(未完成)
 
 
 Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。

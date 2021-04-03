@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>学习日记 - 分类 - NEGOCES's Blog</title><link>https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/</link><description>学习日记 - 分类 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 20 Mar 2021 22:59:49 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/" rel="self" type="application/rss+xml"/><item><title>Kubernetes 学习日记</title><link>https://negoces.github.io/posts/baaa9162/</link><pubDate>Sat, 20 Mar 2021 22:59:49 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/baaa9162/</guid><description><![CDATA[<p>Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>学习日记 - 分类 - NEGOCES's Blog</title><link>https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/</link><description>学习日记 - 分类 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 20 Mar 2021 22:59:49 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/" rel="self" type="application/rss+xml"/><item><title>Kubernetes 学习日记(未完成)</title><link>https://negoces.github.io/posts/baaa9162/</link><pubDate>Sat, 20 Mar 2021 22:59:49 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/baaa9162/</guid><description><![CDATA[<p>Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。</p>
 <div class="details admonition danger open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
@@ -1306,7 +1306,329 @@ docker run -d <span class="se">\
 </span><span class="se"></span>portainer/portainer-ce
 </code></pre></td></tr></table>
 </div>
-</div><p>到此为止，Docker 和 Portainer 面板均已部署完毕，可前往<code>&lt;ip&gt;：9000</code>访问面板</p>]]></description></item><item><title>树莓派4入门指南(无显示器)</title><link>https://negoces.github.io/posts/04c00a0d/</link><pubDate>Wed, 03 Mar 2021 20:54:16 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/04c00a0d/</guid><description><![CDATA[<h2 id="准备">准备</h2>
+</div><p>到此为止，Docker 和 Portainer 面板均已部署完毕，可前往<code>&lt;ip&gt;：9000</code>访问面板</p>]]></description></item><item><title>把树莓派当作热点</title><link>https://negoces.github.io/posts/542347b3/</link><pubDate>Wed, 03 Mar 2021 21:18:18 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/542347b3/</guid><description><![CDATA[<p>将树莓派作为二级路由器</p>
+<div class="details admonition danger open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-skull-crossbones fa-fw"></i>AP模式 与 路由模式<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>树莓派可作为纯 AP <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> 使用，这里启用了 NAT 作为二级路由使用。</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>AP： 全称 WirelessAccessPoint(无线访问接入点) 是无线网和有线网之间沟通的桥梁 <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+</div>
+        </div>
+    </div>
+<blockquote>
+<p>测试环境:<br>
+设备: RaspberryPi 3B+<br>
+系统: Raspberry Pi OS (与 Raspbian 类似是官方的 64 位系统。)<br>
+上级路由: 10.0.0.1 (OpenWRT)</p>
+</blockquote>
+<h2 id="安装系统">安装系统</h2>
+<p>系统安装及设置语言等操作请参考<a href="/posts/04c00a0d/" rel="">此文章</a></p>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">树莓派 3 与树莓派 4 的入门安装基本一致，区别在于树莓派 3 的 USB 启动不需要更新 eeprom</div>
+        </div>
+    </div>
+<h2 id="安装必要软件">安装必要软件</h2>
+<p>完全更新系统，防止安装软件时出现依赖不兼容等问题。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
+sudo apt full-upgrade -y
+</code></pre></td></tr></table>
+</div>
+</div><p>安装<code>hostapd</code>、<code>dnsmasq</code>等软件，其中<code>hostapd</code>可以将你的树莓派变成热点向外发出无线信号，<code>dnsmasq</code>作为 DHCP 服务器与 DNS 缓存，为连接的设备分配 IP 地址及提供 DNS 服务。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install hostapd dnsmasq netfilter-persistent iptables-persistent -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="设置无线接口">设置无线接口</h2>
+<p>编辑<code>/etc/dhcpcd.conf</code>添加下面配置(仅树莓派是修改此文件，debian 需修改<code>/etc/network/interfaces</code>文件)，为 wlan0 接口绑定 IP 地址，用于后面的<code>hostapd</code>绑定接口。</p>
+<p><code>ip_address=</code>后的 IP 地址可以填写任意子网 IP，<code>但不要和你的上级路由重复</code>，比如一般家用路由器为 <code>192.168.1.1/24</code> 客户端可用的 IP 为 192.168.1.2 - 192.168.1.254 (192.168.1.1 为路由器自身地址，192.168.1.255 为广播地址)</p>
+<div class="details admonition tip">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw"></i>子网范围<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ul>
+<li>A 类: 10.0.0.0 - 10.255.255.255 (子网掩码: 255.0.0.0)</li>
+<li>B 类: 172.16.0.0 - 172.31.255.255 (子网掩码: 255.240.0.0)</li>
+<li>C 类: 192.168.0.0 - 192.168.255.255 (子网掩码: 255.255.0.0)</li>
+</ul>
+</div>
+        </div>
+    </div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">interface wlan0
+    static ip_address=172.24.0.1/24
+    nohook wpa_supplicant
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="开启内核转发">开启内核转发</h2>
+<p>启用 Linux 内核转发功能，使得进入树莓派的流量能顺利的通过树莓派转发出去，否则之后将会出现可以连上树莓派但是无法联网的情况。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s2">&#34;net.ipv4.ip_forward=1&#34;</span> <span class="p">|</span> <span class="se">\
+</span><span class="se"></span>sudo tee /etc/sysctl.d/routed-ap.conf &gt; /dev/null
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置无线国家代码">配置无线国家代码</h2>
+<p>使用<code>raspi-config</code>工具设置 WLAN 国家代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo raspi-config
+</code></pre></td></tr></table>
+</div>
+</div><p>依次选择<code>Localisation Options -&gt; WLAN Country -&gt; AU</code>，为什么不用 CN？不知道是不是树莓派的问题，CN 的 5G 频段少之又少，而且都不支持 80MHz，所以选择了 AU。设置完成后返回主菜单，<code>Finished</code>，<code>Reboot</code></p>
+<h2 id="配置并启用-hostapd">配置并启用 hostapd</h2>
+<p>先确保无线模块未被禁用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo rfkill unblock wlan
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw"></i>查询网卡支持的频段<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo iw reg <span class="nb">set</span> AU
+sudo iw phy phy0 channels
+</code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>
+<p>编辑<code>/etc/hostapd/hostapd.conf</code>对 hostapd 进行设置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1"># 接口与频率设定</span>
+<span class="c1"># 绑定接口</span>
+<span class="na">interface</span><span class="o">=</span><span class="s">wlan0</span>
+<span class="c1"># 802.11a</span>
+<span class="na">hw_mode</span><span class="o">=</span><span class="s">a</span>
+<span class="c1"># 信道</span>
+<span class="na">channel</span><span class="o">=</span><span class="s">36</span>
+<span class="c1"># 国家代码</span>
+<span class="na">country_code</span><span class="o">=</span><span class="s">AU</span>
+<span class="c1"># IEEE802.11d</span>
+<span class="na">ieee80211d</span><span class="o">=</span><span class="s">1</span>
+<span class="c1"># IEEE802.11h</span>
+<span class="na">ieee80211h</span><span class="o">=</span><span class="s">1</span>
+<span class="c1"># MAC地址过滤模式</span>
+<span class="na">macaddr_acl</span><span class="o">=</span><span class="s">0</span>
+<span class="c1"># 最大连接数</span>
+<span class="na">max_num_sta</span><span class="o">=</span><span class="s">255</span>
+<span class="c1"># 隐藏SSID</span>
+<span class="na">ignore_broadcast_ssid</span><span class="o">=</span><span class="s">0</span>
+<span class="c1"># 启用WMM</span>
+<span class="na">wmm_enabled</span><span class="o">=</span><span class="s">1</span>
+
+<span class="c1"># 802.11n/ac (HT/VHT) Settings</span>
+<span class="c1"># IEEE802.11n</span>
+<span class="na">ieee80211n</span><span class="o">=</span><span class="s">1</span>
+<span class="c1"># IEEE802.11ac</span>
+<span class="na">ieee80211ac</span><span class="o">=</span><span class="s">1</span>
+<span class="na">ht_capab</span><span class="o">=</span><span class="s">[HT40-][HT40+][SHORT-GI-20][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839]</span>
+<span class="na">vht_capab</span><span class="o">=</span><span class="s">[MAX-MPDU-3895][SHORT-GI-80][SU-BEAMFORMER][SU-BEAMFORMEE]</span>
+<span class="na">vht_oper_chwidth</span><span class="o">=</span><span class="s">1</span>
+<span class="na">vht_oper_centr_freq_seg0_idx</span><span class="o">=</span><span class="s">42</span>
+<span class="c1">#vht_oper_centr_freq_seg1_idx=159</span>
+
+<span class="c1"># SSID及安全设置</span>
+<span class="na">ssid</span><span class="o">=</span><span class="s">RaspAP</span>
+<span class="na">wpa</span><span class="o">=</span><span class="s">2</span>
+<span class="na">auth_algs</span><span class="o">=</span><span class="s">1</span>
+<span class="na">rsn_pairwise</span><span class="o">=</span><span class="s">CCMP</span>
+<span class="na">wpa_key_mgmt</span><span class="o">=</span><span class="s">WPA-PSK</span>
+<span class="na">wpa_passphrase</span><span class="o">=</span><span class="s">22223333</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>在我使用的过程中，ACS(自动选择信道)即<code>channel=0</code>会导致无法启动。</p>
+<p>目前已知能正常启动且国外论坛建议的<code>channel / vht_oper_centr_freq_seg0_idx</code>的参数分别为<code>36/42</code>和<code>149/155</code>，即<code>36</code>或<code>149</code>信道。</p>
+</div>
+        </div>
+    </div>
+<p>先测试能否启动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo /usr/sbin/hostapd -P /run/hostapd.pid -dd /etc/hostapd/hostapd.conf
+</code></pre></td></tr></table>
+</div>
+</div><p>如果<code>hostapd</code>正常启动则可通过<code>cltl^C</code>关闭，并使用下列指令设置开机自启并在后台运行。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl unmask hostapd
+sudo systemctl <span class="nb">enable</span> --now hostapd
+sudo systemctl status hostapd
+</code></pre></td></tr></table>
+</div>
+</div><p>手机的 WLAN 列表中会显示你的 WiFi 名称，但请不要尝试连接，现在并没有配置 DHCP 服务，你的设备会因为无法分配到 IP 导致无法连接</p>
+<h2 id="配置并启用-dnsmasq">配置并启用 dnsmasq</h2>
+<p>备份<code>dnsmasq</code>安装时生成的配置，以便于日后查阅</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+</code></pre></td></tr></table>
+</div>
+</div><p>创建<code>/etc/dnsmasq.conf</code>并编辑新配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">interface=wlan0
+dhcp-range=172.24.0.2,172.24.0.254,255.255.255.0,2h
+domain=wlan
+server=223.5.5.5
+address=/raspberry.lan/172.24.0.1
+</code></pre></td></tr></table>
+</div>
+</div><p>设置开机自启并立即启动<code>dnsmasq</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl <span class="nb">enable</span> --now dnsmasq
+sudo systemctl restart dnsmasq
+sudo systemctl status dnsmasq
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-iptables">配置 iptables</h2>
+<p>配置 iptables 实现 NAT 功能，将发送到树莓派的流量截获并修改源地址实现 SNAT</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo iptables -t nat -A POSTROUTING -j MASQUERADE
+</code></pre></td></tr></table>
+</div>
+</div><p>配置 iptables 永久化，使每次重启后 iptables 都能自动添加之前的规则</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo netfilter-persistent save
+</code></pre></td></tr></table>
+</div>
+</div>]]></description></item><item><title>树莓派4入门指南(无显示器)</title><link>https://negoces.github.io/posts/04c00a0d/</link><pubDate>Wed, 03 Mar 2021 20:54:16 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/04c00a0d/</guid><description><![CDATA[<p>树莓派 4 无头启动(Headless)入门指南</p>
+<div class="details admonition danger open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">以下部分内容仅适用于 <code>Debian 10 (buster)</code> 系统，最新的指南请前往 <a href="https://www.raspberrypi.org/documentation/" target="_blank" rel="noopener noreffer">官网(英文)</a> 查阅。</div>
+        </div>
+    </div>
+<h2 id="准备">准备</h2>
 <p>所需材料:</p>
 <ul>
 <li>树莓派*1</li>
@@ -1317,9 +1639,10 @@ docker run -d <span class="se">\
 <li>活人*1</li>
 </ul>
 <h2 id="制作带有系统的-sd-卡">制作带有系统的 SD 卡</h2>
+<p>从 <a href="https://www.raspberrypi.org/software/operating-systems/" target="_blank" rel="noopener noreffer">官网</a> 或者 <a href="https://mirrors.tuna.tsinghua.edu.cn/raspberry-pi-os-images/" target="_blank" rel="noopener noreffer">TUNA</a> 下载 Raspberry Pi OS 的镜像(<code>raspios_lite_arm64</code>)。</p>
 <p>打开 Etcher，点击最左侧的<code>Flash from file</code>，选择你所下载的树莓派镜像，点击中间的<code>Select target</code>，勾选你的 SD 卡，点击<code>Select</code>，点击最右边的<code>Flash</code>等待烧录完即可。</p>
 <p>烧录完之后系统里面会多出一个命名为<code>boot</code>的分区，在此分区里面创建一个空白的名为<code>ssh</code>的文件以开启 ssh 远程访问。</p>
-<div class="details admonition note open">
+<div class="details admonition note">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-pencil-alt fa-fw"></i>连接到WiFi网络<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
@@ -1350,7 +1673,7 @@ docker run -d <span class="se">\
 </div></div>
         </div>
     </div>
-<div class="details admonition note open">
+<div class="details admonition note">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-pencil-alt fa-fw"></i>使用USB启动<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
@@ -1389,9 +1712,16 @@ passwd
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="设置镜像并更新">设置镜像并更新</h2>
-<blockquote>
-<p>我的配置用的是 testing 更新通道，软件比较新但也可能出现 bug</p>
-</blockquote>
+<div class="details admonition danger open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>下面的配置用的是 <code>testing</code> 更新通道，软件比较新但也可能出现 BUG</p>
+<p>若想使用稳定版请将下面的<code>testing</code>全部替换成<code>buster</code></p>
+</div>
+        </div>
+    </div>
 <p>设置 Debian 仓库镜像</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1446,6 +1776,14 @@ sudo apt full-upgrade -y
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="设置中文">设置中文</h2>
+<div class="details admonition danger open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">如果你的树莓派连接了显示器且没有安装图形界面请不要设置中文，否则会导致乱码</div>
+        </div>
+    </div>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1462,7 +1800,17 @@ sudo apt full-upgrade -y
 </div>
 </div><p>然后重启</p>
 <p>然后，Enjoy youself!</p>
-<div class="details admonition note open">
+<h2 id="更多设置">更多设置</h2>
+<p>更多的设置(比如 GPIO 等)可以使用树莓派官方的工具进行配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo raspi-config
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-pencil-alt fa-fw"></i>小技巧<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
@@ -1494,342 +1842,7 @@ vcgencmd measure_temp
 </div>
 </div></div>
         </div>
-    </div>]]></description></item><item><title>把树莓派当作热点并开启Tproxy</title><link>https://negoces.github.io/posts/542347b3/</link><pubDate>Mon, 15 Feb 2021 14:18:18 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/542347b3/</guid><description><![CDATA[<blockquote>
-<p>测试环境:<br>
-设备: RaspberryPi 3B+<br>
-系统: raspios<br>
-上级路由: 192.1681.1 (OpenWRT)</p>
-</blockquote>
-<h2 id="安装系统">安装系统</h2>
-<p>从<a href="https://www.raspberrypi.org/software/operating-systems/" target="_blank" rel="noopener noreffer">官网</a>或者<a href="https://mirrors.tuna.tsinghua.edu.cn/raspberry-pi-os-images/" target="_blank" rel="noopener noreffer">镜像</a>下载 raspios,使用<a href="https://www.balena.io/etcher/" target="_blank" rel="noopener noreffer">BalenaEtcher</a>写入 SD 卡</p>
-<p>启动并修改 apt 镜像</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/apt/sources.list
-deb https://mirrors.sjtug.sjtu.edu.cn/debian buster main contrib non-free
-deb https://mirrors.sjtug.sjtu.edu.cn/debian buster-updates main contrib non-free
-deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ buster/updates main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian buster main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian buster-updates main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ buster/updates main contrib non-free
-</code></pre></td></tr></table>
-</div>
-</div><div class="details admonition note">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-pencil-alt fa-fw"></i>更激进的软件更新<i class="details-icon fas fa-angle-right fa-fw"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/apt/sources.list
-deb https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
-deb https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
-deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
-deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
-</code></pre></td></tr></table>
-</div>
-</div></div>
-        </div>
-    </div>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/apt/sources.list.d/raspi.list
-deb https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
-deb-src https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
-</code></pre></td></tr></table>
-</div>
-</div><p>完全更新系统</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
-sudo apt full-upgrade -y
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="安装必要软件">安装必要软件</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install hostapd dnsmasq netfilter-persistent iptables-persistent -y
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="设置无线接口">设置无线接口</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/dhcpcd.conf
-interface wlan0
-    static ip_address=172.16.3.1/24
-    nohook wpa_supplicant
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="设置系统语言可选">设置系统语言(可选)</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1"># /etc/environment</span>
-<span class="na">LANG</span><span class="o">=</span><span class="s">zh_CN.UTF-8</span>
-<span class="na">LANGUAGE</span><span class="o">=</span><span class="s">&#34;zh_CN:zh:en_US:en&#34;</span>
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="开启内核转发">开启内核转发</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1"># /etc/sysctl.conf</span>
-<span class="na">net.ipv4.ip_forward</span><span class="o">=</span><span class="s">1</span>
-<span class="na">net.ipv6.conf.all.forwarding</span><span class="o">=</span><span class="s">1</span>
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="配置无线国家代码">配置无线国家代码</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo raspi-config
-</code></pre></td></tr></table>
-</div>
-</div><p><code>Localisation Options -&gt; WLAN Country -&gt; AU</code></p>
-<p>重启</p>
-<h2 id="配置并启用hostapd">配置并启用hostapd</h2>
-<p>先确保无线模块未被禁用</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo rfkill unblock wlan
-</code></pre></td></tr></table>
-</div>
-</div><p>对hostapd进行设置</p>
-<p>(
-查看支持的频段
-sudo iw reg set GB
-iw phy phy0 channels
-)</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1"># /etc/hostapd/hostapd.conf</span>
-
-<span class="c1"># 接口与频率设定</span>
-<span class="na">interface</span><span class="o">=</span><span class="s">wlan0</span>
-<span class="na">hw_mode</span><span class="o">=</span><span class="s">a</span>
-<span class="na">channel</span><span class="o">=</span><span class="s">149</span>
-<span class="na">country_code</span><span class="o">=</span><span class="s">AU</span>
-<span class="na">ieee80211d</span><span class="o">=</span><span class="s">1</span>
-<span class="na">macaddr_acl</span><span class="o">=</span><span class="s">0</span>
-<span class="na">max_num_sta</span><span class="o">=</span><span class="s">10</span>
-<span class="na">ignore_broadcast_ssid</span><span class="o">=</span><span class="s">0</span>
-<span class="na">wmm_enabled</span><span class="o">=</span><span class="s">1</span>
-
-<span class="c1"># 802.11n/ac (HT/VHT) Settings</span>
-<span class="na">ieee80211n</span><span class="o">=</span><span class="s">1</span>
-<span class="na">ieee80211ac</span><span class="o">=</span><span class="s">1</span>
-<span class="na">ht_capab</span><span class="o">=</span><span class="s">[HT40+][SHORT-GI-20][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839]</span>
-<span class="na">vht_capab</span><span class="o">=</span><span class="s">[MAX-MPDU-3895][SHORT-GI-80][SU-BEAMFORMEE]</span>
-<span class="na">vht_oper_chwidth</span><span class="o">=</span><span class="s">1</span>
-<span class="na">vht_oper_centr_freq_seg0_idx</span><span class="o">=</span><span class="s">155</span>
-
-<span class="c1"># SSID及安全设置</span>
-<span class="na">ssid</span><span class="o">=</span><span class="s">Raspberry Net</span>
-<span class="na">wpa</span><span class="o">=</span><span class="s">2</span>
-<span class="na">auth_algs</span><span class="o">=</span><span class="s">1</span>
-<span class="na">rsn_pairwise</span><span class="o">=</span><span class="s">CCMP</span>
-<span class="na">wpa_key_mgmt</span><span class="o">=</span><span class="s">WPA-PSK</span>
-<span class="na">wpa_passphrase</span><span class="o">=</span><span class="s">12345678</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>start</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl unmask hostapd
-sudo systemctl <span class="nb">enable</span> hostapd
-sudo systemctl start hostapd
-sudo systemctl status hostapd
-</code></pre></td></tr></table>
-</div>
-</div><p>手机的WLAN列表中会扫描到，但请不要尝试连接，现在并没有配置DHCP服务，你的设备会因为没有分配到IP导致无法连接</p>
-<h2 id="配置并启用dnsmasq">配置并启用dnsmasq</h2>
-<p>备份原有配置</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
-</code></pre></td></tr></table>
-</div>
-</div><p>创建新配置</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/dnsmasq.conf
-interface=wlan0
-dhcp-range=172.16.3.100,172.16.3.253,255.255.255.0,2h
-domain=wlan
-address=/gw.wlan/172.16.3.1
-</code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl <span class="nb">enable</span> dnsmasq
-sudo systemctl restart dnsmasq
-sudo systemctl status dnsmasq
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="配置iptables">配置iptables</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo iptables -t nat -A POSTROUTING -j MASQUERADE
-</code></pre></td></tr></table>
-</div>
-</div><p>iptables永久化</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo netfilter-persistent save
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="启用ipv6地址下发">启用IPv6地址下发</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install radvd -y
-</code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/radvd.conf
-interface wlan0 {
-    AdvSendAdvert on;
-	MinRtrAdvInterval 30;
-	MaxRtrAdvInterval 100; 
-    prefix ::/64
-    {
-        AdvOnLink on;
-        AdvAutonomous on;   
-        AdvRouterAddr off;
-        AdvValidLifetime 120;
-		AdvPreferredLifetime 100;
-    };
-};
-</code></pre></td></tr></table>
-</div>
-</div>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
+    </div>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/posts/16e870f5/cover.png" referrerpolicy="no-referrer">
             </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
 <h2 id="iptables-是什么">iptables 是什么</h2>
