@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes 学习日记"
+title: "Kubernetes 学习日记(未完成)"
 date: 2021-03-20T22:59:49+08:00
 #featuredImage: "cover.png"
 slug: baaa9162

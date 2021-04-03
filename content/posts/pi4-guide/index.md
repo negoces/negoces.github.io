@@ -1,13 +1,22 @@
 ---
 title: "树莓派4入门指南(无显示器)"
 date: 2021-03-03T20:54:16+08:00
+lastmod: 2021-04-03T12:54:16+08:00
 #featuredImage: "cover.png"
 slug: 04c00a0d
 categories: [学习日记]
 tags: [RaspberryPi]
 ---
 
+树莓派 4 无头启动(Headless)入门指南
+
 <!--more-->
+
+{{< admonition danger "注意" true >}}
+
+以下部分内容仅适用于 `Debian 10 (buster)` 系统，最新的指南请前往 [官网(英文)](https://www.raspberrypi.org/documentation/) 查阅。
+
+{{< /admonition >}}
 
 ## 准备
 
@@ -22,11 +31,13 @@ tags: [RaspberryPi]
 
 ## 制作带有系统的 SD 卡
 
+从 [官网](https://www.raspberrypi.org/software/operating-systems/) 或者 [TUNA](https://mirrors.tuna.tsinghua.edu.cn/raspberry-pi-os-images/) 下载 Raspberry Pi OS 的镜像(`raspios_lite_arm64`)。
+
 打开 Etcher，点击最左侧的`Flash from file`，选择你所下载的树莓派镜像，点击中间的`Select target`，勾选你的 SD 卡，点击`Select`，点击最右边的`Flash`等待烧录完即可。
 
 烧录完之后系统里面会多出一个命名为`boot`的分区，在此分区里面创建一个空白的名为`ssh`的文件以开启 ssh 远程访问。
 
-{{< admonition note "连接到WiFi网络" >}}
+{{< admonition note "连接到WiFi网络" false >}}
 在`boot`分区创建`wpa_supplicant.conf`并编辑
 
 ```shell
@@ -42,7 +53,7 @@ network={
 
 {{< /admonition >}}
 
-{{< admonition note "使用USB启动" >}}
+{{< admonition note "使用USB启动" false >}}
 一、更新`eeprom`
 
 1. 准备一张 SD 卡，格式化成 FAT32 格式
@@ -74,7 +85,13 @@ passwd
 
 ## 设置镜像并更新
 
-> 我的配置用的是 testing 更新通道，软件比较新但也可能出现 bug
+{{< admonition danger "注意" true >}}
+
+下面的配置用的是 `testing` 更新通道，软件比较新但也可能出现 BUG
+
+若想使用稳定版请将下面的`testing`全部替换成`buster`
+
+{{< /admonition >}}
 
 设置 Debian 仓库镜像
 
@@ -109,6 +126,12 @@ sudo apt full-upgrade -y
 
 ## 设置中文
 
+{{< admonition danger "注意" true >}}
+
+如果你的树莓派连接了显示器且没有安装图形界面请不要设置中文，否则会导致乱码
+
+{{< /admonition >}}
+
 ```shell
 echo \
 'LANG=zh_CN.UTF-8
@@ -120,7 +143,15 @@ sudo tee /etc/environment > /dev/null
 
 然后，Enjoy youself!
 
-{{< admonition note "小技巧" >}}
+## 更多设置
+
+更多的设置(比如 GPIO 等)可以使用树莓派官方的工具进行配置
+
+```shell
+sudo raspi-config
+```
+
+{{< admonition note "小技巧" false >}}
 
 #### 磁盘测速
 
