@@ -1811,7 +1811,342 @@ vcgencmd measure_temp
 </div>
 </div></div>
         </div>
-    </div>]]></description></item><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
+    </div>]]></description></item><item><title>把树莓派当作热点并开启Tproxy</title><link>https://negoces.github.io/posts/542347b3/</link><pubDate>Mon, 15 Feb 2021 14:18:18 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/542347b3/</guid><description><![CDATA[<blockquote>
+<p>测试环境:<br>
+设备: RaspberryPi 3B+<br>
+系统: raspios<br>
+上级路由: 192.1681.1 (OpenWRT)</p>
+</blockquote>
+<h2 id="安装系统">安装系统</h2>
+<p>从<a href="https://www.raspberrypi.org/software/operating-systems/" target="_blank" rel="noopener noreffer">官网</a>或者<a href="https://mirrors.tuna.tsinghua.edu.cn/raspberry-pi-os-images/" target="_blank" rel="noopener noreffer">镜像</a>下载 raspios,使用<a href="https://www.balena.io/etcher/" target="_blank" rel="noopener noreffer">BalenaEtcher</a>写入 SD 卡</p>
+<p>启动并修改 apt 镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/apt/sources.list
+deb https://mirrors.sjtug.sjtu.edu.cn/debian buster main contrib non-free
+deb https://mirrors.sjtug.sjtu.edu.cn/debian buster-updates main contrib non-free
+deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ buster/updates main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian buster main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian buster-updates main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ buster/updates main contrib non-free
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw"></i>更激进的软件更新<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/apt/sources.list
+deb https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
+deb https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
+deb https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian testing-updates main contrib non-free
+deb-src https://mirrors.sjtug.sjtu.edu.cn/debian-security/ stable/updates main contrib non-free
+</code></pre></td></tr></table>
+</div>
+</div></div>
+        </div>
+    </div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/apt/sources.list.d/raspi.list
+deb https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
+deb-src https://mirrors.sjtug.sjtu.edu.cn/raspberrypi/debian/ buster main
+</code></pre></td></tr></table>
+</div>
+</div><p>完全更新系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt update
+sudo apt full-upgrade -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装必要软件">安装必要软件</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install hostapd dnsmasq netfilter-persistent iptables-persistent -y
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="设置无线接口">设置无线接口</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/dhcpcd.conf
+interface wlan0
+    static ip_address=172.16.3.1/24
+    nohook wpa_supplicant
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="设置系统语言可选">设置系统语言(可选)</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1"># /etc/environment</span>
+<span class="na">LANG</span><span class="o">=</span><span class="s">zh_CN.UTF-8</span>
+<span class="na">LANGUAGE</span><span class="o">=</span><span class="s">&#34;zh_CN:zh:en_US:en&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="开启内核转发">开启内核转发</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1"># /etc/sysctl.conf</span>
+<span class="na">net.ipv4.ip_forward</span><span class="o">=</span><span class="s">1</span>
+<span class="na">net.ipv6.conf.all.forwarding</span><span class="o">=</span><span class="s">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置无线国家代码">配置无线国家代码</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo raspi-config
+</code></pre></td></tr></table>
+</div>
+</div><p><code>Localisation Options -&gt; WLAN Country -&gt; AU</code></p>
+<p>重启</p>
+<h2 id="配置并启用hostapd">配置并启用hostapd</h2>
+<p>先确保无线模块未被禁用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo rfkill unblock wlan
+</code></pre></td></tr></table>
+</div>
+</div><p>对hostapd进行设置</p>
+<p>(
+查看支持的频段
+sudo iw reg set GB
+iw phy phy0 channels
+)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="c1"># /etc/hostapd/hostapd.conf</span>
+
+<span class="c1"># 接口与频率设定</span>
+<span class="na">interface</span><span class="o">=</span><span class="s">wlan0</span>
+<span class="na">hw_mode</span><span class="o">=</span><span class="s">a</span>
+<span class="na">channel</span><span class="o">=</span><span class="s">149</span>
+<span class="na">country_code</span><span class="o">=</span><span class="s">AU</span>
+<span class="na">ieee80211d</span><span class="o">=</span><span class="s">1</span>
+<span class="na">macaddr_acl</span><span class="o">=</span><span class="s">0</span>
+<span class="na">max_num_sta</span><span class="o">=</span><span class="s">10</span>
+<span class="na">ignore_broadcast_ssid</span><span class="o">=</span><span class="s">0</span>
+<span class="na">wmm_enabled</span><span class="o">=</span><span class="s">1</span>
+
+<span class="c1"># 802.11n/ac (HT/VHT) Settings</span>
+<span class="na">ieee80211n</span><span class="o">=</span><span class="s">1</span>
+<span class="na">ieee80211ac</span><span class="o">=</span><span class="s">1</span>
+<span class="na">ht_capab</span><span class="o">=</span><span class="s">[HT40+][SHORT-GI-20][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839]</span>
+<span class="na">vht_capab</span><span class="o">=</span><span class="s">[MAX-MPDU-3895][SHORT-GI-80][SU-BEAMFORMEE]</span>
+<span class="na">vht_oper_chwidth</span><span class="o">=</span><span class="s">1</span>
+<span class="na">vht_oper_centr_freq_seg0_idx</span><span class="o">=</span><span class="s">155</span>
+
+<span class="c1"># SSID及安全设置</span>
+<span class="na">ssid</span><span class="o">=</span><span class="s">Raspberry Net</span>
+<span class="na">wpa</span><span class="o">=</span><span class="s">2</span>
+<span class="na">auth_algs</span><span class="o">=</span><span class="s">1</span>
+<span class="na">rsn_pairwise</span><span class="o">=</span><span class="s">CCMP</span>
+<span class="na">wpa_key_mgmt</span><span class="o">=</span><span class="s">WPA-PSK</span>
+<span class="na">wpa_passphrase</span><span class="o">=</span><span class="s">12345678</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>start</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl unmask hostapd
+sudo systemctl <span class="nb">enable</span> hostapd
+sudo systemctl start hostapd
+sudo systemctl status hostapd
+</code></pre></td></tr></table>
+</div>
+</div><p>手机的WLAN列表中会扫描到，但请不要尝试连接，现在并没有配置DHCP服务，你的设备会因为没有分配到IP导致无法连接</p>
+<h2 id="配置并启用dnsmasq">配置并启用dnsmasq</h2>
+<p>备份原有配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+</code></pre></td></tr></table>
+</div>
+</div><p>创建新配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/dnsmasq.conf
+interface=wlan0
+dhcp-range=172.16.3.100,172.16.3.253,255.255.255.0,2h
+domain=wlan
+address=/gw.wlan/172.16.3.1
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl <span class="nb">enable</span> dnsmasq
+sudo systemctl restart dnsmasq
+sudo systemctl status dnsmasq
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置iptables">配置iptables</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo iptables -t nat -A POSTROUTING -j MASQUERADE
+</code></pre></td></tr></table>
+</div>
+</div><p>iptables永久化</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo netfilter-persistent save
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="启用ipv6地址下发">启用IPv6地址下发</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo apt install radvd -y
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback"># /etc/radvd.conf
+interface wlan0 {
+    AdvSendAdvert on;
+	MinRtrAdvInterval 30;
+	MaxRtrAdvInterval 100; 
+    prefix ::/64
+    {
+        AdvOnLink on;
+        AdvAutonomous on;   
+        AdvRouterAddr off;
+        AdvValidLifetime 120;
+		AdvPreferredLifetime 100;
+    };
+};
+</code></pre></td></tr></table>
+</div>
+</div>]]></description></item><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
 <h2 id="第一次接触-linux">第一次接触 Linux</h2>
 <p>我一个接触到的 Linux 叫<a href="https://www.slax.org/" target="_blank" rel="noopener noreffer">Slax</a>，我也不清楚它算不算一个发行版本，总之它是基于 Debian 的。</p>
 <p>当时我高一，上的是封闭式学校，不给带电子产品，一周下来唯一能接触电子产品的时候便是微机课。因为平时的高强度学习，微机课一般都被我们当作放松时间(虽然要过会考)，便想着通过机房的电脑玩些什么。然而学校的老师们早就想到了这一点，通过路由切断了网络，安装了极域电子教室对 USB 进行管控(虽然后期通过注册表找到了卸载密码)。我曾因为重装家里面电脑的系统在 U 盘写了个老毛桃 PE，于是在微机室的电脑上启动试了一下发现可以启动。但是 PE 在运行时将系统加载到内存上，安装的软件关机之后就没有了。于是我在万恶的百度(当时还不会上谷歌)上面搜索&quot;口袋系统&quot;，我便在搜索结果里面看到了 Slax。<br>
@@ -2210,204 +2545,6 @@ vcgencmd measure_temp
     <span class="p">}</span>
     <span class="k">return</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div>]]></description></item><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
-                <img src="/cover.png" referrerpolicy="no-referrer">
-            </div><p>curl是从服务器传输数据或向服务器传输数据的工具，熟悉其用法后，完全可以取代 Postman 这一类的图形界面工具。</p>
-<h2 id="常规用法">常规用法</h2>
-<p>模拟浏览器向网站发送请求<code>curl &lt;URL&gt;</code>,比如</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl <span class="s2">&#34;https://www.bilibili.com&#34;</span>
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="参数解释">参数解释</h2>
-<h3 id="-x-指定请求方法">-X 指定请求方法</h3>
-<p>指定 HTTP 请求的方法。RESTful API的四种方法:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -X GET <span class="s2">&#34;https://example.com&#34;</span>
-curl -X POST <span class="s2">&#34;https://example.com&#34;</span>
-curl -X PUT <span class="s2">&#34;https://example.com&#34;</span>
-curl -X DELETE <span class="s2">&#34;https://example.com&#34;</span>
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-a-指定ua">-A 指定UA</h3>
-<p>指定UA（<code>User-Agent</code>）。curl 的默认用户代理字符串是（<code>curl/[version]</code>）。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -A <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36&#39;</span> https://google.com
-</code></pre></td></tr></table>
-</div>
-</div><p>也可以通过<code>-H</code>参数直接指定</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -H <span class="s1">&#39;User-Agent: php/1.0&#39;</span> https://google.com
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-b-发送cookies">-b 发送Cookies</h3>
-<p>向服务器发送 Cookies。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -b <span class="s1">&#39;foo1=bar;foo2=bar2&#39;</span> https://google.com
-</code></pre></td></tr></table>
-</div>
-</div><p>或者发送本地文件中的Cookies</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -b cookies.txt https://www.google.com
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-c-保存cookies">-c 保存Cookies</h3>
-<p>将服务器设置的 Cookies 写入一个文件。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -c cookies.txt https://www.google.com
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-d-发送post数据体">-d 发送POST数据体</h3>
-<p>用于发送 POST 请求的数据体。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -d<span class="s1">&#39;login=emma＆password=123&#39;</span> -X POST https://google.com/login
-<span class="c1">#或者使用本地文件</span>
-curl -d <span class="s1">&#39;@data.txt&#39;</span> https://google.com/login
-</code></pre></td></tr></table>
-</div>
-</div><p>使用<code>-d</code>参数以后，HTTP 请求会自动加上标头<code>Content-Type : application/x-www-form-urlencoded</code>。并且会自动将请求转为 POST 方法，因此可以省略<code>-X POST</code>。</p>
-<h3 id="-e-设置referer">-e 设置Referer</h3>
-<p>设置 HTTP 的标头<code>Referer</code>，表示请求的来源。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -e <span class="s1">&#39;https://google.com?q=example&#39;</span> https://www.example.com
-</code></pre></td></tr></table>
-</div>
-</div><p>可以通过<code>-H</code>参数直接添加标头<code>Referer</code>，达到同样效果。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -H <span class="s1">&#39;Referer: https://google.com?q=example&#39;</span> https://www.example.com
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-f-上传文件">-F 上传文件</h3>
-<p>向服务器上传二进制文件。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -F <span class="s1">&#39;file=@photo.png&#39;</span> https://google.com/profile
-</code></pre></td></tr></table>
-</div>
-</div><p>指定 MIME 类型。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -F <span class="s1">&#39;file=@photo.png;type=image/png&#39;</span> https://google.com/profile
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-h-指定http标头">-H 指定HTTP标头</h3>
-<p>添加 HTTP 请求的标头。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -H <span class="s1">&#39;Accept-Language: en-US&#39;</span> -H <span class="s1">&#39;Secret-Message: xyzzy&#39;</span> https://google.com
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-i-打印http标头">-i 打印HTTP标头</h3>
-<p>打印出服务器回应的 HTTP 标头。收到服务器回应后，先输出服务器回应的标头，然后空一行，再输出网页的源码。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -i https://www.example.com
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-k-跳过ssl检测">-k 跳过SSL检测</h3>
-<p>跳过 SSL 检测。不会检查服务器的 SSL 证书是否正确。</p>
-<h3 id="-l-开启重定向">-L 开启重定向</h3>
-<p>让 HTTP 请求跟随服务器的重定向。curl 默认不跟随重定向。</p>
-<h3 id="-o-保存为文件">-o 保存为文件</h3>
-<p>将服务器的回应保存成文件，等同于<code>wget</code>命令。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -o example.html https://www.example.com
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-u-basic-auth认证">-u Basic Auth认证</h3>
-<p>用来设置服务器认证的用户名和密码。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -u <span class="s1">&#39;bob:12345&#39;</span> https://google.com/login
-<span class="c1">#或</span>
-curl https://bob:12345@google.com/login
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="-x-设置代理">-x 设置代理</h3>
-<p>指定 HTTP 请求的代理。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -x socks5://user:passwd@proxy.com:8080 https://www.example.com
-</code></pre></td></tr></table>
-</div>
-</div><p>如果没有指定代理协议，默认为 HTTP。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">curl -x user:passwd@proxy.com:8080 https://www.example.com
 </code></pre></td></tr></table>
 </div>
 </div>]]></description></item></channel></rss>
