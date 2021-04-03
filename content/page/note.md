@@ -5,7 +5,7 @@ comment:
   enable: false
 ---
 
-## 不用怀疑！这就是个记事本！
+## 不用怀疑！这就是个记事本！[·](/pages/d7266c81/)
 
 {{< admonition note "Android SDK Platform Tools 下载地址" false >}}
 
