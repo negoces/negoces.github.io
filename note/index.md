@@ -188,3 +188,53 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\18D1D00D01
 
 {{< /admonition >}}
 
+{{< admonition note "SSH本地端口转发" false >}}
+
+通俗一点: 内网穿透
+
+`A <===> B <==|NAT/防火墙|==> C`
+
+由 C 发起，将 C 本机或局域网内的端口映射到 B，A 可通过 B 访问到 C
+
+```shell
+ssh -gN -R $ListenIP:$ListenPort:$LocalIP:$LocalPort $RemoteUser@$RemoteIP
+```
+
+- `$ListenIP`: B 要监听的 IP
+- `$ListenPort`: B 要监听的端口
+- `$LocalIP`: C 本地的目标 IP
+- `$LocalPort` C 本地的目标端口
+- `$RemoteUser` B 上的用户
+- `$RemoteIP` B 的 IP
+
+比如将本机的 Minecraft 服务器映射到 172.16.0.1 (用户名: `User`)
+
+```shell
+ssh -gN -R 0.0.0.0:25565:127.0.0.1:25565 User@17.16.0.1
+```
+
+#### 注意
+
+B 机上的 ssh 需开启`GatewayPorts`
+
+##### OpenSSH 配置
+
+`/etc/ssh/sshd_config`
+```ini
+...
+#GatewayPorts no
+GatewayPorts yes
+...
+```
+
+##### Dropbear 配置
+
+`/etc/config/dropbear`
+```conf
+config dropbear
+	...
+	option GatewayPorts 'on'
+```
+
+{{< /admonition >}}
+
