@@ -220,6 +220,7 @@ B 机上的 ssh 需开启`GatewayPorts`
 ##### OpenSSH 配置
 
 `/etc/ssh/sshd_config`
+
 ```ini
 ...
 #GatewayPorts no
@@ -230,10 +231,49 @@ GatewayPorts yes
 ##### Dropbear 配置
 
 `/etc/config/dropbear`
+
 ```conf
 config dropbear
 	...
 	option GatewayPorts 'on'
+```
+
+{{< /admonition >}}
+
+{{< admonition note "Openwrt 手动安装 fprs" false >}}
+
+- [Github](https://github.com/fatedier/frp/)
+
+`frps -> /usr/bin/frps`  
+`frps.ini -> /etc/frps/frps.ini`  
+`frps.init -> /etc/init.d/frps`
+
+`/etc/frps/frps.ini`
+
+```ini
+[common]
+bind_port = 7000
+token = f258e18a
+```
+
+`/etc/init.d/frps`
+
+```shell
+#!/bin/sh /etc/rc.common
+
+START=99
+USE_PROCD=1
+
+BINARY=/usr/bin/frps
+CONF=/etc/frps/frps.ini
+
+start_service() {
+        procd_open_instance
+        procd_set_param command $BINARY -c $CONF
+        procd_set_param file $CONF
+        procd_set_param respawn
+        procd_close_instance
+}
 ```
 
 {{< /admonition >}}
