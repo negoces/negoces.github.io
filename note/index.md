@@ -253,7 +253,7 @@ config dropbear
 ```ini
 [common]
 bind_port = 7000
-token = f258e18a
+token = <自己生成>
 ```
 
 `/etc/init.d/frps`
