@@ -58,6 +58,7 @@ ExecReload=/usr/bin/screen -p 0 -S minecraft-%i -X eval 'stuff "reload"\\015'
 ExecStop=/usr/bin/screen -p 0 -S minecraft-%i -X eval 'stuff "save-all"\\015'
 ExecStop=/usr/bin/screen -p 0 -S minecraft-%i -X eval 'stuff "stop"\\015'
 ExecStop=/bin/sleep 10
+RemainAfterExit=yes
 Restart=on-failure
 RestartSec=60s
 

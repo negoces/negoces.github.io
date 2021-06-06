@@ -3,6 +3,6 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "start": "hugo serve --disableFastRender -e production -D"
+        "start": "hugo serve --disableFastRender -D"
     }
 }
