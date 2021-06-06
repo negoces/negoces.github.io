@@ -1,4 +1,636 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>RaspberryPi - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/raspberrypi/</link><description>RaspberryPi - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Thu, 04 Mar 2021 20:10:24 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/raspberrypi/" rel="self" type="application/rss+xml"/><item><title>树莓派4安装Gitea</title><link>https://negoces.github.io/posts/a6cf258f/</link><pubDate>Thu, 04 Mar 2021 20:10:24 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/a6cf258f/</guid><description><![CDATA[<p>在树莓派上面搭建一个内网 git 服务器，用来存放一些代码及镜像一些常用仓库。顺便搭建个 DroneCI 玩玩。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>RaspberryPi - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/raspberrypi/</link><description>RaspberryPi - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sun, 06 Jun 2021 15:45:47 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/raspberrypi/" rel="self" type="application/rss+xml"/><item><title>树莓派安装Seafile文件服务</title><link>https://negoces.github.io/posts/37b9e15f/</link><pubDate>Sun, 06 Jun 2021 15:45:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/37b9e15f/</guid><description><![CDATA[<div class="details admonition danger open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-skull-crossbones fa-fw"></i>警告<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">此文章的部分内容仅适用于 <code>debian buster arm64</code> 系统，对于其他系统仅做参考，不保证能够正常运行</div>
+        </div>
+    </div>
+<h2 id="安装-mariadb-数据库">安装 MariaDB 数据库</h2>
+<p><code>若已使用 Docker 安装过 MariaDB 且可用，可忽略此步骤</code></p>
+<p>安装 MariaDB 并设置自启</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install mariadb-server mariadb-client -y
+sudo systemctl <span class="nb">enable</span> --now mariadb
+</code></pre></td></tr></table>
+</div>
+</div><p>用 <code>root</code> 权限进入数据库开启密码登录:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="n">USE</span> <span class="n">mysql</span><span class="p">;</span> <span class="cm">/* 进入 mysql 库 */</span>
+<span class="k">ALTER</span> <span class="k">USER</span> <span class="o">`</span><span class="n">root</span><span class="o">`@`</span><span class="n">localhost</span><span class="o">`</span> <span class="n">IDENTIFIED</span> <span class="k">WITH</span> <span class="n">mysql_native_password</span><span class="p">;</span> <span class="cm">/* 使用MySQL原生验证 */</span>
+<span class="k">ALTER</span> <span class="k">USER</span> <span class="o">`</span><span class="n">root</span><span class="o">`@`</span><span class="n">localhost</span><span class="o">`</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">&#39;$PASSWORD&#39;</span><span class="p">;</span> <span class="cm">/* 设置登录密码为 $PASSWORD */</span>
+<span class="n">FLUSH</span> <span class="k">privileges</span><span class="p">;</span> <span class="cm">/* 刷新权限 */</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可使用以下指令测试连接:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">mysql -u root -p
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition tip">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw"></i>为什么在其他计算机上无法登入数据库<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>MariaDB 默认监听 <code>127.0.0.1</code> 即:仅本机可登入数据库,如有需求前往 <code>/etc/mysql/mariadb.conf.d/50-server.cnf</code> 文件修改 <code>bind-address = 0.0.0.0</code> 后重启服务,并登入入数据库通过以下 SQL 语句开启 root 的任意域登录:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="n">USE</span> <span class="n">mysql</span><span class="p">;</span> <span class="cm">/* 进入 mysql 库 */</span>
+<span class="k">CREATE</span> <span class="k">USER</span> <span class="o">`</span><span class="n">root</span><span class="o">`@`%`</span> <span class="n">IDENTIFIED</span> <span class="k">WITH</span> <span class="n">mysql_native_password</span><span class="p">;</span> <span class="cm">/* 使用MySQL原生验证 */</span>
+<span class="k">CREATE</span> <span class="k">USER</span> <span class="o">`</span><span class="n">root</span><span class="o">`@`%`</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">&#39;$PASSWORD&#39;</span><span class="p">;</span> <span class="cm">/* 设置登录密码为 $PASSWORD */</span>
+<span class="n">FLUSH</span> <span class="k">privileges</span><span class="p">;</span> <span class="cm">/* 刷新权限 */</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>若在 <code>CREATE</code> 过程中出现 <code>ERROR 1396 (HY000)</code> 错误，则表明该条目已存在，将 <code>CREATE</code> 替换成 <code>ALTER</code> 执行即可。</p>
+</div>
+        </div>
+    </div>
+<h2 id="安装-seafile">安装 Seafile</h2>
+<h3 id="安装依赖">安装依赖</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install python3 python3-setuptools python3-pip libmemcached-dev python3-mysqldb -y
+pip config <span class="nb">set</span> global.index-url https://mirrors.sjtug.sjtu.edu.cn/pypi/web/simple
+sudo pip config <span class="nb">set</span> global.index-url https://mirrors.sjtug.sjtu.edu.cn/pypi/web/simple
+sudo pip3 install Pillow pylibmc captcha jinja2 <span class="nv">sqlalchemy</span><span class="o">==</span>1.4.3 django-pylibmc django-simple-captcha python3-ldap pymysql
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="创建-seafile-用户">创建 Seafile 用户</h3>
+<p><code>非必选，但不进行此操作可能会导致后续的步骤需要改动</code></p>
+<p>对 Seafile 服务进行用户隔离，保障数据安全，防止误操作或其他用户恶意删除。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo useradd -MUr seafile
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="下载-seafile">下载 Seafile</h3>
+<div class="details admonition warning open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-exclamation-triangle fa-fw"></i>关于32位(armhf,armv7)系统用户<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">32 位系统用户请下载<code>8.0.5-armv7</code>版本: <a href="https://ghproxy.com/github.com/haiwen/seafile-rpi/releases/download/v8.0.5/seafile-server-8.0.5-buster-armv7.tar.gz" target="_blank" rel="noopener noreffer">seafile-server-8.0.5-buster-armv7.tar.gz</a></div>
+        </div>
+    </div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 从 Github 下载 seafile-8.0.3-arm64 (链接包含加速，国内用户可直接下载)</span>
+wget https://ghproxy.com/github.com/haiwen/seafile-rpi/releases/download/v8.0.3/seafile-server-8.0.3-buster-arm64v8.tar.gz
+<span class="c1"># 解压 seafile-server-8.0.3-buster-arm64v8.tar.gz</span>
+tar -xzf seafile-server-8.0.3-buster-arm64v8.tar.gz
+<span class="c1"># 在 /opt 目录创建 seafile 文件夹</span>
+sudo mkdir /opt/seafile
+<span class="c1"># 将 seafile-server-8.0.3 移动到 /opt/seafile</span>
+sudo mv seafile-server-8.0.3 /opt/seafile
+<span class="c1"># 设置 /opt/seafile 属主及权限</span>
+sudo chown -R seafile:seafile /opt/seafile/
+sudo chmod -R <span class="m">755</span> /opt/seafile/
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="配置-seafile">配置 Seafile</h3>
+<div class="details admonition warning open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-exclamation-triangle fa-fw"></i>关于执行权限问题<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>由于树莓派默认用户为 <code>pi</code> 而 seafile 文件属主为 <code>seafile</code> ，我们无法直接执行 seafile 文件里面的<code>设置</code>、<code>启动</code>等脚本，解决方法:</p>
+<ol>
+<li>
+<p>切换用户</p>
+<p>使用 <code>su</code> 指令切换当前用户</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo su seafile
+</code></pre></td></tr></table>
+</div>
+</div><p>当终端以 <code>seafile@raspberrypi</code> 打头时，则表明切换成功，此时的所有操作均由 <code>seafile</code> 执行。</p>
+</li>
+<li>
+<p>使用 <code>sudo -u seafile &lt;脚本&gt;</code> 来执行脚本</p>
+<p>此时将会使用 seafile 执行这个脚本，而不影响其他指令。</p>
+</li>
+</ol>
+<p>以下步骤将使用第二种方式。</p>
+</div>
+        </div>
+    </div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /opt/seafile/seafile-server-8.0.3 <span class="c1"># 进入 seafile 目录</span>
+sudo -u seafile ./setup-seafile-mysql.sh <span class="c1"># 运行配置脚本</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>按照提示进行配置，出现以下信息则表明配置成功。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">-----------------------------------------------------------------
+Your seafile server configuration has been finished successfully.
+-----------------------------------------------------------------
+
+run seafile server:     ./seafile.sh <span class="o">{</span> start <span class="p">|</span> stop <span class="p">|</span> restart <span class="o">}</span>
+run seahub  server:     ./seahub.sh  <span class="o">{</span> start &lt;port&gt; <span class="p">|</span> stop <span class="p">|</span> restart &lt;port&gt; <span class="o">}</span>
+
+-----------------------------------------------------------------
+If you are behind a firewall, remember to allow input/output of these tcp ports:
+-----------------------------------------------------------------
+
+port of seafile fileserver:   <span class="m">8082</span>
+port of seahub:               <span class="m">8000</span>
+
+When problems occur, Refer to
+
+        https://download.seafile.com/published/seafile-manual/home.md
+
+<span class="k">for</span> information.
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="启动-seafile">启动 Seafile</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo -u seafile ./seafile.sh start <span class="c1"># 一般seafile都能正常启动，除非有其他程序占用端口</span>
+sudo -u seafile ./seahub.sh start <span class="c1"># 首次启动需要按照提示配置管理员账户II</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>若 Seahub 无法启动，请参考<a href="#%E5%85%B3%E4%BA%8E-seahub-%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E7%9A%84%E9%97%AE%E9%A2%98" rel="">关于 seahub 无法启动</a></p>
+<h3 id="测试-seahub">测试 Seahub</h3>
+<p>打开<code>/opt/seafile/conf/gunicorn.conf.py</code><br>
+修改<code>bind = &quot;127.0.0.1:8000&quot;</code>为<code>bind = &quot;0.0.0.0:8000&quot;</code><br>
+执行<code>sudo -u seafile ./seahub.sh restart</code>重启 seahub<br>
+浏览器打开<code>http://&lt;IP&gt;:8000/</code>查看服务是否正常</p>
+<p>若要使用反向代理，将<code>gunicorn.conf.py</code>改回原配置，重启 seahub，继续<a href="#%E9%85%8D%E7%BD%AE-nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86" rel="">下列步骤</a></p>
+<h3 id="设置-seafile-开机自启">设置 Seafile 开机自启</h3>
+<p>创建并编辑<code>/etc/systemd/system/seafile.service</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>Unit<span class="o">]</span>
+<span class="nv">Description</span><span class="o">=</span>Seafile
+<span class="nv">After</span><span class="o">=</span>network.target mysql.service
+
+<span class="o">[</span>Service<span class="o">]</span>
+<span class="nv">Type</span><span class="o">=</span>oneshot
+<span class="nv">ExecStart</span><span class="o">=</span>/opt/seafile/seafile-server-latest/seafile.sh start
+<span class="nv">ExecStop</span><span class="o">=</span>/opt/seafile/seafile-server-latest/seafile.sh stop
+<span class="nv">RemainAfterExit</span><span class="o">=</span>yes
+<span class="nv">User</span><span class="o">=</span>seafile
+<span class="nv">Group</span><span class="o">=</span>seafile
+
+<span class="o">[</span>Install<span class="o">]</span>
+<span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+</code></pre></td></tr></table>
+</div>
+</div><p>创建并编辑<code>/etc/systemd/system/seahub.service</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">[</span>Unit<span class="o">]</span>
+<span class="nv">Description</span><span class="o">=</span>Seafile hub
+<span class="nv">After</span><span class="o">=</span>network.target seafile.service
+
+<span class="o">[</span>Service<span class="o">]</span>
+<span class="nv">ExecStart</span><span class="o">=</span>/opt/seafile/seafile-server-latest/seahub.sh start
+<span class="nv">ExecStop</span><span class="o">=</span>/opt/seafile/seafile-server-latest/seahub.sh stop
+<span class="nv">User</span><span class="o">=</span>seafile
+<span class="nv">Group</span><span class="o">=</span>seafile
+<span class="nv">Type</span><span class="o">=</span>oneshot
+<span class="nv">RemainAfterExit</span><span class="o">=</span>yes
+
+<span class="o">[</span>Install<span class="o">]</span>
+<span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+</code></pre></td></tr></table>
+</div>
+</div><p>设置开机自启</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sudo systemctl <span class="nb">enable</span> seafile
+sudo systemctl <span class="nb">enable</span> seahub
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-nginx-反向代理">配置 Nginx 反向代理</h2>
+<h3 id="安装-nginx">安装 Nginx</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install nginx -y
+sudo systemctl <span class="nb">enable</span> --now nginx
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="准备证书及相关文件">准备证书及相关文件</h3>
+<ol>
+<li>
+<p>前往自己的域名服务商或 Let&rsquo;s Encrypt 申请证书</p>
+</li>
+<li>
+<p>使用下列指令下载 dhparam</p>
+</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">curl https://ssl-config.mozilla.org/ffdhe2048.txt &gt; ./dhparam
+sudo mv ./dhparam /var/www/
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="配置-nginx-并重启">配置 Nginx 并重启</h3>
+<p>修改<code>/etc/nginx/sites-available/default</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name _; # 域名
+    ssl_certificate /path/to/signed_cert_plus_intermediates; # 证书crt
+    ssl_certificate_key /path/to/private_key; # 证书key
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:MozSSL:10m;
+    ssl_session_tickets off;
+    ssl_dhparam /var/www/dhparam;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers on;
+    add_header Strict-Transport-Security &#34;max-age=63072000&#34; always;
+
+    proxy_set_header X-Forwarded-For $remote_addr;
+    location / {
+         proxy_pass         http://127.0.0.1:8000;
+         proxy_set_header   Host $host;
+         proxy_set_header   X-Real-IP $remote_addr;
+         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header   X-Forwarded-Host $server_name;
+         proxy_read_timeout  1200s;
+         client_max_body_size 0;
+
+         access_log      /var/log/nginx/seahub.access.log;
+         error_log       /var/log/nginx/seahub.error.log;
+    }
+    location /seafhttp {
+        rewrite ^/seafhttp(.*)$ $1 break;
+        proxy_pass http://127.0.0.1:8082;
+        client_max_body_size 0;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout  36000s;
+        proxy_read_timeout  36000s;
+        proxy_send_timeout  36000s;
+        send_timeout  36000s;
+    }
+    location /media {
+        root /home/user/haiwen/seafile-server-latest/seahub; # seafile位置
+    }
+}
+</code></pre></td></tr></table>
+</div>
+</div><p>以上配置包含了 TLS(https)设置，请在<code>第11行</code>填入自己的域名，例如: <code>server_name mycloud.com;</code>，在<code>第12、13行</code>填入自己的证书路径。<br>
+若不需要启用 https 设置，请直接将<code>第4行</code>至<code>第22行</code>删除。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo nginx -t <span class="c1"># 检查配置是否有错误</span>
+sudo systemctl restart nginx <span class="c1"># 重启Nginx</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>访问域名查看页面是否正常加载</p>
+<h2 id="调整-openssl-ciphers-顺序优化-tls-性能">调整 openssl ciphers 顺序优化 TLS 性能</h2>
+<p>TLSv1.2 的 ciphers 顺序可以在 Nginx 里面通过<code>ssl_ciphers</code>和<code>ssl_prefer_server_ciphers</code>进行设置，对于 TLSv1.3 Nginx 会从 OpenSSL 读取顺序，
+但是！OpenSSL 的默认顺序是<code>TLS_AES_256_GCM_SHA384</code>、<code>TLS_CHACHA20_POLY1305_SHA256</code>、<code>TLS_AES_128_GCM_SHA256</code>，对于普通的服务器来说，这三种协议都能跑到 100M/s 以上，基本没什么区别，但是对于树莓派则不一样，因为树莓派鸡肋的性能且没有 AES 硬件加速，它在使用 AES256-GCM 作为加密方式时只能达到 20M/s 的速度，POLY1305 则可以稳定在 100M/s 以上。所以，我们要设置优先 ciphers 来提传输速度。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 查看配置文件所在位置</span>
+openssl version -a <span class="p">|</span> grep OPENSSLDIR
+</code></pre></td></tr></table>
+</div>
+</div><p>修改刚刚获得的目录下的<code>openssl.cnf</code>，在随后追加</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="na">openssl_conf</span> <span class="o">=</span> <span class="s">default_conf</span>
+
+<span class="k">[default_conf]</span>
+<span class="na">ssl_conf</span> <span class="o">=</span> <span class="s">ssl_sect</span>
+
+<span class="k">[ssl_sect]</span>
+<span class="na">system_default</span> <span class="o">=</span> <span class="s">system_default_sect</span>
+
+<span class="k">[system_default_sect]</span>
+<span class="na">MinProtocol</span> <span class="o">=</span> <span class="s">TLSv1.2</span>
+<span class="na">Ciphersuites</span> <span class="o">=</span> <span class="s">TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256</span>
+<span class="na">CipherString</span> <span class="o">=</span> <span class="s">DEFAULT@SECLEVEL=2</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>验证</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">openssl ciphers -s -tls1_3
+</code></pre></td></tr></table>
+</div>
+</div><p>重启 Nginx 生效</p>
+<h2 id="安装-memcached">安装 Memcached</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install memcached libmemcached-dev -y
+sudo systemctl <span class="nb">enable</span> --now memcached
+</code></pre></td></tr></table>
+</div>
+</div><p>修改<code>/opt/seafile/conf/seahub_settings.py</code>文件，追加以下代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-py" data-lang="py"><span class="n">CACHES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;BACKEND&#39;</span><span class="p">:</span> <span class="s1">&#39;django_pylibmc.memcached.PyLibMCCache&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LOCATION&#39;</span><span class="p">:</span> <span class="s1">&#39;127.0.0.1:11211&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;locmem&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;BACKEND&#39;</span><span class="p">:</span> <span class="s1">&#39;django.core.cache.backends.locmem.LocMemCache&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+<span class="n">COMPRESS_CACHE_BACKEND</span> <span class="o">=</span> <span class="s1">&#39;locmem&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>重启 seahub 生效</p>
+<h2 id="关于-seahub-无法启动的问题">关于 seahub 无法启动的问题</h2>
+<h3 id="如何-debug">如何 Debug</h3>
+<p>修改<code>/opt/seafile/conf/gunicorn.conf.py</code>文件<br>
+找到<code>daemon = True</code>，将其改为<code>daemon = False</code><br>
+再次运行<code>./seahub.sh start</code>以查看错误，使用<code>Ctrl</code>+<code>C</code>组合键结束进程</p>
+<p><code>注: 记得 Debug 之后将其改回来</code>
+<code>注: 部分错误无法使用 start-fastcgi 来 Debug</code></p>
+<h3 id="错误-nameerror-name-_mysql-is-not-defined">错误: <code>NameError: name '_mysql' is not defined</code></h3>
+<ul>
+<li>原因: <code>MySQLdb</code>为 Python2 的模块，在 Python3 上无法运行</li>
+<li>解决方法: 用<code>pymysql</code>替代<code>MySQLdb</code></li>
+<li>具体操作: 安装 python 模块<code>pymysql</code>，并将以下代码添加入<code>/opt/seafile/seafile-server-latest/seahub/seahub/__init__.py</code>文件
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pymysql</span>
+<span class="n">pymysql</span><span class="o">.</span><span class="n">install_as_MySQLdb</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h3 id="错误-modulenotfounderror-no-module-named-image">错误: <code>ModuleNotFoundError: No module named 'Image'</code></h3>
+<ul>
+<li>原因: seafile 内预装的 PIL 和 Pillow 有问题</li>
+<li>解决方法: 对<code>Pillow</code>进行更新</li>
+<li>具体操作: 使用以下指令
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">pip3</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">Pillow</span> <span class="o">-</span><span class="n">t</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">seafile</span><span class="o">/</span><span class="n">seafile</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">latest</span><span class="o">/</span><span class="n">seahub</span><span class="o">/</span><span class="n">thirdpart</span>
+<span class="c1"># 若下载缓慢请使用镜像加速</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">Pillow</span> <span class="o">-</span><span class="n">t</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">seafile</span><span class="o">/</span><span class="n">seafile</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">latest</span><span class="o">/</span><span class="n">seahub</span><span class="o">/</span><span class="n">thirdpart</span> <span class="o">-</span><span class="n">i</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">mirrors</span><span class="o">.</span><span class="n">sjtug</span><span class="o">.</span><span class="n">sjtu</span><span class="o">.</span><span class="n">edu</span><span class="o">.</span><span class="n">cn</span><span class="o">/</span><span class="n">pypi</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="n">simple</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h3 id="错误-modulenotfounderror-no-module-named-xxx">错误: <code>ModuleNotFoundError: No module named 'XXX'</code></h3>
+<ul>
+<li>原因: <code>XXX</code> 模块缺失或文件权限问题</li>
+<li>解决方法: 使用 pip 安装或参考<a href="#%E6%8C%87%E4%BB%A4%E6%9C%AA%E6%89%BE%E5%88%B0%E5%8F%8A%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98" rel="">下一条</a></li>
+</ul>
+<h3 id="指令未找到及其他问题">指令未找到及其他问题</h3>
+<ul>
+<li>原因: seafile 文件权限问题</li>
+<li>解决方法: 设置 seafile 文件权限</li>
+<li>具体操作: 使用以下指令
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">sudo</span> <span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">seafile</span><span class="p">:</span><span class="n">seafile</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">seafile</span><span class="o">/</span>
+<span class="n">sudo</span> <span class="n">chmod</span> <span class="o">-</span><span class="n">R</span> <span class="mi">755</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">seafile</span><span class="o">/</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id="参考-issues">参考 Issues</h2>
+<ul>
+<li><a href="https://github.com/haiwen/seafile-rpi/issues/80">https://github.com/haiwen/seafile-rpi/issues/80</a></li>
+<li><a href="https://github.com/haiwen/seafile-rpi/issues/65">https://github.com/haiwen/seafile-rpi/issues/65</a></li>
+<li><a href="https://github.com/openssl/openssl/issues/7562">https://github.com/openssl/openssl/issues/7562</a></li>
+</ul>
+]]></description></item><item><title>树莓派4安装Gitea</title><link>https://negoces.github.io/posts/a6cf258f/</link><pubDate>Thu, 04 Mar 2021 20:10:24 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/a6cf258f/</guid><description><![CDATA[<p>在树莓派上面搭建一个内网 git 服务器，用来存放一些代码及镜像一些常用仓库。顺便搭建个 DroneCI 玩玩。</p>
 <blockquote>
 <p>此文章依据怎么方便怎么来的准则，并未考虑稳定与性能，切勿用作生产环境！</p>
 </blockquote>
