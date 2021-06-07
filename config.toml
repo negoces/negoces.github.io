@@ -1,4 +1,4 @@
-baseURL = "https://negoces.github.io/"
+baseURL = "https://blog.negoces.top/"
 # [en, zh-cn, fr, ...] 设置默认的语言
 defaultContentLanguage = "zh-cn"
 # 网站语言, 仅在这里 CN 大写
@@ -6,7 +6,7 @@ languageCode = "zh-CN"
 # 是否包括中日韩文字
 hasCJKLanguage = true
 # 网站标题
-title = "NEGOCES's Blog"
+title = "「無名」"
 
 # 更改使用 Hugo 构建网站时使用的默认主题
 theme = "loveit"
@@ -33,7 +33,7 @@ theme = "loveit"
   #  应用图标配置
   [params.app]
     # 当添加到 iOS 主屏幕或者 Android 启动器时的标题, 覆盖默认标题
-    title = "NEGOCES's Blog"
+    title = "「無名」"
     # 是否隐藏网站图标资源链接
     noFavicon = false
     # 更现代的 SVG 网站图标, 可替代旧的 .png 和 .ico 文件
@@ -78,7 +78,7 @@ theme = "loveit"
       # LOGO 的 URL
       logo = "/logo.svg"
       # 标题名称
-      name = "NEGOCES's Blog"
+      name = "「無名」"
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
       # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
@@ -90,7 +90,7 @@ theme = "loveit"
   [params.footer]
     enable = true
     #  自定义内容 (支持 HTML 格式)
-    custom = ''
+    custom = '什么都没有了呢...'
     #  是否显示 Hugo 和主题信息
     hugo = true
     #  是否显示版权信息
