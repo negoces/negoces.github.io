@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Game - 分类 - NEGOCES's Blog</title><link>https://negoces.github.io/categories/game/</link><description>Game - 分类 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 10 Mar 2021 17:13:41 +0800</lastBuildDate><atom:link href="https://negoces.github.io/categories/game/" rel="self" type="application/rss+xml"/><item><title>从零开始搭建一个我的世界服务器</title><link>https://negoces.github.io/posts/079848ab/</link><pubDate>Wed, 10 Mar 2021 17:13:41 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/079848ab/</guid><description><![CDATA[<div class="featured-image">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Game - 分类 - 「無名」</title><link>https://blog.negoces.top/categories/game/</link><description>Game - 分类 - 「無名」</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Wed, 10 Mar 2021 17:13:41 +0800</lastBuildDate><atom:link href="https://blog.negoces.top/categories/game/" rel="self" type="application/rss+xml"/><item><title>从零开始搭建一个我的世界服务器</title><link>https://blog.negoces.top/posts/079848ab/</link><pubDate>Wed, 10 Mar 2021 17:13:41 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/079848ab/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/posts/079848ab/cover.png" referrerpolicy="no-referrer">
             </div><p>相信有不少人玩 Minecraft 的时候都想与自己的小伙伴一起玩耍，如过你们恰好在同一局域网，那么可以通过游戏内的<code>对局域网开放</code>与小伙伴联机，但是房主必须一直在线，而且非局域网内的小伙伴也无法一起玩耍。</p>
 <blockquote>
@@ -315,7 +315,7 @@ java -Xms2G -Xmx4G -jar server.jar nogui
 <p>设置 server-ip=0.0.0.0 或着留空则会监听所有网卡，会接受来自所有网卡的连接，<strong>故强烈建议此参数留空！</strong></p>
 </div>
         </div>
-    </div>]]></description></item><item><title>Minecraft 服务端种类</title><link>https://negoces.github.io/posts/d9828d29/</link><pubDate>Sat, 06 Jun 2020 20:41:33 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/d9828d29/</guid><description><![CDATA[<p>现在网络上的我的世界服务端有许多，那么他们都有些什么特点呢</p>
+    </div>]]></description></item><item><title>Minecraft 服务端种类</title><link>https://blog.negoces.top/posts/d9828d29/</link><pubDate>Sat, 06 Jun 2020 20:41:33 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/d9828d29/</guid><description><![CDATA[<p>现在网络上的我的世界服务端有许多，那么他们都有些什么特点呢</p>
 <h2 id="快速入门">快速入门</h2>
 <p>底下那么一大坨认真看的人我觉得不多，直接列举吧</p>
 <ul>

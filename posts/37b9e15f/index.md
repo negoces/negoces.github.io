@@ -160,7 +160,7 @@ sudo -u seafile ./seahub.sh start # 首次启动需要按照提示配置管理�
 执行`sudo -u seafile ./seahub.sh restart`重启 seahub  
 浏览器打开`http://<IP>:8000/`查看服务是否正常
 
-若要使用反向代理，将`gunicorn.conf.py`改回原配置，重启 seahub，继续[下列步骤](#%E9%85%8D%E7%BD%AE-nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86)
+若要使用反向代理，将`gunicorn.conf.py`改回原配置，重启 seahub，继续下列步骤
 
 ### 设置 Seafile 开机自启
 
@@ -318,14 +318,15 @@ system_default = system_default_sect
 
 [system_default_sect]
 MinProtocol = TLSv1.2
-Ciphersuites = TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256
+Ciphersuites = TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256
 CipherString = DEFAULT@SECLEVEL=2
 ```
 
 验证
 
 ```bash
-openssl ciphers -s -tls1_3
+openssl ciphers -s -tls1_3 -v # TLSv1.3
+openssl ciphers -s -tls1_2 -v # TLSv1.2
 ```
 
 重启 Nginx 生效

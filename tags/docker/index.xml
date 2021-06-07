@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Docker - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/docker/</link><description>Docker - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Thu, 04 Mar 2021 20:10:24 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/docker/" rel="self" type="application/rss+xml"/><item><title>树莓派4安装Gitea</title><link>https://negoces.github.io/posts/a6cf258f/</link><pubDate>Thu, 04 Mar 2021 20:10:24 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/a6cf258f/</guid><description><![CDATA[<p>在树莓派上面搭建一个内网 git 服务器，用来存放一些代码及镜像一些常用仓库。顺便搭建个 DroneCI 玩玩。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Docker - 标签 - 「無名」</title><link>https://blog.negoces.top/tags/docker/</link><description>Docker - 标签 - 「無名」</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Thu, 04 Mar 2021 20:10:24 +0800</lastBuildDate><atom:link href="https://blog.negoces.top/tags/docker/" rel="self" type="application/rss+xml"/><item><title>树莓派4安装Gitea</title><link>https://blog.negoces.top/posts/a6cf258f/</link><pubDate>Thu, 04 Mar 2021 20:10:24 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/a6cf258f/</guid><description><![CDATA[<p>在树莓派上面搭建一个内网 git 服务器，用来存放一些代码及镜像一些常用仓库。顺便搭建个 DroneCI 玩玩。</p>
 <blockquote>
 <p>此文章依据怎么方便怎么来的准则，并未考虑稳定与性能，切勿用作生产环境！</p>
 </blockquote>
@@ -543,7 +543,7 @@ docker pull drone/drone-runner-docker:1
 </div>
 </div></div>
         </div>
-    </div>]]></description></item><item><title>树莓派4安装Docker</title><link>https://negoces.github.io/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/c0b3720d/</guid><description><![CDATA[<div class="featured-image">
+    </div>]]></description></item><item><title>树莓派4安装Docker</title><link>https://blog.negoces.top/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/c0b3720d/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/posts/c0b3720d/cover.png" referrerpolicy="no-referrer">
             </div><p>Docker 大法好！！！</p>
 <h2 id="安装必要工具">安装必要工具</h2>

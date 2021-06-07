@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Linux - 标签 - NEGOCES's Blog</title><link>https://negoces.github.io/tags/linux/</link><description>Linux - 标签 - NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 20 Mar 2021 22:59:49 +0800</lastBuildDate><atom:link href="https://negoces.github.io/tags/linux/" rel="self" type="application/rss+xml"/><item><title>Kubernetes 学习日记(未完成)</title><link>https://negoces.github.io/posts/baaa9162/</link><pubDate>Sat, 20 Mar 2021 22:59:49 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/baaa9162/</guid><description><![CDATA[<p>Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。</p>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Linux - 标签 - 「無名」</title><link>https://blog.negoces.top/tags/linux/</link><description>Linux - 标签 - 「無名」</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sat, 20 Mar 2021 22:59:49 +0800</lastBuildDate><atom:link href="https://blog.negoces.top/tags/linux/" rel="self" type="application/rss+xml"/><item><title>Kubernetes 学习日记(未完成)</title><link>https://blog.negoces.top/posts/baaa9162/</link><pubDate>Sat, 20 Mar 2021 22:59:49 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/baaa9162/</guid><description><![CDATA[<p>Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。</p>
 <div class="details admonition danger open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
@@ -421,7 +421,7 @@ docker tag registry.aliyuncs.com/google_containers/coredns:1.7.0 <span class="se
 kubeadm init --ignore-preflight-errors<span class="o">=</span>Swap
 </code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>在Linux上安装cifsd启用SMB共享</title><link>https://negoces.github.io/posts/4ab61985/</link><pubDate>Wed, 17 Mar 2021 19:14:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4ab61985/</guid><description><![CDATA[<p>用树莓派做了一个网络存储，想挂载到系统上，便想到了 SMB 协议，之前用过 Samba 但是性能实属不行，恰巧在 Github 上看到了 cifsd 这个项目，并且支持 RDMA 所以在树莓派上面安装试试，结果发现效果还不错，速度蛮快的。</p>
+</div>]]></description></item><item><title>在Linux上安装cifsd启用SMB共享</title><link>https://blog.negoces.top/posts/4ab61985/</link><pubDate>Wed, 17 Mar 2021 19:14:22 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/4ab61985/</guid><description><![CDATA[<p>用树莓派做了一个网络存储，想挂载到系统上，便想到了 SMB 协议，之前用过 Samba 但是性能实属不行，恰巧在 Github 上看到了 cifsd 这个项目，并且支持 RDMA 所以在树莓派上面安装试试，结果发现效果还不错，速度蛮快的。</p>
 <h2 id="安装必要的依赖">安装必要的依赖</h2>
 <p>Github 上只有源码，没有现成的二进制文件，软件仓库里面也没有，所以必须自己编译(其实并不意外，这个程序是作为内核模块运行的，所以才有如此之高的性能)。</p>
 <div class="highlight"><div class="chroma">
@@ -635,7 +635,7 @@ sudo systemctl status cifsd         <span class="c1"># 查看当前进程状态<
 <p>大功告成，可以存你喜欢的小姐姐了<br>
 因为 <code>cifsd</code> 支持 <code>RDMA</code> 可以不经过 CPU 直接传输数据，所以理论上是可以跑满网络带宽的<br>
 至于你的带宽有多少你可以使用 <code>iperf3</code> 进行测试</p>
-</blockquote>]]></description></item><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
+</blockquote>]]></description></item><item><title>Linux ane Me</title><link>https://blog.negoces.top/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
 <h2 id="第一次接触-linux">第一次接触 Linux</h2>
 <p>我一个接触到的 Linux 叫<a href="https://www.slax.org/" target="_blank" rel="noopener noreffer">Slax</a>，我也不清楚它算不算一个发行版本，总之它是基于 Debian 的。</p>
 <p>当时我高一，上的是封闭式学校，不给带电子产品，一周下来唯一能接触电子产品的时候便是微机课。因为平时的高强度学习，微机课一般都被我们当作放松时间(虽然要过会考)，便想着通过机房的电脑玩些什么。然而学校的老师们早就想到了这一点，通过路由切断了网络，安装了极域电子教室对 USB 进行管控(虽然后期通过注册表找到了卸载密码)。我曾因为重装家里面电脑的系统在 U 盘写了个老毛桃 PE，于是在微机室的电脑上启动试了一下发现可以启动。但是 PE 在运行时将系统加载到内存上，安装的软件关机之后就没有了。于是我在万恶的百度(当时还不会上谷歌)上面搜索&quot;口袋系统&quot;，我便在搜索结果里面看到了 Slax。<br>
@@ -667,7 +667,7 @@ sudo systemctl status cifsd         <span class="c1"># 查看当前进程状态<
 </figure>
 
 <p>目前 Manjaro GNOME 是我日常使用的系统，装了 VSCode 还有一些其他 IDE，众所周知，Linux 没用 QQ，我用的是用 yay 装的 com.qq.tim.spark
-虽然托盘独立了看起来有点难受，但是使用起来并没有什么大问题。</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
+虽然托盘独立了看起来有点难受，但是使用起来并没有什么大问题。</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://blog.negoces.top/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/posts/16e870f5/cover.png" referrerpolicy="no-referrer">
             </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
 <h2 id="iptables-是什么">iptables 是什么</h2>
@@ -736,7 +736,7 @@ sudo systemctl status cifsd         <span class="c1"># 查看当前进程状态<
 自定义链接：用于内置链的扩展和补充，可实现更灵活的规则管理机制；自定义链可以设置完之后，添加到内置链中，方便管理</p>
 <blockquote>
 <p>待续&hellip; (iptables的命令操作)</p>
-</blockquote>]]></description></item><item><title>使用curl测试API</title><link>https://negoces.github.io/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
+</blockquote>]]></description></item><item><title>使用curl测试API</title><link>https://blog.negoces.top/posts/9058bdc8/</link><pubDate>Sat, 07 Nov 2020 12:33:57 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/9058bdc8/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/cover.png" referrerpolicy="no-referrer">
             </div><p>curl是从服务器传输数据或向服务器传输数据的工具，熟悉其用法后，完全可以取代 Postman 这一类的图形界面工具。</p>
 <h2 id="常规用法">常规用法</h2>

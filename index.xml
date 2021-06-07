@@ -1,4 +1,4 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NEGOCES's Blog</title><link>https://negoces.github.io/</link><description>NEGOCES's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sun, 06 Jun 2021 15:45:47 +0800</lastBuildDate><atom:link href="https://negoces.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>树莓派安装Seafile文件服务</title><link>https://negoces.github.io/posts/37b9e15f/</link><pubDate>Sun, 06 Jun 2021 15:45:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/37b9e15f/</guid><description><![CDATA[<div class="details admonition danger open">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>「無名」</title><link>https://blog.negoces.top/</link><description>「無名」</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sun, 06 Jun 2021 15:45:47 +0800</lastBuildDate><atom:link href="https://blog.negoces.top/index.xml" rel="self" type="application/rss+xml"/><item><title>树莓派安装Seafile文件服务</title><link>https://blog.negoces.top/posts/37b9e15f/</link><pubDate>Sun, 06 Jun 2021 15:45:47 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/37b9e15f/</guid><description><![CDATA[<div class="details admonition danger open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-skull-crossbones fa-fw"></i>警告<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
@@ -233,7 +233,7 @@ sudo -u seafile ./seahub.sh start <span class="c1"># 首次启动需要按照提
 修改<code>bind = &quot;127.0.0.1:8000&quot;</code>为<code>bind = &quot;0.0.0.0:8000&quot;</code><br>
 执行<code>sudo -u seafile ./seahub.sh restart</code>重启 seahub<br>
 浏览器打开<code>http://&lt;IP&gt;:8000/</code>查看服务是否正常</p>
-<p>若要使用反向代理，将<code>gunicorn.conf.py</code>改回原配置，重启 seahub，继续<a href="#%E9%85%8D%E7%BD%AE-nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86" rel="">下列步骤</a></p>
+<p>若要使用反向代理，将<code>gunicorn.conf.py</code>改回原配置，重启 seahub，继续下列步骤</p>
 <h3 id="设置-seafile-开机自启">设置 Seafile 开机自启</h3>
 <p>创建并编辑<code>/etc/systemd/system/seafile.service</code></p>
 <div class="highlight"><div class="chroma">
@@ -506,7 +506,7 @@ openssl version -a <span class="p">|</span> grep OPENSSLDIR
 
 <span class="k">[system_default_sect]</span>
 <span class="na">MinProtocol</span> <span class="o">=</span> <span class="s">TLSv1.2</span>
-<span class="na">Ciphersuites</span> <span class="o">=</span> <span class="s">TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256</span>
+<span class="na">Ciphersuites</span> <span class="o">=</span> <span class="s">TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256</span>
 <span class="na">CipherString</span> <span class="o">=</span> <span class="s">DEFAULT@SECLEVEL=2</span>
 </code></pre></td></tr></table>
 </div>
@@ -514,9 +514,11 @@ openssl version -a <span class="p">|</span> grep OPENSSLDIR
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">openssl ciphers -s -tls1_3
+<pre class="chroma"><code class="language-bash" data-lang="bash">openssl ciphers -s -tls1_3 -v <span class="c1"># TLSv1.3</span>
+openssl ciphers -s -tls1_2 -v <span class="c1"># TLSv1.2</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>重启 Nginx 生效</p>
@@ -630,7 +632,7 @@ sudo systemctl <span class="nb">enable</span> --now memcached
 <li><a href="https://github.com/haiwen/seafile-rpi/issues/65">https://github.com/haiwen/seafile-rpi/issues/65</a></li>
 <li><a href="https://github.com/openssl/openssl/issues/7562">https://github.com/openssl/openssl/issues/7562</a></li>
 </ul>
-]]></description></item><item><title>Kubernetes 学习日记(未完成)</title><link>https://negoces.github.io/posts/baaa9162/</link><pubDate>Sat, 20 Mar 2021 22:59:49 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/baaa9162/</guid><description><![CDATA[<p>Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。</p>
+]]></description></item><item><title>Kubernetes 学习日记(未完成)</title><link>https://blog.negoces.top/posts/baaa9162/</link><pubDate>Sat, 20 Mar 2021 22:59:49 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/baaa9162/</guid><description><![CDATA[<p>Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统。</p>
 <div class="details admonition danger open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
@@ -1053,7 +1055,7 @@ docker tag registry.aliyuncs.com/google_containers/coredns:1.7.0 <span class="se
 kubeadm init --ignore-preflight-errors<span class="o">=</span>Swap
 </code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>在Linux上安装cifsd启用SMB共享</title><link>https://negoces.github.io/posts/4ab61985/</link><pubDate>Wed, 17 Mar 2021 19:14:22 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/4ab61985/</guid><description><![CDATA[<p>用树莓派做了一个网络存储，想挂载到系统上，便想到了 SMB 协议，之前用过 Samba 但是性能实属不行，恰巧在 Github 上看到了 cifsd 这个项目，并且支持 RDMA 所以在树莓派上面安装试试，结果发现效果还不错，速度蛮快的。</p>
+</div>]]></description></item><item><title>在Linux上安装cifsd启用SMB共享</title><link>https://blog.negoces.top/posts/4ab61985/</link><pubDate>Wed, 17 Mar 2021 19:14:22 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/4ab61985/</guid><description><![CDATA[<p>用树莓派做了一个网络存储，想挂载到系统上，便想到了 SMB 协议，之前用过 Samba 但是性能实属不行，恰巧在 Github 上看到了 cifsd 这个项目，并且支持 RDMA 所以在树莓派上面安装试试，结果发现效果还不错，速度蛮快的。</p>
 <h2 id="安装必要的依赖">安装必要的依赖</h2>
 <p>Github 上只有源码，没有现成的二进制文件，软件仓库里面也没有，所以必须自己编译(其实并不意外，这个程序是作为内核模块运行的，所以才有如此之高的性能)。</p>
 <div class="highlight"><div class="chroma">
@@ -1267,7 +1269,7 @@ sudo systemctl status cifsd         <span class="c1"># 查看当前进程状态<
 <p>大功告成，可以存你喜欢的小姐姐了<br>
 因为 <code>cifsd</code> 支持 <code>RDMA</code> 可以不经过 CPU 直接传输数据，所以理论上是可以跑满网络带宽的<br>
 至于你的带宽有多少你可以使用 <code>iperf3</code> 进行测试</p>
-</blockquote>]]></description></item><item><title>从零开始搭建一个我的世界服务器</title><link>https://negoces.github.io/posts/079848ab/</link><pubDate>Wed, 10 Mar 2021 17:13:41 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/079848ab/</guid><description><![CDATA[<div class="featured-image">
+</blockquote>]]></description></item><item><title>从零开始搭建一个我的世界服务器</title><link>https://blog.negoces.top/posts/079848ab/</link><pubDate>Wed, 10 Mar 2021 17:13:41 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/079848ab/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/posts/079848ab/cover.png" referrerpolicy="no-referrer">
             </div><p>相信有不少人玩 Minecraft 的时候都想与自己的小伙伴一起玩耍，如过你们恰好在同一局域网，那么可以通过游戏内的<code>对局域网开放</code>与小伙伴联机，但是房主必须一直在线，而且非局域网内的小伙伴也无法一起玩耍。</p>
 <blockquote>
@@ -1584,7 +1586,7 @@ java -Xms2G -Xmx4G -jar server.jar nogui
 <p>设置 server-ip=0.0.0.0 或着留空则会监听所有网卡，会接受来自所有网卡的连接，<strong>故强烈建议此参数留空！</strong></p>
 </div>
         </div>
-    </div>]]></description></item><item><title>树莓派4安装Gitea</title><link>https://negoces.github.io/posts/a6cf258f/</link><pubDate>Thu, 04 Mar 2021 20:10:24 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/a6cf258f/</guid><description><![CDATA[<p>在树莓派上面搭建一个内网 git 服务器，用来存放一些代码及镜像一些常用仓库。顺便搭建个 DroneCI 玩玩。</p>
+    </div>]]></description></item><item><title>树莓派4安装Gitea</title><link>https://blog.negoces.top/posts/a6cf258f/</link><pubDate>Thu, 04 Mar 2021 20:10:24 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/a6cf258f/</guid><description><![CDATA[<p>在树莓派上面搭建一个内网 git 服务器，用来存放一些代码及镜像一些常用仓库。顺便搭建个 DroneCI 玩玩。</p>
 <blockquote>
 <p>此文章依据怎么方便怎么来的准则，并未考虑稳定与性能，切勿用作生产环境！</p>
 </blockquote>
@@ -2129,7 +2131,7 @@ docker pull drone/drone-runner-docker:1
 </div>
 </div></div>
         </div>
-    </div>]]></description></item><item><title>树莓派4安装Docker</title><link>https://negoces.github.io/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/c0b3720d/</guid><description><![CDATA[<div class="featured-image">
+    </div>]]></description></item><item><title>树莓派4安装Docker</title><link>https://blog.negoces.top/posts/c0b3720d/</link><pubDate>Wed, 03 Mar 2021 21:55:47 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/c0b3720d/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/posts/c0b3720d/cover.png" referrerpolicy="no-referrer">
             </div><p>Docker 大法好！！！</p>
 <h2 id="安装必要工具">安装必要工具</h2>
@@ -2255,7 +2257,7 @@ docker run -d <span class="se">\
 </span><span class="se"></span>portainer/portainer-ce
 </code></pre></td></tr></table>
 </div>
-</div><p>到此为止，Docker 和 Portainer 面板均已部署完毕，可前往<code>&lt;ip&gt;：9000</code>访问面板</p>]]></description></item><item><title>把树莓派当作热点</title><link>https://negoces.github.io/posts/542347b3/</link><pubDate>Wed, 03 Mar 2021 21:18:18 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/542347b3/</guid><description><![CDATA[<p>将树莓派作为二级路由器</p>
+</div><p>到此为止，Docker 和 Portainer 面板均已部署完毕，可前往<code>&lt;ip&gt;：9000</code>访问面板</p>]]></description></item><item><title>把树莓派当作热点</title><link>https://blog.negoces.top/posts/542347b3/</link><pubDate>Wed, 03 Mar 2021 21:18:18 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/542347b3/</guid><description><![CDATA[<p>将树莓派作为二级路由器</p>
 <div class="details admonition danger open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-skull-crossbones fa-fw"></i>AP模式 与 路由模式<i class="details-icon fas fa-angle-right fa-fw"></i>
@@ -2568,7 +2570,7 @@ sudo systemctl status dnsmasq
 <pre class="chroma"><code class="language-shell" data-lang="shell">sudo netfilter-persistent save
 </code></pre></td></tr></table>
 </div>
-</div>]]></description></item><item><title>树莓派4入门指南(无显示器)</title><link>https://negoces.github.io/posts/04c00a0d/</link><pubDate>Wed, 03 Mar 2021 20:54:16 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/04c00a0d/</guid><description><![CDATA[<p>树莓派 4 无头启动(Headless)入门指南</p>
+</div>]]></description></item><item><title>树莓派4入门指南(无显示器)</title><link>https://blog.negoces.top/posts/04c00a0d/</link><pubDate>Wed, 03 Mar 2021 20:54:16 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/04c00a0d/</guid><description><![CDATA[<p>树莓派 4 无头启动(Headless)入门指南</p>
 <div class="details admonition danger open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-skull-crossbones fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
@@ -2791,7 +2793,7 @@ vcgencmd measure_temp
 </div>
 </div></div>
         </div>
-    </div>]]></description></item><item><title>Linux ane Me</title><link>https://negoces.github.io/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
+    </div>]]></description></item><item><title>Linux ane Me</title><link>https://blog.negoces.top/posts/2109a7df/</link><pubDate>Mon, 25 Jan 2021 14:42:03 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/2109a7df/</guid><description><![CDATA[<p>Linux 因为其稳定和安全被不少服务器所使用，我也因为偶然接触到了 Linux，发现了它的方便，甚至将它作为日常系统使用。</p>
 <h2 id="第一次接触-linux">第一次接触 Linux</h2>
 <p>我一个接触到的 Linux 叫<a href="https://www.slax.org/" target="_blank" rel="noopener noreffer">Slax</a>，我也不清楚它算不算一个发行版本，总之它是基于 Debian 的。</p>
 <p>当时我高一，上的是封闭式学校，不给带电子产品，一周下来唯一能接触电子产品的时候便是微机课。因为平时的高强度学习，微机课一般都被我们当作放松时间(虽然要过会考)，便想着通过机房的电脑玩些什么。然而学校的老师们早就想到了这一点，通过路由切断了网络，安装了极域电子教室对 USB 进行管控(虽然后期通过注册表找到了卸载密码)。我曾因为重装家里面电脑的系统在 U 盘写了个老毛桃 PE，于是在微机室的电脑上启动试了一下发现可以启动。但是 PE 在运行时将系统加载到内存上，安装的软件关机之后就没有了。于是我在万恶的百度(当时还不会上谷歌)上面搜索&quot;口袋系统&quot;，我便在搜索结果里面看到了 Slax。<br>
@@ -2823,7 +2825,7 @@ vcgencmd measure_temp
 </figure>
 
 <p>目前 Manjaro GNOME 是我日常使用的系统，装了 VSCode 还有一些其他 IDE，众所周知，Linux 没用 QQ，我用的是用 yay 装的 com.qq.tim.spark
-虽然托盘独立了看起来有点难受，但是使用起来并没有什么大问题。</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://negoces.github.io/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://negoces.github.io/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
+虽然托盘独立了看起来有点难受，但是使用起来并没有什么大问题。</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://blog.negoces.top/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
                 <img src="/posts/16e870f5/cover.png" referrerpolicy="no-referrer">
             </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
 <h2 id="iptables-是什么">iptables 是什么</h2>
