@@ -430,9 +430,9 @@ theme = "loveit"
     enable = false
     # Google Analytics
     [params.analytics.google]
-      id = ""
+      id = "G-BG0RWPCHJE"
       # 是否匿名化用户 IP
-      anonymizeIP = true
+      anonymizeIP = false
     # Fathom Analytics
     [params.analytics.fathom]
       id = ""
