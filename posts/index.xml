@@ -1,4 +1,240 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>所有文章 - 「無名」</title><link>https://blog.negoces.top/posts/</link><description>所有文章 | 「無名」</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Sun, 06 Jun 2021 15:45:47 +0800</lastBuildDate><atom:link href="https://blog.negoces.top/posts/" rel="self" type="application/rss+xml"/><item><title>树莓派安装Seafile文件服务</title><link>https://blog.negoces.top/posts/37b9e15f/</link><pubDate>Sun, 06 Jun 2021 15:45:47 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/37b9e15f/</guid><description><![CDATA[<div class="details admonition danger open">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>所有文章 - 「無名」</title><link>https://blog.negoces.top/posts/</link><description>所有文章 | 「無名」</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>negoces@163.com (NEGOCES)</managingEditor><webMaster>negoces@163.com (NEGOCES)</webMaster><lastBuildDate>Tue, 22 Jun 2021 21:54:45 +0800</lastBuildDate><atom:link href="https://blog.negoces.top/posts/" rel="self" type="application/rss+xml"/><item><title>使用 Node 搭建一个自动部署博客</title><link>https://blog.negoces.top/posts/3256da5e/</link><pubDate>Tue, 22 Jun 2021 21:54:45 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/3256da5e/</guid><description><![CDATA[<h2 id="我为什么要使用-node-来搭建-hugo-博客">我为什么要使用 Node 来搭建 Hugo 博客</h2>
+<p>我最开始的博客是使用 Hexo 搭建的，那时候刚用的时候觉得很香。但是用到后来，随者文章数量的增加，Hexo 的生成时间直接变成了分钟级别。后来就看到了 Hugo 便将博客转移到了 Hugo 上面并同时看到了 Vercel 的托管服务，当时就觉得白嫖真香。作为一个懒癌晚期，肯定要整个自动部署，很巧 vercel 提供了 hugo 的自动部署，但是不支持 hugo-extended，导致我的博客并不能通过部署，为了解决这个问题便写了个 Github Actions 让 Github 将博客静态文件构建到 gh-pages，vercel 直接部署 gh-pages 分支的静态文件。这次就使用 Node 来简化一下流程，使 vercel 支持 hugo-extended。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">原流程</span><span class="p">:</span><span class="w"> </span><span class="l">推送仓库 =&gt; Github Actions 构建 =&gt; 发布到 gh-pages 分支 =&gt; 部署到 vervel</span><span class="w">
+</span><span class="w"></span><span class="nt">现流程</span><span class="p">:</span><span class="w"> </span><span class="l">推送仓库 =&gt; vercel 构建并部署</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="使用-yarn-创建一个-node-项目">使用 Yarn 创建一个 Node 项目</h2>
+<p>首先得确保你安装了 <a href="https://nodejs.org/zh-cn/" target="_blank" rel="noopener noreffer">Node.js</a> 并且安装了 <code>Yarn</code>(你对<code>npm</code>很熟悉的话也不是不能用)</p>
+<p>之后，咱找个地方创建咱的博客文件夹</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">mkdir blog <span class="o">&amp;&amp;</span> <span class="nb">cd</span> blog
+</code></pre></td></tr></table>
+</div>
+</div><p>之后，使用<code>yarn init</code>创建项目</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ yarn init
+yarn init v1.22.10
+question name <span class="o">(</span>node<span class="o">)</span>: blog          <span class="c1"># 项目名</span>
+question version <span class="o">(</span>1.0.0<span class="o">)</span>:           <span class="c1"># 版本，可直接回车</span>
+question description: my blog       <span class="c1"># 项目描述，可留空</span>
+question entry point <span class="o">(</span>index.js<span class="o">)</span>:
+question repository url:
+question author: negoces            <span class="c1"># 作者</span>
+question license <span class="o">(</span>MIT<span class="o">)</span>:             <span class="c1"># 开源协议</span>
+question private:
+success Saved package.json
+Done in 39.47s.
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="在-node-项目中安装-hugo-并创建博客站点">在 Node 项目中安装 Hugo 并创建博客站点</h2>
+<p>安装 hugo (期间需要代理，TUN 模式的那种)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">yarn add hugo-extended
+</code></pre></td></tr></table>
+</div>
+</div><p>创建站点(hugo 无法在非空文件夹里面创建站点，所以先建在 tmp 目录再移回来)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">yarn hugo new site tmp
+mv tmp/* ./
+rm -rf tmp
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="初始化-git-仓库并安装主题">初始化 Git 仓库并安装主题</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">git init
+git branch -m main
+<span class="c1"># 安装主题(链接已加速)</span>
+git submodule add https://github.com.cnpmjs.org/CaiJimmy/hugo-theme-stack/ themes/hugo-theme-stack
+</code></pre></td></tr></table>
+</div>
+</div><p>删除 hugo 默认的配置和内容，替换成主题的示例配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">rm -rf config.toml
+rm -rf content/
+cp themes/hugo-theme-stack/exampleSite/config.yaml ./
+cp -r themes/hugo-theme-stack/exampleSite/content/ ./
+</code></pre></td></tr></table>
+</div>
+</div><p>删除<code>rich-content</code>文章，否则在本地测试构建时会有些文件下载不下来，导致构建失败(有代理当我没说)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">rm -rf content/post/rich-content/
+yarn hugo serve
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-npm-脚本并测试构建">配置 NPM 脚本并测试构建</h2>
+<p>编辑<code>package.json</code>并加入<code>&quot;scripts&quot;</code>项</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;blog&#34;</span><span class="p">,</span>
+  <span class="nt">&#34;version&#34;</span><span class="p">:</span> <span class="s2">&#34;1.0.0&#34;</span><span class="p">,</span>
+  <span class="nt">&#34;description&#34;</span><span class="p">:</span> <span class="s2">&#34;my blog&#34;</span><span class="p">,</span>
+  <span class="nt">&#34;main&#34;</span><span class="p">:</span> <span class="s2">&#34;index.js&#34;</span><span class="p">,</span>
+  <span class="nt">&#34;author&#34;</span><span class="p">:</span> <span class="s2">&#34;negoces&#34;</span><span class="p">,</span>
+  <span class="nt">&#34;license&#34;</span><span class="p">:</span> <span class="s2">&#34;MIT&#34;</span><span class="p">,</span>
+  <span class="nt">&#34;dependencies&#34;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&#34;hugo-extended&#34;</span><span class="p">:</span> <span class="s2">&#34;^0.84.0&#34;</span>
+  <span class="p">},</span>
+  <span class="nt">&#34;scripts&#34;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&#34;build&#34;</span><span class="p">:</span> <span class="s2">&#34;hugo -d ./dist&#34;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>测试构建</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">yarn build
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-gitignore-并创建提交">配置 gitignore 并创建提交</h2>
+<p>编辑 <code>.gitignore</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-text" data-lang="text">/dist/
+/resources/_gen/
+.vscode/*
+tags
+/node_modules/
+yarn.lock
+</code></pre></td></tr></table>
+</div>
+</div><p>创建提交</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">git add *
+git add .gitignore
+git commit -m <span class="s2">&#34;init&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="推送到-github-并在-vercel-部署项目">推送到 Github 并在 Vercel 部署项目</h2>
+<p>前往 Github 创建仓库</p>
+<p>添加远程地址并推送:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">git remote add origin &lt;远程地址&gt;
+git push -u origin main
+</code></pre></td></tr></table>
+</div>
+</div><p>到 vercel 创建项目</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">参数</th>
+<th style="text-align:left">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">FRAMEWORK PRESET</td>
+<td style="text-align:left">Other</td>
+</tr>
+<tr>
+<td style="text-align:left">BUILD COMMAND</td>
+<td style="text-align:left">yarn build</td>
+</tr>
+<tr>
+<td style="text-align:left">OUTPUT DIRECTORY</td>
+<td style="text-align:left">dist</td>
+</tr>
+</tbody>
+</table>
+<h2 id="示例网站">示例网站</h2>
+<p><a href="https://testblog-three.vercel.app/" target="_blank" rel="noopener noreffer">https://testblog-three.vercel.app/</a></p>
+<blockquote>
+<p>这主题还蛮好看的，后期可能会将现博客迁移到这个主题上</p>
+</blockquote>]]></description></item><item><title>树莓派安装Seafile文件服务</title><link>https://blog.negoces.top/posts/37b9e15f/</link><pubDate>Sun, 06 Jun 2021 15:45:47 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/37b9e15f/</guid><description><![CDATA[<div class="details admonition danger open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-skull-crossbones fa-fw"></i>警告<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
@@ -2823,73 +3059,4 @@ vcgencmd measure_temp
 </figure>
 
 <p>目前 Manjaro GNOME 是我日常使用的系统，装了 VSCode 还有一些其他 IDE，众所周知，Linux 没用 QQ，我用的是用 yay 装的 com.qq.tim.spark
-虽然托盘独立了看起来有点难受，但是使用起来并没有什么大问题。</p>]]></description></item><item><title>iptables从入门到放弃</title><link>https://blog.negoces.top/posts/16e870f5/</link><pubDate>Mon, 18 Jan 2021 17:29:57 +0800</pubDate><author>作者</author><guid>https://blog.negoces.top/posts/16e870f5/</guid><description><![CDATA[<div class="featured-image">
-                <img src="/posts/16e870f5/cover.png" referrerpolicy="no-referrer">
-            </div><p>iptables 是 Linux 系统上常用的命令行工具，主要用来配置防火墙。运用 iptables 我们能够实现流量的转发、拦截等操作</p>
-<h2 id="iptables-是什么">iptables 是什么</h2>
-<p>iptables 是运行在用户空间的应用软件，通过控制 Linux 内核 netfilter 模块，来管理网络数据包的处理和转发。在大部分 Linux 发行版中，可以通过手册页或<code>man iptables</code>获取用户手册。</p>
-<div class="details admonition info open">
-        <div class="details-summary admonition-title">
-            <i class="icon fas fa-info-circle fa-fw"></i>netfilter是什么(摘自Wiki)<i class="details-icon fas fa-angle-right fa-fw"></i>
-        </div>
-        <div class="details-content">
-            <div class="admonition-content">Netfilter，在 Linux 内核中的一个软件框架，用于管理网络数据包。不仅具有网络地址转换（NAT）的功能，也具备数据包内容修改、以及数据包过滤等防火墙功能。利用运作于用户空间的应用软件，如 iptables、ebtables 和 arptables 等，来控制 Netfilter，系统管理者可以管理通过 Linux 操作系统的各种网络数据包。1990 年代，Netfilter 在 Linux 2.3.15 版时进入 Linux 内核，正式应用于 Linux 2.4 版。</div>
-        </div>
-    </div>
-<p>简而言之就是 Netfilter 的上层程序，用户通过 iptables 指定规则，由 Netfilter 来执行，实现流量的拦截、转发等操作。</p>
-<h2 id="iptables-的链chain">iptables 的链(chain)</h2>
-<p>iptables 中有 5 个链，分别与 netfilter 中的 hook 对应</p>
-<ul>
-<li><code>PREROUTING</code> - 对应<code>NF_IP_PRE_ROUTING</code>,任何进入网络堆栈的流量都会触发此 hook。</li>
-<li><code>INPUT</code> - 对应<code>NF_IP_LOCAL_IN</code>，如果数据包发送到本地系统，则在路由传入数据包之后，将触发此 hook。</li>
-<li><code>FORWARD</code> - 对应<code>NF_IP_FORWARD</code>，如果该数据包转发到另一台主机，则在路由输入数据包之后将触发此 hook。</li>
-<li><code>OUTPUT</code> - 对应<code>NF_IP_LOCAL_OUT</code>，由本地的出栈流量触发。</li>
-<li><code>POSTROUTING</code> - 对应<code>NF_IP_POST_ROUTING</code>，任何传出的流量都将触发此 hook。</li>
-</ul>
-<p>数据包走向:</p>
-<ul>
-<li>目的地址为本机的传入流量: -&gt; <code>PREROUTING</code> -&gt; <code>INPUT</code></li>
-<li>目的地址为其他主机的传入流量: -&gt; <code>PREROUTING</code> -&gt; <code>FORWARD</code> -&gt; <code>POSTROUTING</code> -&gt;</li>
-<li>本机出站流量: <code>OUTPUT</code> -&gt; <code>POSTROUTING</code> -&gt;</li>
-</ul>
-<h2 id="iptables-的表tables">iptables 的表(tables)</h2>
-<h3 id="filter-表">filter 表</h3>
-<p>filter 表是默认的表，如果不指明表则使用此表。其通常用于过滤数据包。其中的内建链包括：</p>
-<ul>
-<li>INPUT,OUTPUT,FORWARD</li>
-</ul>
-<h3 id="nat-表">nat 表</h3>
-<p>nat 表如其名，用于地址转换操作。其中的内建链包括：</p>
-<ul>
-<li>PREROUTING,POSTROUTING,OUTPUT</li>
-</ul>
-<h3 id="mangle-表">mangle 表</h3>
-<p>mangle 表用于处理数据包。其和 nat 表的主要区别在于，nat 表侧重连接而 mangle 表侧重每一个数据包。其中内建链列表如下。</p>
-<ul>
-<li>PREROUTING,OUTPUT,FORWARD,INPUT,POSTROUTING</li>
-</ul>
-<h3 id="raw-表">raw 表</h3>
-<p>raw 表用于处理异常，有如下两个内建链：</p>
-<ul>
-<li>PREROUTING,OUTPUT</li>
-</ul>
-<figure>
-     <figcaption>
-            <h4>流量流向</h4>
-        </figcaption>
-</figure>
-
-<h2 id="iptables-的规则rules">iptables 的规则(rules)</h2>
-<p>根据规则匹配条件来尝试匹配报文，一旦匹配成功，就由规则定义的处理动作做出处理。</p>
-<h3 id="匹配条件">匹配条件</h3>
-<p>基本匹配条件：源地址，目标地址，传输层协议<br>
-扩展匹配条件：由扩展模块定义</p>
-<h3 id="处理动作">处理动作</h3>
-<p>基本处理动作：ACCEPT、DROP<br>
-扩展处理动作：REJECT、RETURN、LOG、REDIRECT</p>
-<h3 id="iptables的链内置链和自定义链">iptables的链：内置链和自定义链</h3>
-<p>内置链：对应于hook functions<br>
-自定义链接：用于内置链的扩展和补充，可实现更灵活的规则管理机制；自定义链可以设置完之后，添加到内置链中，方便管理</p>
-<blockquote>
-<p>待续&hellip; (iptables的命令操作)</p>
-</blockquote>]]></description></item></channel></rss>
+虽然托盘独立了看起来有点难受，但是使用起来并没有什么大问题。</p>]]></description></item></channel></rss>
